@@ -1,0 +1,11 @@
+{
+  "opening-tag": "{",
+  "closing-tag": "}",
+  "row": "<div style='row'>{}</div>",
+  "box": "<div style='box'>{}</div>",
+  "button": "<button class='button'>{}</button>",
+  "title": "<h1>{}</h1>",
+  "text": "<p>{}</p>",
+  "select-box": "<select><option value='' hidden selected>{}</option><option value=''>Option 1</option><option value=''>Option 2</option></select>",
+  "input": "<input placeholder=''></input>"
+}
