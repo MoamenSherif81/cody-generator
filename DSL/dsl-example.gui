@@ -1,0 +1,30 @@
+row{
+    button, button, button
+}
+row{
+    box{
+        title, text, button
+    }
+    box{
+        text, button
+    }
+}
+row{
+    box{
+        title, select-box, input, button
+    }
+}
+row{
+    box{
+        title, text, select-box
+    }
+    box{
+        text
+    }
+    box{
+        text, input
+    }
+    box{
+        text, button
+    }
+}
