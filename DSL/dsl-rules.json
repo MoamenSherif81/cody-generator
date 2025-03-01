@@ -1,0 +1,50 @@
+{
+  "root": {
+    "term": false,
+    "children": [
+      "row"
+    ]
+  },
+  "row": {
+    "term": true,
+    "children": [
+      "box"
+    ]
+  },
+  "box": {
+    "term": true,
+    "children": [
+      "elements"
+    ]
+  },
+  "elements": {
+    "term": false,
+    "children": [
+      "button",
+      "title",
+      "text",
+      "select-box",
+      "input"
+    ]
+  },
+  "button": {
+    "term": true,
+    "children": []
+  },
+  "title": {
+    "term": true,
+    "children": []
+  },
+  "text": {
+    "term": true,
+    "children": []
+  },
+  "select-box": {
+    "term": true,
+    "children": []
+  },
+  "input": {
+    "term": true,
+    "children": []
+  }
+}
