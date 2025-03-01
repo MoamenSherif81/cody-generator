@@ -1,7 +1,7 @@
 import subprocess
 
 class Generator:
-    def __init__(self, folder_location="./Data/", batch=1000, rules_location="../DSL/dsl-rules.json", seed=281203):
+    def __init__(self, folder_location="./", batch=1000, rules_location="../DSL/dsl-rules.json", seed=281203):
         self.folder_location = folder_location
         self.rules_location = rules_location
         self.seed = seed
