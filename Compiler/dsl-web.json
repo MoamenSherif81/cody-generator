@@ -1,0 +1,11 @@
+{
+  "opening-tag": "{",
+  "closing-tag": "}",
+  "row": "<div class='row'>[]</div>",
+  "box": "<div class='box'>[]</div>",
+  "button": "<button class='button'>[]</button>",
+  "title": "<h1>[]</h1>",
+  "text": "<p>[]</p>",
+  "select-box": "<select>\n\t<option value=\"\" hidden selected>Select box</option>\n\t<option value=\"\">Option 1</option>\n\t<option value=\"\">Option 2</option>[]</select>",
+  "input": "<input placeholder='input'>[]</input>"
+}
