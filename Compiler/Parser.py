@@ -28,7 +28,7 @@ class Parser:
         tags_keys = []
 
         try:
-            with open("/home/mohab/Mohab/GP/cody-generator/Compiler/dsl-web.json", encoding="utf-8") as file:
+            with open("Compiler/dsl-web.json", encoding="utf-8") as file:
                 tokens = json.load(file)
 
             for token, value in tokens.items():
@@ -38,7 +38,7 @@ class Parser:
                 tags[token] = tag
                 tags_keys.append(token)
 
-            with open("/home/mohab/Mohab/GP/cody-generator/Compiler/Dsl_txt_limit.json", encoding="utf-8") as file:
+            with open("Compiler/Dsl_txt_limit.json", encoding="utf-8") as file:
                 size_limits = json.load(file)
 
             for token, limit in size_limits.items():

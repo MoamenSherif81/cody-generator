@@ -16,10 +16,9 @@ def read_input_file(file_path: str) -> str:
 
 
 if __name__ == "__main__":
-    file_path = "/home/mohab/Mohab/GP/cody-generator/Compiler/dsl-example.gui"  # Change to your actual file path
+    file_path = "Compiler/dsl-example.gui"
     dsl_code = read_input_file(file_path)
 
     if dsl_code:
-        pars = Parser(dsl_code)
-        compiler = compiler("/home/mohab/Mohab/GP/cody-generator/Compiler/Generated")
+        compiler = compiler("Compiler/Generated")
         compiler.compile(dsl_code,"index.html")
