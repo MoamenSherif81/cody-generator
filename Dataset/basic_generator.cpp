@@ -62,7 +62,7 @@ void generate(const string &cur_node, string &dsl, mt19937 &rng, unordered_map<s
 
 signed main(int argc, char *argv[]) {
     if (argc < 6) {
-        cerr << "Need 5 arguments: number of samples, folder location, batch size, rules location, and seed\n";
+        cerr << "Need 5 arguments: number of samples, folder location, file counter, rules location, and seed\n";
         return 1;
     }
 
@@ -71,7 +71,7 @@ signed main(int argc, char *argv[]) {
         unordered_map<string, bool> is_term;
         unsigned int num_samples = atoi(argv[1]);
         string folder_location = argv[2];
-        unsigned int batch = atoi(argv[3]);
+        unsigned int file_counter = atoi(argv[3]);
         string rules_location = argv[4];
         unsigned int seed = atoi(argv[5]);
 
@@ -80,7 +80,7 @@ signed main(int argc, char *argv[]) {
         mt19937 rng(seed);
 
         for (int i = 0; i < num_samples; i++) {
-            ofstream file(folder_location + "/" + to_string(i) + ".gui");
+            ofstream file(folder_location + "/" + to_string(file_counter++) + ".gui");
             string content;
             generate("root", content, rng, is_term, children);
             file << content;

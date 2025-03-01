@@ -1,17 +1,23 @@
 import subprocess
+from logging import exception
+import os
 
 class Generator:
-    def __init__(self, folder_location="./", batch=1000, rules_location="../DSL/dsl-rules.json", seed=281203):
-        self.folder_location = folder_location
+    def __init__(self, folder_location="./", file_counter=0, rules_location="../DSL/dsl-rules.json", seed=281203):
+        os.makedirs(folder_location + "Data", exist_ok=True)
+        self.folder_location = folder_location + "Data/"
         self.rules_location = rules_location
         self.seed = seed
-        self.batch = batch
-        self.file_counter = 0
+        self.file_counter = file_counter
 
     def basic_generate(self, num_samples):
-        result = subprocess.run(["./basic_generator",str(num_samples), self.folder_location, str(self.batch), self.rules_location, str(self.seed)])
-        # print("C++ output: ", result.stdout.strip())
-        # print("C++ Error: ", result.stderr.strip())
+        result = subprocess.run(["./basic_generator",str(num_samples), self.folder_location, str(self.file_counter), self.rules_location, str(self.seed)])
+        if result.returncode == 0:
+            self.file_counter += num_samples
+            return True
+        raise exception(result.stderr)
+
+
 
     def skewed_generate(self, num):
         pass
@@ -22,5 +28,5 @@ class Generator:
 
 if __name__ == "__main__":
     gen = Generator()
-    gen.basic_generate(10)
+    gen.basic_generate(5)
 
