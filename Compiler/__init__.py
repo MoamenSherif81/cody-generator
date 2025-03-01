@@ -23,4 +23,3 @@ if __name__ == "__main__":
         pars = Parser(dsl_code)
         compiler = compiler("/home/mohab/Mohab/GP/cody-generator/Compiler/Generated")
         compiler.compile(dsl_code,"index.html")
-    print("helfdsjkf")

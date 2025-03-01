@@ -51,7 +51,7 @@ class compiler:
         self.parser = None
         self.root = None
         self.text_generator = TextGenerator()
-        with open("Compiler/htmlTemplate.html", "r", encoding="utf-8") as file:
+        with open("/home/mohab/Mohab/GP/cody-generator/Compiler/htmlTemplate.html", "r", encoding="utf-8") as file:
             self.html_template = file.read()
         self.save_path = savingPath
 
