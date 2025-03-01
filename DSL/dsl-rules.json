@@ -8,8 +8,7 @@
   "row": {
     "term": true,
     "children": [
-      "box",
-      "elements"
+      "box"
     ]
   },
   "box": {
