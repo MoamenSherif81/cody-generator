@@ -1,4 +1,6 @@
 import json
+import os.path
+
 from Tag import Tag
 
 
@@ -28,7 +30,8 @@ class Parser:
         tags_keys = []
 
         try:
-            with open("Compiler/dsl-web.json", encoding="utf-8") as file:
+            dsl_web_path = os.path.join(os.getcwd(),"dsl-web.json")
+            with open(dsl_web_path, encoding="utf-8") as file:
                 tokens = json.load(file)
 
             for token, value in tokens.items():
@@ -37,8 +40,8 @@ class Parser:
                 tag = Tag(token, value)
                 tags[token] = tag
                 tags_keys.append(token)
-
-            with open("Compiler/Dsl_txt_limit.json", encoding="utf-8") as file:
+            dsl_limits_path = os.path.join(os.getcwd(),"Dsl_txt_limit.json")
+            with open(dsl_limits_path, encoding="utf-8") as file:
                 size_limits = json.load(file)
 
             for token, limit in size_limits.items():
@@ -76,3 +79,4 @@ class Parser:
                 return self.tags[current_token], i + 1
 
         return None, idx
+ob = Parser("")

@@ -55,7 +55,7 @@ class compiler:
             self.html_template = file.read()
         self.save_path = savingPath
 
-    def compile(self, code: str, path: str = ""):
+    def compile(self, code: str, path: str = None):
         """
         Compiles the given DSL code.
 
@@ -67,7 +67,10 @@ class compiler:
         self.root = Node(Tag("body", "<body>[]</body>"))
         self.build_tree(0, self.root)
         compiled_code = self.build_code(self.root, 0)
-        self.write_to_file("index.html", f"{self.html_template}{compiled_code}</html>")
+        html_code = f"{self.html_template}{compiled_code}</html>"
+        if path is not None:
+            self.write_to_file("index.html",html_code )
+        return html_code
 
     def write_to_file(self, file_name: str, text: str):
         """
@@ -81,7 +84,7 @@ class compiler:
             file_path = f"{self.save_path}/{file_name}"
             with open(file_path, "w", encoding="utf-8") as file:
                 file.write(text)
-            print("File written successfully!")
+            # print("File written successfully!")
         except Exception as e:
             print(f"Error writing to file: {e}")
 
