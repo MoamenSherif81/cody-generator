@@ -29,19 +29,18 @@ cd Compiler
 Then, execute the script with the following command:
 
 ```sh
-python script.py <input_directory> <output_directory> <css_file>
+python script.py <input_directory> <output_directory>
 ```
 
 ### Arguments:
 
 - `<input_directory>`: Directory containing `.gui` files.
 - `<output_directory>`: Directory where screenshots will be saved.
-- `<css_file>`: Path to the CSS file used for styling.
 
 ### Example:
 
 ```sh
-python script.py /home/user/gui_files /home/user/screenshots /home/user/style.css
+python script.py /home/user/gui_files /home/user/screenshots 
 ```
 
 ## Notes

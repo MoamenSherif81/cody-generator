@@ -95,7 +95,7 @@ async def do_work(directory_path, output_directory, css_file_content, thread_cou
 if __name__ == "__main__":
     input_directory = sys.argv[1]
     output_directory = sys.argv[2]
-    css_file_path = sys.argv[3]
+    css_file_path = "style.css"
 
     with open(css_file_path, "r", encoding="utf-8") as css_file:
         css_content = css_file.read()
