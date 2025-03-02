@@ -1,1 +1,0 @@
-row{box{text},box{text,select-box,text},box{text,input,button}},row{box{text,select-box}},row{box{button},box{button,select-box,text,button}}
