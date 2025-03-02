@@ -1,6 +1,7 @@
+import os
 import subprocess
 from logging import exception
-import os
+
 
 class Generator:
     def __init__(self, folder_location="./", file_counter=0, rules_location="../DSL/dsl-rules.json", seed=281203):
