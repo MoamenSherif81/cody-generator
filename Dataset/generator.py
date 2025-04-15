@@ -46,7 +46,7 @@ class Generator:
 if __name__ == "__main__":
     # seed for random generator
     seed = int(sys.argv[1])
-    # seed for random generator
+    # number of samples
     samples = int(sys.argv[2])
     # out_put directory
     output_directory = sys.argv[3]
