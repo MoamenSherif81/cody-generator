@@ -8,7 +8,7 @@ fi
 
 NUM_SAMPLES=$1
 
-mkdir -p Extra
+mkdir -p Extra/input
 
 # Navigate to Dataset directory
 cd Dataset || exit
@@ -20,7 +20,7 @@ g++ -std=c++17 -Iinclude basic_generator.cpp -o basic_generator
 cd ..
 
 # Run generator.py with the input number
-python3 Dataset/generator.py 281203 "$NUM_SAMPLES" ./Extra
+python3 Dataset/generator.py 281203 "$NUM_SAMPLES" ./Extra/
 
 # Install Playwright and its dependencies
 pip install playwright
