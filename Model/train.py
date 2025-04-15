@@ -61,10 +61,12 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
     else:
         output_signature = (
             (
-                tf.TensorSpec(shape=(None, IMAGE_SIZE, IMAGE_SIZE, 3), dtype=tf.int32),
-                tf.TensorSpec(shape=(None, CONTEXT_LENGTH, voc.size), dtype=tf.int32),
+                tf.TensorSpec(
+                    shape=(None, *(IMAGE_SIZE, IMAGE_SIZE), 3), dtype=tf.float32
+                ),
+                tf.TensorSpec(shape=(None, CONTEXT_LENGTH, voc.size), dtype=tf.float32),
             ),
-            tf.TensorSpec(shape=(None, voc.size), dtype=tf.int32),
+            tf.TensorSpec(shape=(None, voc.size), dtype=tf.float32),
         )
         dataset = tf.data.Dataset.from_generator(
             lambda: generator, output_signature=output_signature
