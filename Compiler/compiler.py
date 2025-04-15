@@ -1,5 +1,5 @@
 import random
-
+import os
 from Parser import Parser
 from Tag import Tag
 from TextGenerator import TextGenerator
@@ -44,14 +44,18 @@ class compiler:
     Compiler class to parse and compile DSL code.
     """
 
-    def __init__(self,savingPath:str):
+    def __init__(self, savingPath: str):
         """
         Initializes the Compiler object.
         """
         self.parser = None
         self.root = None
         self.text_generator = TextGenerator()
-        with open("/home/mohab/Mohab/GP/cody-generator/Compiler/htmlTemplate.html", "r", encoding="utf-8") as file:
+        with open(
+            os.path.join(os.path.dirname(__file__), "htmlTemplate.html"),
+            "r",
+            encoding="utf-8",
+        ) as file:
             self.html_template = file.read()
         self.save_path = savingPath
 
@@ -69,7 +73,7 @@ class compiler:
         compiled_code = self.build_code(self.root, 0)
         html_code = f"{self.html_template}{compiled_code}</html>"
         if path is not None:
-            self.write_to_file("index.html",html_code )
+            self.write_to_file("index.html", html_code)
         return html_code
 
     def write_to_file(self, file_name: str, text: str):
@@ -132,7 +136,9 @@ class compiler:
         if node.tag.tag_name in ["row", "box", "body"]:
             code += indentation
         else:
-            text_len = random.randint(int(0.5 * node.tag.text_size_limit), node.tag.text_size_limit)
+            text_len = random.randint(
+                int(0.5 * node.tag.text_size_limit), node.tag.text_size_limit
+            )
             code += self.text_generator.generate_sentence(text_len)
         code += f"{node.tag.close_tag}\n"
         return code
