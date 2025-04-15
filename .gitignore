@@ -178,3 +178,6 @@ pyrightconfig.json
 /Dataset/Data/
 
 bin
+bin.zip
+input
+Extra
