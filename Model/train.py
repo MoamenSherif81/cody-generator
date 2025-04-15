@@ -4,8 +4,9 @@ import numpy as np
 from classes.dataset.Generator import Generator
 from classes.dataset.Dataset import Dataset
 from classes.Vocabulary import Vocabulary
-from classes.models.config import BATCH_SIZE
+from classes.models.config import BATCH_SIZE, IMAGE_SIZE, CONTEXT_LENGTH
 from classes.models.pix2code_model import pix2code_model
+import tensorflow as tf
 
 
 def run(input_path, output_path, is_memory_intensive=False, pretrained_model=None):
@@ -37,7 +38,7 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
 
         input_shape = dataset.input_shape
         output_size = dataset.output_size
-        steps_per_epoch = dataset.size / BATCH_SIZE
+        steps_per_epoch = dataset.size // BATCH_SIZE
 
         voc = Vocabulary()
         voc.retrieve(output_path)
@@ -58,7 +59,17 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
     if not is_memory_intensive:
         model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words)
     else:
-        model.fit_generator(generator, steps_per_epoch=steps_per_epoch)
+        output_signature = (
+            (
+                tf.TensorSpec(shape=(None, IMAGE_SIZE, IMAGE_SIZE, 3), dtype=tf.int32),
+                tf.TensorSpec(shape=(None, CONTEXT_LENGTH, voc.size), dtype=tf.int32),
+            ),
+            tf.TensorSpec(shape=(None, voc.size), dtype=tf.int32),
+        )
+        dataset = tf.data.Dataset.from_generator(
+            lambda: generator, output_signature=output_signature
+        )
+        model.fit_generator(dataset, steps_per_epoch=steps_per_epoch)
 
 
 if __name__ == "__main__":
