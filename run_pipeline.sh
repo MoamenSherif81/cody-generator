@@ -39,7 +39,7 @@ python3 Model/convert_to_features.py ./Extra/input ./Extra/input_features
 
 # Create bin directory and train the model
 mkdir -p Extra/bin
-python3 Model/train.py ./Extra/input_features ./Extra/bin 1
+python3 Model/train.py ./Extra/input_features ./Extra/bin
 
 # Zip the bin directory
 zip -r Extra/bin.zip Extra/bin/

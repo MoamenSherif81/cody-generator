@@ -14,8 +14,8 @@ class Generator:
         ),
         seed=281203,
     ):
-        os.makedirs(folder_location + "input", exist_ok=True)
-        self.folder_location = folder_location + "input/"
+        os.makedirs(os.path.join(folder_location , "input"), exist_ok=True)
+        self.folder_location = os.path.join(folder_location, "input")
         self.rules_location = rules_location
         self.seed = seed
         self.file_counter = file_counter
