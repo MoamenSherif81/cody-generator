@@ -20,11 +20,7 @@
   "elements": {
     "term": false,
     "children": [
-      "button",
-      "title",
-      "text",
-      "select-box",
-      "input"
+      "button"
     ]
   },
   "button": {

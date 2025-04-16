@@ -45,7 +45,7 @@ void generate(const string &cur_node, string &dsl, mt19937 &rng, unordered_map<s
 
     int num_children = 1;
     if (cur_node=="root" or is_term[cur_node]) {
-        num_children = uniform_int_distribution(1, 4)(rng);
+        num_children = uniform_int_distribution(1, 3)(rng);
     }
     for (int i = 0; i < num_children; i++) {
         const string to = children[cur_node][uniform_int_distribution(0, (int) children[cur_node].size() - 1)(rng)];
