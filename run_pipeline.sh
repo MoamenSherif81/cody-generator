@@ -33,13 +33,20 @@ python3 Renderer.py ../Extra/input ../Extra/input
 # Go back to root directory
 cd ..
 
-# Create input_features directory and convert input to features
-mkdir -p Extra/input_features
-python3 Model/convert_to_features.py ./Extra/input ./Extra/input_features
+# Split the data
+python3 Model/build_datasets.py Extra/input
+
+# Create training_features directory and convert input to features
+mkdir -p Extra/training_features
+python3 Model/convert_to_features.py ./Extra/training ./Extra/training_features
+
+# Create validation_features directory and convert validation to features
+mkdir -p Extra/validation_features
+python3 Model/convert_to_features.py ./Extra/validation ./Extra/validation_features
 
 # Create bin directory and train the model
 mkdir -p Extra/bin
-python3 Model/train.py ./Extra/input_features ./Extra/bin 1
+python3 Model/train.py ./Extra/training_features ./Extra/validation_features ./Extra/bin 1
 
 # Zip the bin directory
 zip -r Extra/bin.zip Extra/bin/

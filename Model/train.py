@@ -9,44 +9,66 @@ from classes.models.pix2code_model import pix2code_model
 import tensorflow as tf
 
 
-def run(input_path, output_path, is_memory_intensive=False, pretrained_model=None):
+def run(
+    training_path,
+    validation_path,
+    output_path,
+    is_memory_intensive=False,
+    pretrained_model=None,
+):
     np.random.seed(1234)
 
-    dataset = Dataset()
-    dataset.load(input_path, generate_binary_sequences=True)
-    dataset.save_metadata(output_path)
-    dataset.voc.save(output_path)
+    training_dataset = Dataset()
+    training_dataset.load(training_path, generate_binary_sequences=True)
+    training_dataset.save_metadata(output_path)
+    training_dataset.voc.save(output_path)
+
+    validation_dataset = Dataset()
+    validation_dataset.load(validation_path, generate_binary_sequences=True)
 
     if not is_memory_intensive:
-        dataset.convert_arrays()
+        training_dataset.convert_arrays()
+        validation_dataset.convert_arrays()
 
-        input_shape = dataset.input_shape
-        output_size = dataset.output_size
+        input_shape = training_dataset.input_shape
+        output_size = training_dataset.output_size
 
         print(
-            len(dataset.input_images),
-            len(dataset.partial_sequences),
-            len(dataset.next_words),
+            len(training_dataset.input_images),
+            len(training_dataset.partial_sequences),
+            len(training_dataset.next_words),
         )
         print(
-            dataset.input_images.shape,
-            dataset.partial_sequences.shape,
-            dataset.next_words.shape,
+            training_dataset.input_images.shape,
+            training_dataset.partial_sequences.shape,
+            training_dataset.next_words.shape,
         )
     else:
-        gui_paths, img_paths = Dataset.load_paths_only(input_path)
+        training_gui_paths, training_img_paths = Dataset.load_paths_only(training_path)
+        validation_gui_paths, validation_img_paths = Dataset.load_paths_only(
+            validation_path
+        )
 
-        input_shape = dataset.input_shape
-        output_size = dataset.output_size
-        steps_per_epoch = dataset.size // BATCH_SIZE
+        input_shape = training_dataset.input_shape
+        output_size = training_dataset.output_size
+        training_steps_per_epoch = training_dataset.size // BATCH_SIZE
+        validation_steps_per_epoch = validation_dataset.size // BATCH_SIZE
 
         voc = Vocabulary()
         voc.retrieve(output_path)
 
-        generator = Generator.data_generator(
+        training_generator = Generator.data_generator(
             voc,
-            gui_paths,
-            img_paths,
+            training_gui_paths,
+            training_img_paths,
+            batch_size=BATCH_SIZE,
+            generate_binary_sequences=True,
+        )
+
+        validation_generator = Generator.data_generator(
+            voc,
+            validation_gui_paths,
+            validation_img_paths,
             batch_size=BATCH_SIZE,
             generate_binary_sequences=True,
         )
@@ -57,7 +79,15 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
         model.model.load_weights(pretrained_model)
 
     if not is_memory_intensive:
-        model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words)
+        model.fit(
+            training_dataset.input_images,
+            training_dataset.partial_sequences,
+            training_dataset.next_words,
+            (
+                [validation_dataset.input_images, validation_dataset.partial_sequences],
+                validation_dataset.next_words,
+            ),
+        )
     else:
         output_signature = (
             (
@@ -68,29 +98,39 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
             ),
             tf.TensorSpec(shape=(None, voc.size), dtype=tf.float32),
         )
-        dataset = tf.data.Dataset.from_generator(
-            lambda: generator, output_signature=output_signature
+        training_dataset = tf.data.Dataset.from_generator(
+            lambda: training_generator, output_signature=output_signature
         )
-        model.fit_generator(dataset, steps_per_epoch=steps_per_epoch)
+        validation_dataset = tf.data.Dataset.from_generator(
+            lambda: validation_generator, output_signature=output_signature
+        )
+        model.fit_generator(
+            training_dataset,
+            steps_per_epoch=training_steps_per_epoch,
+            validation_generator=validation_dataset,
+            validation_steps=validation_steps_per_epoch
+        )
 
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
 
-    if len(argv) < 2:
+    if len(argv) < 3:
         print("Error: not enough argument supplied:")
         print(
-            "train.py <input path> <output path> <is memory intensive (default: 0)> <pretrained weights (optional)>"
+            "train.py <training path> <validation path> <output path> <is memory intensive (default: 0)> <pretrained weights (optional)>"
         )
         exit(0)
     else:
-        input_path = argv[0]
-        output_path = argv[1]
-        use_generator = False if len(argv) < 3 else True if int(argv[2]) == 1 else False
-        pretrained_weigths = None if len(argv) < 4 else argv[3]
+        training_path = argv[0]
+        validation_path = argv[1]
+        output_path = argv[2]
+        use_generator = False if len(argv) < 4 else True if int(argv[3]) == 1 else False
+        pretrained_weigths = None if len(argv) < 5 else argv[4]
 
     run(
-        input_path,
+        training_path,
+        validation_path,
         output_path,
         is_memory_intensive=use_generator,
         pretrained_model=pretrained_weigths,
