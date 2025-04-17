@@ -33,6 +33,7 @@ class Generator:
         )
         if result.returncode == 0:
             self.file_counter += num_samples
+            print("Dataset generated!!")
             return True
         raise exception(result.stderr)
 
