@@ -67,9 +67,9 @@ class pix2code_model(AModel):
         self.model = Model(inputs=[visual_input, textual_input], outputs=decoder)
 
         optimizer = RMSprop(learning_rate=0.0001, clipvalue=1.0)
-        self.model.compile(loss="categorical_crossentropy", optimizer=optimizer)
+        self.model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
 
-    def fit(self, images, partial_captions, next_words):
+    def fit(self, images, partial_captions, next_words, validation_data=None):
         self.model.fit(
             [images, partial_captions],
             next_words,
@@ -77,12 +77,24 @@ class pix2code_model(AModel):
             epochs=EPOCHS,
             batch_size=BATCH_SIZE,
             verbose=1,
+            validation_data=validation_data,  # expects a tuple: ([val_images, val_captions], val_next_words)
         )
         self.save()
 
-    def fit_generator(self, generator, steps_per_epoch):
+    def fit_generator(
+        self,
+        train_generator,
+        steps_per_epoch,
+        validation_generator=None,
+        validation_steps=None,
+    ):
         self.model.fit(
-            generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1
+            train_generator,
+            steps_per_epoch=steps_per_epoch,
+            validation_data=validation_generator,
+            validation_steps=validation_steps,
+            epochs=EPOCHS,
+            verbose=1,
         )
         self.save()
 
