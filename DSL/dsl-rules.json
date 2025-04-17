@@ -24,7 +24,8 @@
     "term": false,
     "consecutive": true,
     "children": [
-      "button"
+      "button",
+      "text"
     ]
   },
   "button": {
