@@ -76,7 +76,7 @@ def run(
     model = pix2code_model(input_shape, output_size, output_path)
 
     if pretrained_model is not None:
-        model.model.load_weights(pretrained_model)
+        model.model.load_weights(pretrained_model, skip_mismatch=True)
 
     if not is_memory_intensive:
         model.fit(
