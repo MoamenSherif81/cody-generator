@@ -10,6 +10,7 @@
 // install nlohmann/json.hpp
 #include "nlohmann/json.hpp"
 #include <random>
+#include <set>
 using namespace std;
 
 void load_rules(const string &rules_location, unordered_map<string, bool> &is_term,
@@ -55,7 +56,7 @@ void generate(const string &cur_node, string &dsl, mt19937 &rng, unordered_map<s
     int num_children = 1;
     if (cur_node == "root" or is_term[cur_node])
     {
-        num_children = uniform_int_distribution(1, 4)(rng);
+        num_children = uniform_int_distribution(1, 3)(rng);
     }
     for (int i = 0; i < num_children; i++)
     {
@@ -95,6 +96,7 @@ signed main(int argc, char *argv[])
         unsigned int file_counter = atoi(argv[3]);
         string rules_location = argv[4];
         unsigned int seed = atoi(argv[5]);
+        set<string> st;
 
         load_rules(rules_location, is_term, children, consecutive);
 
@@ -102,9 +104,15 @@ signed main(int argc, char *argv[])
 
         for (int i = 0; i < num_samples; i++)
         {
-            ofstream file(folder_location + "/" + to_string(file_counter++) + ".gui");
             string content, last;
             generate("root", content, rng, is_term, children, consecutive, last);
+            if (st.find(content) != st.end())
+            {
+                i--;
+                continue;
+            }
+            st.insert(content);
+            ofstream file(folder_location + "/" + to_string(file_counter++) + ".gui");
             file << content;
         }
     }
