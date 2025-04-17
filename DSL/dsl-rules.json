@@ -25,7 +25,9 @@
     "consecutive": true,
     "children": [
       "button",
-      "text"
+      "text",
+      "input",
+      "title"
     ]
   },
   "button": {
