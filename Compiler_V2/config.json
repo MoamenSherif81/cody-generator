@@ -18,7 +18,7 @@
   },
   "button": {
     "htmlTag": "<button class='button'>[]</button>",
-    "text_limit": 7,
+    "text_limit": 3,
     "default-color": [0, 0, 0]
   },
   "title": {
