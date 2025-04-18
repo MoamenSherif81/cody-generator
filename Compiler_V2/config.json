@@ -1,44 +1,115 @@
 {
-  "opening-tag": "{",
-  "closing-tag": "}",
-  "root": {
-    "htmlTag": "[]",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
+  "tagMappings": {
+    "row": {
+      "htmlTag": "div",
+      "cssClasses": [
+        "row"
+      ],
+      "text penultimateLimit": 0,
+      "defaultColor": [
+        0,
+        0,
+        0
+      ],
+      "cssAttributes": {
+        "color": "background-color",
+        "size": "font-size"
+      }
+    },
+    "box": {
+      "htmlTag": "div",
+      "cssClasses": [
+        "box"
+      ],
+      "textLimit": 0,
+      "defaultColor": [
+        227,
+        226,
+        226
+      ],
+      "cssAttributes": {
+        "color": "background-color"
+      }
+    },
+    "button": {
+      "htmlTag": "button",
+      "cssClasses": [
+        "button"
+      ],
+      "textLimit": 7,
+      "defaultColor": [
+        255,
+        255,
+        255
+      ],
+      "cssAttributes": {
+        "color": "background-color",
+        "size": "font-size"
+      }
+    },
+    "input": {
+      "htmlTag": "input",
+      "cssClasses": [
+        "input"
+      ],
+      "textLimit": 0,
+      "defaultColor": [
+        255,
+        255,
+        255
+      ],
+      "cssAttributes": {
+        "color": "background-color"
+      }
+    },
+    "select-box": {
+      "htmlTag": "select",
+      "cssClasses": [
+        "select-box"
+      ],
+      "textLimit": 0,
+      "defaultColor": [
+        255,
+        255,
+        255
+      ],
+      "cssAttributes": {
+        "color": "background-color"
+      }
+    },
+    "title": {
+      "htmlTag": "h1",
+      "cssClasses": [
+        "title"
+      ],
+      "textLimit": 5,
+      "defaultColor": [
+        0,
+        0,
+        0
+      ],
+      "cssAttributes": {
+        "color": "color",
+        "size": "font-size"
+      }
+    },
+    "text": {
+      "htmlTag": "p",
+      "cssClasses": [
+        "text"
+      ],
+      "textLimit": 20,
+      "defaultColor": [
+        0,
+        0,
+        0
+      ],
+      "cssAttributes": {
+        "color": "color",
+        "size": "font-size"
+      }
+    }
   },
-  "row": {
-    "htmlTag": "<div class='row'>[]</div>",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
-  },
-  "box": {
-    "htmlTag": "<div class='box'>[]</div>",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
-  },
-  "button": {
-    "htmlTag": "<button class='button'>[]</button>",
-    "text_limit": 3,
-    "default-color": [0, 0, 0]
-  },
-  "title": {
-    "htmlTag": "<h1>[]</h1>",
-    "text_limit": 5,
-    "default-color": [0, 0, 0]
-  },
-  "text": {
-    "htmlTag": "<p>[]</p>",
-    "text_limit": 20,
-    "default-color": [0, 0, 0]
-  },
-  "select-box": {
-    "htmlTag": "<select>\n\t<option value=\"\" hidden selected>Select box</option>\n\t<option value=\"\">Option 1</option>\n\t<option value=\"\">Option 2</option>[]</select>",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
-  },
-  "input": {
-    "htmlTag": "<input placeholder='input'>[]</input>",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
-  }
+  "openingTag": "{",
+  "closingTag": "}"
 }

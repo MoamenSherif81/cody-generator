@@ -1,7 +1,8 @@
-from typing import List
+from typing import List, Dict, Any
+
 
 class ASTNode:
-    """Represents a node in the DSL AST."""
-    def __init__(self, tag: str, children: List['ASTNode'] = None):
-        self.tag = tag
-        self.children = children or []
+    def __init__(self, tag: str, children: List['ASTNode'] = None, attributes: Dict[str, Any] = None):
+        self.tag = tag  # Stores the tag name (e.g., 'row', 'box')
+        self.children = children if children is not None else []
+        self.attributes = attributes if attributes is not None else {}
