@@ -1,7 +1,7 @@
 import json
 import os.path
 
-from Tag import Tag
+from Compiler.Tag import Tag
 
 
 class Parser:

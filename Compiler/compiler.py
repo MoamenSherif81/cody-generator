@@ -1,8 +1,8 @@
 import random
 import os
-from Parser import Parser
-from Tag import Tag
-from TextGenerator import TextGenerator
+from Compiler.Parser import Parser
+from Compiler.Tag import Tag
+from Compiler.TextGenerator import TextGenerator
 
 
 class Node:
@@ -52,9 +52,9 @@ class compiler:
         self.root = None
         self.text_generator = TextGenerator()
         with open(
-            os.path.join(os.path.dirname(__file__), "htmlTemplate.html"),
-            "r",
-            encoding="utf-8",
+                os.path.join(os.path.dirname(__file__), "htmlTemplate.html"),
+                "r",
+                encoding="utf-8",
         ) as file:
             self.html_template = file.read()
         self.save_path = savingPath

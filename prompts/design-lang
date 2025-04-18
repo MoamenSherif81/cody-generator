@@ -1,0 +1,105 @@
+i want to implement compiler for a dsl language that translate this language to html and css file 
+
+
+the language tags is read html tags  from json file such that 
+```
+{
+  "opening-tag": "{",
+  "closing-tag": "}",
+  "row": "<div class='row'>[]</div>",
+  "box": "<div class='box'>[]</div>",
+  "button": "<button class='button'>[]</button>",
+  "title": "<h1>[]</h1>",
+  "text": "<p>[]</p>",
+  "select-box": "<select>\n\t<option value=\"\" hidden selected>Select box</option>\n\t<option value=\"\">Option 1</option>\n\t<option value=\"\">Option 2</option>[]</select>",
+  "input": "<input placeholder='input'>[]</input>"
+}
+```
+each key should translate to the value
+and the css file 
+```
+*{
+  margin: 0;
+}
+
+body{
+  padding: 24px;
+  box-sizing: border-box;
+  background-color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.box{
+  width: 100%;
+  background-color: rgb(227, 226, 226);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  border-radius: 8px;
+}
+
+.button{
+  padding: 12px 24px;
+  background-color: grey;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+select, input{
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid black;
+  background-color: white;
+  outline: none;
+}
+``` 
+if dsl code is 
+```
+row { input , box{input}}
+```
+
+the output html should be 
+```
+<div class='row'>
+   <input placeholder='input'> </input>
+   <div class='box'>
+	<input placeholder='input'></input>
+   </div>
+</div>
+```
+the css file should be 
+```
+.row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.box{
+  width: 100%;
+  background-color: rgb(227, 226, 226);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  border-radius: 8px;
+}
+
+```
+
+
+the html corrsponding to the dsl and only the css classes exsit on the file itself
+
+i want to design that first 
+in the next question i will ask how to make that compiler support that dsl recive colors such that row<color(2,3,34) , > 
