@@ -9,6 +9,13 @@ from tqdm import tqdm
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import time
+
+# Add the parent directory of the script to sys.path to find Compiler_V2
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
 from Compiler_V2 import compile_dsl
 
 def setup_chrome_driver():
@@ -130,6 +137,9 @@ def main(input_folder, output_folder, screenshot_ratio=0.33):
     print(f"Total execution time: {elapsed_time:.2f} seconds")
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python gui_screenshot.py <input_folder> <output_folder>")
+        sys.exit(1)
     input_folder = sys.argv[1]
     output_folder = sys.argv[2]
     main(input_folder, output_folder, screenshot_ratio=0.33)
