@@ -1,44 +1,9 @@
 {
-  "opening-tag": "{",
-  "closing-tag": "}",
-  "root": {
-    "htmlTag": "[]",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
-  },
-  "row": {
-    "htmlTag": "<div class='row'>[]</div>",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
-  },
-  "box": {
-    "htmlTag": "<div class='box'>[]</div>",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
-  },
-  "button": {
-    "htmlTag": "<button class='button'>[]</button>",
-    "text_limit": 7,
-    "default-color": [0, 0, 0]
-  },
-  "title": {
-    "htmlTag": "<h1>[]</h1>",
-    "text_limit": 5,
-    "default-color": [0, 0, 0]
-  },
-  "text": {
-    "htmlTag": "<p>[]</p>",
-    "text_limit": 20,
-    "default-color": [0, 0, 0]
-  },
-  "select-box": {
-    "htmlTag": "<select>\n\t<option value=\"\" hidden selected>Select box</option>\n\t<option value=\"\">Option 1</option>\n\t<option value=\"\">Option 2</option>[]</select>",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
-  },
-  "input": {
-    "htmlTag": "<input placeholder='input'>[]</input>",
-    "text_limit": 0,
-    "default-color": [0, 0, 0]
-  }
+  "row": 0,
+  "box": 0,
+  "button": 7,
+  "title": 5,
+  "text": 20,
+  "select-box": 0,
+  "input": 0
 }
