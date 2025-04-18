@@ -27,7 +27,8 @@
       "button",
       "text",
       "input",
-      "title"
+      "title",
+      "select-box"
     ]
   },
   "button": {
