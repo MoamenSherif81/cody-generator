@@ -1,11 +1,11 @@
 import sys
 import numpy as np
 
-from classes.dataset.Generator import Generator
-from classes.dataset.Dataset import Dataset
-from classes.Vocabulary import Vocabulary
-from classes.models.config import BATCH_SIZE, IMAGE_SIZE, CONTEXT_LENGTH
-from classes.models.pix2code_model import pix2code_model
+from .classes.dataset.Generator import Generator
+from .classes.dataset.Dataset import Dataset
+from .classes.Vocabulary import Vocabulary
+from .classes.models.config import BATCH_SIZE, IMAGE_SIZE, CONTEXT_LENGTH
+from .classes.models.pix2code_model import pix2code_model
 import tensorflow as tf
 
 
