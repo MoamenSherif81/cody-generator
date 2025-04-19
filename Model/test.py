@@ -32,9 +32,11 @@ def LCS_accuracy(original, predicted):
         length_sum += len(original_tokens)
         n = len(original_tokens)
         m = len(predicted_tokens)
-        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        dp = []
         for idx_i in range(n):
+            dp.append([])
             for idx_j in range(m):
+                dp[idx_i].append(0)
                 if original_tokens[idx_i] == predicted_tokens[idx_j]:
                     dp[idx_i][idx_j] = (
                         dp[idx_i - 1][idx_j - 1] + 1
