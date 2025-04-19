@@ -9,6 +9,10 @@ from classes.models.pix2code_model import pix2code_model
 import tensorflow as tf
 
 
+def test_gready():
+    pass
+
+
 def run(
     testing_path, weights_path, model_name="pix2code_model", is_memory_intensive=False
 ):
@@ -64,7 +68,7 @@ def run(
         testing_dataset = tf.data.Dataset.from_generator(
             lambda: testing_generator, output_signature=output_signature
         )
-        model.evaluate_generator(testing_dataset, steps=testing_steps_per_epoch)
+        print(model.evaluate_generator(testing_dataset, steps=testing_steps_per_epoch))
 
 
 if __name__ == "__main__":
