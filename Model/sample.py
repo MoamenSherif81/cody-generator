@@ -11,11 +11,10 @@ import numpy as np
 
 def sample(
     input_path,
-    search_method,
+    search_method=0,
     trained_weights_path=join(dirname(__file__), "..", "Extra", "bin"),
     trained_model_name="pix2code_model",
 ):
-    raise RuntimeError("Debugging: This error is raised intentionally for debugging purposes.")
     meta_dataset = np.load(
         "{}/meta_dataset.npy".format(trained_weights_path), allow_pickle=True
     )
