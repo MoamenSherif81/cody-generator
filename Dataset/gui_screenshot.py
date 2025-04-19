@@ -70,13 +70,17 @@ def screenshot_worker(task_queue, result_queue, progress_bar):
                 with progress_bar.get_lock():
                     progress_bar.update(1)
     finally:
+        result_queue.put((None, None))
         thread_local.driver.quit()
 
 def write_worker(result_queue):
     """Worker function: write screenshots from result queue to disk."""
     while True:
         try:
-            screenshot_data, output_path = result_queue.get_nowait()
+            screenshot_data, output_path = result_queue.get()
+            if output_path is None:
+                result_queue.task_done()
+                break
             with open(output_path, 'wb') as f:
                 f.write(screenshot_data)
             result_queue.task_done()
@@ -110,8 +114,8 @@ def main(input_folder, output_folder, screenshot_ratio=0.33):
     total_workers = os.cpu_count() * 2 if os.cpu_count() else 4
 
     # Calculate number of screenshot and write workers
-    screenshot_workers = max(1, int(total_workers * screenshot_ratio))
-    write_workers = max(1, total_workers - screenshot_workers)
+    screenshot_workers = min(1, int(total_workers * screenshot_ratio))
+    write_workers = min(1, total_workers - screenshot_workers)
 
     # Initialize progress bar
     progress_bar = tqdm(total=len(gui_files), desc="Processing .gui files", unit="file")

@@ -4,7 +4,6 @@ from Compiler_V2.config import load_config
 from Compiler_V2.css_processor import filter_css, generate_css_template
 from Compiler_V2.generator import generate_html, generate_html_template
 from Compiler_V2.linter import lint_and_format_dsl
-from Compiler_V2.models import ASTNode
 from Compiler_V2.parser import tokenize, parse
 
 
