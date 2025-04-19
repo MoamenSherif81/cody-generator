@@ -28,6 +28,7 @@ def sample(
 
     evaluation_img = Utils.get_preprocessed_img(input_path, IMAGE_SIZE)
 
+    print(search_method)
     if search_method == "greedy":
         result, _ = sampler.predict_greedy(model, np.array([evaluation_img]))
         print("Result greedy: {}".format(result))
