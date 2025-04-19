@@ -18,9 +18,9 @@ from fastapi.responses import JSONResponse
     response_description="The created record object with screenshot_path as a URL.",
 )
 async def create_image_record(
-        screenshot: List[UploadFile] = File(...),
+        screenshots: List[UploadFile] = File(...),
 ):
-    dsl, html, css = process_screenshots(screenshot)
+    dsl, html, css =await process_screenshots(screenshots)
     dsl = lint_dsl(dsl)
     return JSONResponse(content={
         "html": html,

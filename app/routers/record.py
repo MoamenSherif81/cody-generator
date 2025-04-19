@@ -52,7 +52,8 @@ async def create_image_record(
     # Validate
     if not screenshots:
         raise HTTPException(status_code=400, detail="Please upload at least 1 image")
-
+    if project_id == 0:
+        project_id = None
     # Process screenshots to get DSL, HTML, CSS
     dsl, html, css = await process_screenshots(screenshots)
 

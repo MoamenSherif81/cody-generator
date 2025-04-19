@@ -14,6 +14,8 @@ async def process_screenshots(uploaded_files: List[UploadFile]) -> Tuple[str, st
     Reads file bytes once and processes them in memory.
     """
     dsl = ""
+    print(dsl)
+
     for img in uploaded_files:
         # Validate content type
         if not img.content_type.startswith("image/"):
@@ -36,7 +38,6 @@ async def process_screenshots(uploaded_files: List[UploadFile]) -> Tuple[str, st
             dsl += temp_dsl + ","
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"AI model failed for {img.filename}: {str(e)}")
-
     if not dsl:
         raise HTTPException(status_code=400, detail="No valid images processed")
 
