@@ -5,6 +5,8 @@ import sys
 from queue import Queue, Empty
 import threading
 from concurrent.futures import ThreadPoolExecutor
+
+from tensorflow.python.ops.logging_ops import Print
 from tqdm import tqdm
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -76,7 +78,7 @@ def write_worker(result_queue):
     """Worker function: write screenshots from result queue to disk."""
     while True:
         try:
-            screenshot_data, output_path = result_queue.get_nowait()
+            screenshot_data, output_path = result_queue.get(5)
             with open(output_path, 'wb') as f:
                 f.write(screenshot_data)
             result_queue.task_done()
