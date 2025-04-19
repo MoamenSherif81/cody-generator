@@ -26,17 +26,17 @@ async def create_image_record(
         "dsl": dsl
     })
 
+from app.schemas.dsl import DSLContentRequest
 
 @router.post(
     "/text",
-    response_model=RecordResponse,
     summary="Create a record with DSL content",
-    description="Create a record with mandatory DSL content, associated with the authenticated user. Project ID is optional. Requires a valid JWT token (Bearer <token>) in the Swagger UI Authorize dialog (BearerAuth).",
-    response_description="The created record object."
+    description="Create a record with mandatory DSL content, returns compiled HTML & CSS.",
 )
 async def create_dsl_record(
-        dsl_content: str,
+        body: DSLContentRequest,
 ):
+    dsl_content = body.dsl_content
     if not dsl_content.strip():
         raise HTTPException(
             status_code=400,
