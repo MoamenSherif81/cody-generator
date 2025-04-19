@@ -1,10 +1,10 @@
-from typing import List
+from datetime import datetime
 
-from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
+
 from app.config.database import Base
-from datetime import datetime
+
 
 class Record(Base):
     __tablename__ = "records"

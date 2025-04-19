@@ -1,6 +1,8 @@
-from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
+
+from pydantic import BaseModel
+
 
 class RecordImageCreate(BaseModel):
     project_id: Optional[int] = None

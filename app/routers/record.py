@@ -1,8 +1,8 @@
 import os
 from datetime import datetime
-from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import Body
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
@@ -138,13 +138,15 @@ def get_records_no_project(
         # Compile DSL content to HTML and CSS, handle None case
         html, css = compile_dsl(record.dsl_content) if record.dsl_content else (None, None)
         response_data.append({
-            "screenshotPath": record.screenshot_path,  # Can be None
+            "record_id": record.id,
+            "screenshotPath": record.screenshot_path,
             "dsl_code": record.dsl_content,
             "Html": html,
             "Css": css
         })
 
     return {"data": response_data}
+
 
 @router.delete(
     "/{record_id}",
@@ -164,3 +166,82 @@ def delete_record(record_id: int, db: Session = Depends(get_db), current_user: U
     db.delete(db_record)
     db.commit()
     return {"detail": "Record deleted"}
+
+
+@router.put(
+    "/{record_id}",
+    summary="Update DSL content of a record",
+    description="Update the DSL content of a record by its ID. The record must belong to the authenticated user. DSL will be compiled to HTML and CSS. Requires a valid JWT token (Bearer <token>).",
+    response_model=RecordResponse,
+    response_description="The updated record object with compiled HTML and CSS."
+)
+def update_record_dsl(
+        record_id: int,
+        dsl_content: str = Body(..., embed=True),
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    db_record = db.query(Record).filter(
+        Record.id == record_id, Record.user_id == current_user.id
+    ).first()
+
+    if not db_record:
+        raise HTTPException(status_code=404, detail="Record not found")
+
+    if not dsl_content.strip():
+        raise HTTPException(status_code=400, detail="dsl_content must not be empty")
+
+    html, css = compile_dsl(dsl_content)
+    dsl_content = lint_dsl(dsl_content)
+    db_record.created_at = datetime.utcnow()
+    db_record.dsl_content = dsl_content
+    db.commit()
+    db.refresh(db_record)
+
+    return JSONResponse(content={
+        "record": {
+            "id": db_record.id,
+            "screenshot_path": db_record.screenshot_path,
+            "dsl_content": db_record.dsl_content,
+            "user_id": db_record.user_id,
+            "project_id": db_record.project_id,
+            "created_at": db_record.created_at.isoformat()
+        },
+        "compiled_html": html,
+        "compiled_css": css
+    })
+
+
+@router.get(
+    "/{record_id}",
+    response_model=RecordResponse,
+    summary="Get a record by ID",
+    description="Retrieve a specific record by its ID, only if it belongs to the authenticated user. Compiles DSL to HTML and CSS.",
+    response_description="The record object with compiled HTML and CSS."
+)
+def get_record_by_id(
+        record_id: int,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    db_record = db.query(Record).filter(
+        Record.id == record_id, Record.user_id == current_user.id
+    ).first()
+
+    if not db_record:
+        raise HTTPException(status_code=404, detail="Record not found")
+
+    html, css = compile_dsl(db_record.dsl_content) if db_record.dsl_content else (None, None)
+
+    return JSONResponse(content={
+        "record": {
+            "id": db_record.id,
+            "screenshot_path": db_record.screenshot_path,
+            "dsl_content": db_record.dsl_content,
+            "user_id": db_record.user_id,
+            "project_id": db_record.project_id,
+            "created_at": db_record.created_at.isoformat()
+        },
+        "compiled_html": html,
+        "compiled_css": css
+    })
