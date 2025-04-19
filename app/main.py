@@ -1,9 +1,12 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.config.database import engine, Base
 from app.routers import user, project, record, dsl
-from fastapi.middleware.cors import CORSMiddleware
+
+# Load once at startup
+# from app.services.shared_ai_state import model, sampler
 
 app = FastAPI(title="Cody-generator BackEnd")
 
@@ -28,4 +31,4 @@ app.include_router(dsl.router)
 
 @app.get("/", summary="Root endpoint", description="Welcome message for the Code Generator API")
 def read_root():
-    return {"message": "Welcome to Code Generator API"}
+    return {"message": "What the Fuck are u doing here it's root !"}

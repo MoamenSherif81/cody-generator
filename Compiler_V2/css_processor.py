@@ -1,11 +1,12 @@
 from typing import Set, List
+
 import cssutils
 
 
 def filter_css(css_file: str, used_classes: Set[str]) -> str:
     """Filter CSS file to include only rules for used classes."""
     try:
-        with open(css_file, 'r') as f:
+        with open(css_file, "r") as f:
             css_content = f.read()
     except FileNotFoundError:
         return ""
@@ -20,13 +21,13 @@ def filter_css(css_file: str, used_classes: Set[str]) -> str:
         if not line:
             continue
 
-        if not in_rule and '{' in line:
+        if not in_rule and "{" in line:
             in_rule = True
             current_rule = line
-            brace_count = line.count('{') - line.count('}')
+            brace_count = line.count("{") - line.count("}")
         elif in_rule:
             current_rule += " " + line
-            brace_count += line.count('{') - line.count('}')
+            brace_count += line.count("{") - line.count("}")
             if brace_count == 0:
                 in_rule = False
                 for cls in used_classes:
@@ -55,13 +56,13 @@ def generate_css_template(css_content: str, dynamic_css_rules: List[str] = None)
     combined_css += css_content
     if dynamic_css_rules:
         combined_css += "\n\n" + "\n".join(dynamic_css_rules)
-    combined_css +="""\n
+    combined_css += """\n
     @media (max-width: 1024px){
       .row{
         flex-direction: column;
       }
     }
     """
-    sheet = cssutils.parseString(combined_css)
-    formatted_css = sheet.cssText.decode('utf-8')  # Convert from bytes to string
+    sheet = cssutils.parseString(combined_css, validate=False)
+    formatted_css = sheet.cssText.decode("utf-8")  # Convert from bytes to string
     return formatted_css

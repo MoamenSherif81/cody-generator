@@ -3,18 +3,19 @@ import subprocess
 import sys
 from logging import exception
 
+
 # TODO: Fix This class
 class Generator:
     def __init__(
-        self,
-        folder_location="./",
-        file_counter=0,
-        rules_location=os.path.join(
-            os.path.dirname(__file__), "..", "DSL", "dsl-rules.json"
-        ),
-        seed=281203,
+            self,
+            folder_location="./",
+            file_counter=0,
+            rules_location=os.path.join(
+                os.path.dirname(__file__), "..", "DSL", "dsl-rules.json"
+            ),
+            seed=281203,
     ):
-        os.makedirs(os.path.join(folder_location , "input"), exist_ok=True)
+        os.makedirs(os.path.join(folder_location, "input"), exist_ok=True)
         self.folder_location = os.path.join(folder_location, "input")
         self.rules_location = rules_location
         self.seed = seed

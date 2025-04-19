@@ -19,14 +19,17 @@ class Record(Base):
     user = relationship("User", back_populates="records")
     project = relationship("Project", back_populates="records")
 
+
 from pydantic import BaseModel
 from typing import List, Optional
+
 
 class RecordItem(BaseModel):
     screenshotPath: Optional[str]  # Allow None for screenshotPath
     dsl_code: Optional[str]
     Html: Optional[str]
     Css: Optional[str]
+
 
 class RecordListResponse(BaseModel):
     data: List[RecordItem]

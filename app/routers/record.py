@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Body
 from fastapi.responses import JSONResponse
@@ -9,10 +9,10 @@ from sqlalchemy.orm import Session
 from Compiler_V2 import lint_dsl, compile_dsl
 from app.config.database import get_db
 from app.dependencies.auth import get_current_user
-from app.models.record import Record, RecordListResponse
+from app.models.record import Record
 from app.models.user import User
 from app.schemas.record import RecordResponse
-from app.services.ai_service import process_screenshot
+from app.services.ai_service import process_screenshots
 
 router = APIRouter(prefix="/records", tags=["Records"])
 
@@ -34,46 +34,67 @@ def compile_dsl_safe(dsl_content: Optional[str]) -> tuple[Optional[str], Optiona
     return compile_dsl(dsl_content) if dsl_content else (None, None)
 
 
+from fastapi import Form
+
+
 @router.post(
     "/image",
-    response_model=RecordResponse,
-    summary="Create a record with a screenshot",
-    description="Create a record with a mandatory screenshot, associated with the authenticated user. The screenshot is saved and accessible via /uploads/<filename>. Project ID is optional. Requires a valid JWT token (Bearer <token>).",
-    response_description="The created record object with screenshot_path as a URL."
+    summary="Create a record with screenshots",
+    description="Upload one or more screenshot images to generate DSL, HTML, and CSS. Optionally save to database with project ID and user authentication. Requires a valid JWT token for authenticated requests.",
+    response_description="The created record object (if saved) with screenshot_path as a URL, and compiled HTML, CSS, and DSL."
 )
 async def create_image_record(
-        screenshot: UploadFile = File(...),
-        project_id: Optional[int] = None,
+        screenshots: List[UploadFile] = File(...),
+        project_id: Optional[int] = Form(None),
         db: Session = Depends(get_db),
-        current_user: User = Depends(get_current_user)
+        current_user: Optional[User] = Depends(get_current_user, use_cache=False)
 ):
-    # Handle file upload
-    filename = f"{datetime.utcnow().timestamp()}_{screenshot.filename}"
-    file_path = os.path.join("uploads", filename)
-    os.makedirs("uploads", exist_ok=True)
-    with open(file_path, "wb") as f:
-        f.write(await screenshot.read())  # Use await for async file reading
-    screenshot_url = f"/uploads/{filename}"
+    # Validate
+    if not screenshots:
+        raise HTTPException(status_code=400, detail="Please upload at least 1 image")
 
-    # Process screenshot to get DSL, HTML, and CSS
-    dsl, html, css = process_screenshot(screenshot)
+    # Process screenshots to get DSL, HTML, CSS
+    dsl, html, css = await process_screenshots(screenshots)
 
-    # Create and save record
-    db_record = Record(
-        screenshot_path=screenshot_url,
-        dsl_content=dsl,
-        user_id=current_user.id,
-        project_id=project_id,
-        created_at=datetime.utcnow()
-    )
-    db.add(db_record)
-    db.commit()
-    db.refresh(db_record)
+    # If authenticated, save to disk and database
+    if current_user:
+        # Save first screenshot (or loop for all if needed)
+        screenshot = screenshots[0]
+        filename = f"{datetime.utcnow().timestamp()}_{screenshot.filename}"
+        file_path = os.path.join("uploads", filename)
+        os.makedirs("uploads", exist_ok=True)
 
+        # Reset file pointer to start (since process_screenshots consumed it)
+        await screenshot.seek(0)
+        with open(file_path, "wb") as f:
+            f.write(await screenshot.read())
+
+        screenshot_url = f"/uploads/{filename}"
+
+        # Save record to DB
+        db_record = Record(
+            screenshot_path=screenshot_url,
+            dsl_content=dsl,
+            user_id=current_user.id,
+            project_id=project_id,
+            created_at=datetime.utcnow()
+        )
+        db.add(db_record)
+        db.commit()
+        db.refresh(db_record)
+
+        return JSONResponse(content={
+            "record": serialize_record(db_record),
+            "compiled_html": html,
+            "compiled_css": css,
+            "dsl": dsl
+        })
+
+    # If not authenticated, return DSL, HTML, CSS only
     return JSONResponse(content={
-        "record": serialize_record(db_record),
-        "compiled_html": html,
-        "compiled_css": css
+        "html": html,
+        "css": css,
+        "dsl": dsl
     })
 
 

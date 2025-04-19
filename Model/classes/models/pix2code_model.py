@@ -12,8 +12,8 @@ from keras.api.layers import (
 from keras.api.models import Sequential, Model
 
 from keras.api.optimizers import RMSprop
-from classes.models.config import CONTEXT_LENGTH, EPOCHS, BATCH_SIZE
-from classes.models.AModel import AModel
+from .config import CONTEXT_LENGTH, EPOCHS, BATCH_SIZE
+from .AModel import AModel
 
 
 class pix2code_model(AModel):
