@@ -62,7 +62,11 @@ def WER_accuracy(original, predicted):
         n = len(original_tokens)
         m = len(predicted_tokens)
         # max number, too lazy to add a variable, 5000 should be enough
-        dp = [[5000] * (n + 1) for _ in range(m + 1)]
+        dp = []
+        for idx_i in range(n + 1):
+            dp.append([])
+            for idx_j in range(m + 1):
+                dp[idx_i].append(5000)
         dp[0][0] = 0
         for idx_i in range(n):
             for idx_j in range(m):
@@ -113,7 +117,9 @@ def test_gready(testing_path, model, sampler):
             img = Utils.get_preprocessed_img(img_path, IMAGE_SIZE)
             original.append(gui)
             predicted_gui, _ = sampler.predict_greedy(model, np.array([img]))
-            predicted_gui = Utils.tokenize_dsl(predicted_gui.replace(START_TOKEN, "").replace(END_TOKEN, ""))
+            predicted_gui = Utils.tokenize_dsl(
+                predicted_gui.replace(START_TOKEN, "").replace(END_TOKEN, "")
+            )
             predicted.append(predicted_gui)
 
     assert len(original) == len(predicted)
@@ -141,8 +147,12 @@ def test_beam_search(testing_path, beam_width, model, sampler):
         if os.path.isfile(img_path):
             img = Utils.get_preprocessed_img(img_path, IMAGE_SIZE)
             original.append(gui)
-            predicted_gui, _ = sampler.predict_beam_search(model, np.array([img]), beam_width=beam_width)
-            predicted_gui = Utils.tokenize_dsl(predicted_gui.replace(START_TOKEN, "").replace(END_TOKEN, ""))
+            predicted_gui, _ = sampler.predict_beam_search(
+                model, np.array([img]), beam_width=beam_width
+            )
+            predicted_gui = Utils.tokenize_dsl(
+                predicted_gui.replace(START_TOKEN, "").replace(END_TOKEN, "")
+            )
             predicted.append(predicted_gui)
 
     assert len(original) == len(predicted)
