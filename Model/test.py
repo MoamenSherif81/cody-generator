@@ -90,6 +90,7 @@ def WER_accuracy(original, predicted):
 
 
 def test_gready(testing_path, model, sampler):
+    print("greedy testing")
     original = []
     predicted = []
     for f in os.listdir(testing_path):
@@ -104,7 +105,6 @@ def test_gready(testing_path, model, sampler):
                 original.append(gui)
                 predicted.append(sampler.predict_greedy(model, np.array([img])))
     assert len(original) == len(predicted)
-    print("greedy testing")
     token_level_accuracy(original, predicted)
     LCS_accuracy(original, predicted)
     WER_accuracy(original, predicted)
@@ -112,6 +112,7 @@ def test_gready(testing_path, model, sampler):
 
 
 def test_beam_search(testing_path, beam_width, model, sampler):
+    print("Beam search with k={} testing".format(beam_width))
     original = []
     predicted = []
     for f in os.listdir(testing_path):
@@ -130,7 +131,6 @@ def test_beam_search(testing_path, beam_width, model, sampler):
                     )
                 )
     assert len(original) == len(predicted)
-    print("Beam search with k={} testing".format(beam_width))
     token_level_accuracy(original, predicted)
     LCS_accuracy(original, predicted)
     WER_accuracy(original, predicted)
