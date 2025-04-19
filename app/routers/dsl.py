@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 
 from Compiler_V2 import lint_dsl, compile_dsl
 from app.schemas.record import RecordResponse
-from app.services.ai_service import process_screenshot, process_screenshots
+from app.services.ai_service import process_screenshots
 
 router = APIRouter(prefix="/dsl", tags=["dsl"])
 

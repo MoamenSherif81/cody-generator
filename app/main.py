@@ -31,4 +31,4 @@ app.include_router(dsl.router)
 
 @app.get("/", summary="Root endpoint", description="Welcome message for the Code Generator API")
 def read_root():
-    return {"message": "Welcome to Code Generator API"}
+    return {"message": "What the Fuck are u doing here it's root !"}
