@@ -6,7 +6,7 @@ from Model.sampleFromImage import load_model_and_sampler
 from app.config.database import engine, Base
 from app.routers import user, project, record, dsl
 # Load once at startup
-from app.services.shared_ai_state import model, sampler
+# from app.services.shared_ai_state import model, sampler
 
 app = FastAPI(title="Cody-generator BackEnd")
 

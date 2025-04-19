@@ -1,24 +1,28 @@
+from typing import List
+
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from fastapi.responses import JSONResponse
 
 from Compiler_V2 import lint_dsl, compile_dsl
 from app.schemas.record import RecordResponse
-from app.services.ai_service import process_screenshot
+from app.services.ai_service import process_screenshot, process_screenshots
 
 router = APIRouter(prefix="/dsl", tags=["dsl"])
 
+from fastapi import APIRouter, UploadFile, File
+from typing import List
+from fastapi.responses import JSONResponse
 
 @router.post(
     "/image",
-    response_model=RecordResponse,
     summary="Create a record with a screenshot",
-    description="Create a record with a mandatory screenshot, associated with the authenticated user. The screenshot is saved and accessible via /uploads/<filename>. Project ID is optional. Requires a valid JWT token (Bearer <token>) in the Swagger UI Authorize dialog (BearerAuth).",
-    response_description="The created record object with screenshot_path as a URL."
+    description="Upload one or more screenshot images.",
+    response_description="The created record object with screenshot_path as a URL.",
 )
 async def create_image_record(
-        screenshot: UploadFile = File(...),
+    screenshot: List[UploadFile] = File(...),
 ):
-    dsl, html, css = process_screenshot(screenshot)
+    dsl, html, css = process_screenshots(screenshot)
     dsl = lint_dsl(dsl)
     return JSONResponse(content={
         "html": html,
