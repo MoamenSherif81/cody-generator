@@ -11,9 +11,9 @@ import numpy as np
 
 def sample(
     input_path,
+    search_method,
     trained_weights_path=join(dirname(__file__), "..", "Extra", "bin"),
     trained_model_name="pix2code_model",
-    search_method="greedy",
 ):
     print("here we are")
     meta_dataset = np.load(
@@ -29,8 +29,7 @@ def sample(
 
     evaluation_img = Utils.get_preprocessed_img(input_path, IMAGE_SIZE)
 
-    print(search_method)
-    if search_method == "greedy":
+    if search_method == 0:
         result, _ = sampler.predict_greedy(model, np.array([evaluation_img]))
         print("Result greedy: {}".format(result))
     else:
@@ -40,7 +39,7 @@ def sample(
             model, np.array([evaluation_img]), beam_width=beam_width
         )
         print("Result beam: {}".format(result))
-    
+
     result = result.replace(START_TOKEN, "").replace(END_TOKEN, "")
     return result
 
