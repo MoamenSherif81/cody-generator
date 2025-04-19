@@ -43,11 +43,11 @@ def generate_css_template(css_content: str, dynamic_css_rules: List[str] = None)
     combined_css = """
     *{
       margin: 0;
+      box-sizing: border-box;
     }
     
     body{
       padding: 24px;
-      box-sizing: border-box;
       background-color: white;
       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     }\n
