@@ -1,16 +1,39 @@
 import sys
 import numpy as np
-
+import os
 from classes.dataset.Generator import Generator
 from classes.dataset.Dataset import Dataset
 from classes.Vocabulary import Vocabulary
 from classes.models.config import BATCH_SIZE, IMAGE_SIZE, CONTEXT_LENGTH
 from classes.models.pix2code_model import pix2code_model
+from classes.Sampler import Sampler
+from Utils import Utils
 import tensorflow as tf
 
+def token_level_accuracy(original, predicted):
+    length_sum = 0
+    match_sum = 0
+    for idx, original_tokens in enumerate(original):
+        predicted_tokens = predicted[idx]
+        
 
-def test_gready():
-    pass
+
+def test_gready(testing_path, model, sampler):
+    original = []
+    predicted = []
+    for f in os.listdir(testing_path):
+        if f.find(".gui") != -1:
+            gui = open("{}/{}".format(testing_path, f), "r")
+            file_name = f[: f.find(".gui")]
+
+            if os.path.isfile("{}/{}.png".format(testing_path, file_name)):
+                img = Utils.get_preprocessed_img(
+                    "{}/{}.png".format(testing_path, file_name), IMAGE_SIZE
+                )
+                original.append(gui)
+                predicted.append(sampler.predict_greedy(model, np.array([img])))
+    assert len(original) == len(predicted)
+    print("greedy testing")
 
 
 def run(
@@ -48,12 +71,10 @@ def run(
     model.load(model_name)
 
     if not is_memory_intensive:
-        print(
-            model.evaluate(
-                testing_dataset.input_images,
-                testing_dataset.partial_sequences,
-                testing_dataset.next_words,
-            )
+        model.evaluate(
+            testing_dataset.input_images,
+            testing_dataset.partial_sequences,
+            testing_dataset.next_words,
         )
     else:
         output_signature = (
@@ -68,7 +89,9 @@ def run(
         testing_dataset = tf.data.Dataset.from_generator(
             lambda: testing_generator, output_signature=output_signature
         )
-        print(model.evaluate_generator(testing_dataset, steps=testing_steps_per_epoch))
+        model.evaluate_generator(testing_dataset, steps=testing_steps_per_epoch)
+
+    sampler = Sampler(weights_path, input_shape, output_size, CONTEXT_LENGTH)
 
 
 if __name__ == "__main__":
