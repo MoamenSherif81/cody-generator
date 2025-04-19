@@ -1,4 +1,5 @@
 from typing import Set, List
+import cssutils
 
 
 def filter_css(css_file: str, used_classes: Set[str]) -> str:
@@ -39,7 +40,28 @@ def filter_css(css_file: str, used_classes: Set[str]) -> str:
 
 def generate_css_template(css_content: str, dynamic_css_rules: List[str] = None) -> str:
     """Wrap CSS content and append dynamic CSS rules."""
-    combined_css = css_content
+    combined_css = """
+    *{
+      margin: 0;
+    }
+    
+    body{
+      padding: 24px;
+      box-sizing: border-box;
+      background-color: white;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }\n
+    """
+    combined_css += css_content
     if dynamic_css_rules:
         combined_css += "\n\n" + "\n".join(dynamic_css_rules)
-    return combined_css
+    combined_css +="""\n
+    @media (max-width: 1024px){
+      .row{
+        flex-direction: column;
+      }
+    }
+    """
+    sheet = cssutils.parseString(combined_css)
+    formatted_css = sheet.cssText.decode('utf-8')  # Convert from bytes to string
+    return formatted_css

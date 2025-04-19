@@ -1,23 +1,17 @@
-from datetime import datetime
-from typing import Optional
-
 from pydantic import BaseModel
+from typing import Optional, List
 
+class RecordItem(BaseModel):
+    record_id: int
+    screenshot_path: Optional[str]  # Allow None for DSL-based records
+    dsl_code: Optional[str]
+    html: Optional[str]
+    css: Optional[str]
 
-class RecordImageCreate(BaseModel):
-    project_id: Optional[int] = None
-
-class RecordDslCreate(BaseModel):
-    dsl_content: str
-    project_id: Optional[int] = None
+class RecordListResponse(BaseModel):
+    data: List[RecordItem]
 
 class RecordResponse(BaseModel):
-    id: int
-    screenshot_path: Optional[str] = None  # URL like /uploads/<filename>
-    dsl_content: Optional[str] = None
-    project_id: Optional[int] = None
-    user_id: int
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
+    record: dict  # Keep as dict to match JSONResponse structure
+    compiled_html: Optional[str]
+    compiled_css: Optional[str]
