@@ -27,11 +27,8 @@ pip install playwright
 playwright install
 
 # Navigate to Compiler directory and run Renderer
-cd Compiler || exit
-python3 Renderer.py ../Extra/input ../Extra/input
+python3 Dataset/gui_screenshot.py ../Extra/input ../Extra/input
 
-# Go back to root directory
-cd ..
 
 # Split the data
 python3 Model/build_datasets.py Extra/input

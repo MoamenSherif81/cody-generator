@@ -49,7 +49,7 @@ def main():
                 src = data_dir / f"{base}{ext}"
                 dst = output_dirs[split_name] / f"{new_idx}{ext}"
                 if src.exists():
-                    shutil.move(str(src), str(dst))
+                    shutil.copy(str(src), str(dst))
 
     print(f"Split completed! {total} samples distributed into training, validation, and testing.")
 
