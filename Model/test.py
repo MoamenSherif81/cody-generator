@@ -3,7 +3,7 @@ import numpy as np
 import os
 from classes.dataset.Generator import Generator
 from classes.dataset.Dataset import Dataset
-from classes.Vocabulary import Vocabulary
+from classes.Vocabulary import Vocabulary, START_TOKEN, END_TOKEN
 from classes.models.config import BATCH_SIZE, IMAGE_SIZE, CONTEXT_LENGTH
 from classes.models.pix2code_model import pix2code_model
 from classes.Sampler import Sampler
@@ -112,7 +112,9 @@ def test_gready(testing_path, model, sampler):
         if os.path.isfile(img_path):
             img = Utils.get_preprocessed_img(img_path, IMAGE_SIZE)
             original.append(gui)
-            predicted.append(sampler.predict_greedy(model, np.array([img])))
+            predicted_gui, _ = sampler.predict_greedy(model, np.array([img]))
+            predicted_gui = Utils.tokenize_dsl(predicted_gui.replace(START_TOKEN, "").replace(END_TOKEN, ""))
+            predicted.append(predicted_gui)
 
     assert len(original) == len(predicted)
     token_level_accuracy(original, predicted)
@@ -139,11 +141,9 @@ def test_beam_search(testing_path, beam_width, model, sampler):
         if os.path.isfile(img_path):
             img = Utils.get_preprocessed_img(img_path, IMAGE_SIZE)
             original.append(gui)
-            predicted.append(
-                sampler.predict_beam_search(
-                    model, np.array([img]), beam_width=beam_width
-                )
-            )
+            predicted_gui, _ = sampler.predict_beam_search(model, np.array([img]), beam_width=beam_width)
+            predicted_gui = Utils.tokenize_dsl(predicted_gui.replace(START_TOKEN, "").replace(END_TOKEN, ""))
+            predicted.append(predicted_gui)
 
     assert len(original) == len(predicted)
     token_level_accuracy(original, predicted)
