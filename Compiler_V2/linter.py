@@ -29,8 +29,8 @@ def lint_and_format_dsl(dsl: str, tag_mappings: Dict[str, Dict], opening_tag: st
         def validate_node(node: ASTNode, parent_tag: str = None):
             if node.tag not in tag_mappings and node.tag != 'root':
                 raise ValueError(f"Invalid DSL: Invalid tag '{node.tag}'")
-            if not node.children and node.tag != 'root' and node.tag not in valid_leaf_tags:
-                raise ValueError(f"Invalid DSL: Empty block for tag '{node.tag}'")
+            # if not node.children and node.tag != 'root' and node.tag not in valid_leaf_tags:
+            #     raise ValueError(f"Invalid DSL: Empty block for tag '{node.tag}'")
             for child in node.children:
                 validate_node(child, node.tag)
 
