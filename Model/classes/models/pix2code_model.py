@@ -67,7 +67,9 @@ class pix2code_model(AModel):
         self.model = Model(inputs=[visual_input, textual_input], outputs=decoder)
 
         optimizer = RMSprop(learning_rate=0.0001, clipvalue=1.0)
-        self.model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
+        self.model.compile(
+            loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"]
+        )
 
     def fit(self, images, partial_captions, next_words, validation_data=None):
         self.model.fit(
@@ -103,3 +105,11 @@ class pix2code_model(AModel):
 
     def predict_batch(self, images, partial_captions):
         return self.model.predict([images, partial_captions], verbose=1)
+
+    def evaluate(self, images, partial_captions, next_words):
+        self.model.evaluate(
+            [images, partial_captions], next_words, batch_size=BATCH_SIZE, verbose=1
+        )
+
+    def evaluate_generator(self, testing_generator, steps):
+        self.model.evaluate(testing_generator, steps=steps)
