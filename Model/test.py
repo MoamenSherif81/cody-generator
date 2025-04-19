@@ -216,7 +216,7 @@ def run(
         model.evaluate_generator(testing_dataset, steps=testing_steps_per_epoch)
 
     sampler = Sampler(weights_path, input_shape, output_size, CONTEXT_LENGTH)
-    # test_gready(testing_path, model, sampler)
+    test_gready(testing_path, model, sampler)
     test_beam_search(testing_path, 3, model, sampler)
     test_beam_search(testing_path, 5, model, sampler)
 
