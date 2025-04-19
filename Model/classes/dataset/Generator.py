@@ -2,7 +2,7 @@ import numpy as np
 
 from classes.Vocabulary import START_TOKEN, END_TOKEN, PLACEHOLDER
 from .Dataset import Dataset
-from models.config import IMAGE_SIZE, CONTEXT_LENGTH
+from classes.models.config import IMAGE_SIZE, CONTEXT_LENGTH
 from Utils import Utils
 
 
