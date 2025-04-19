@@ -13,7 +13,7 @@ def sample(
     input_path,
     trained_weights_path=join(dirname(__file__), "..", "Extra", "bin"),
     trained_model_name="pix2code_model",
-    search_method=None,
+    search_method="greedy",
 ):
     meta_dataset = np.load(
         "{}/meta_dataset.npy".format(trained_weights_path), allow_pickle=True
