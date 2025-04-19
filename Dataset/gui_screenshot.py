@@ -1,16 +1,14 @@
-import os
 import glob
-import queue
+import os
 import sys
-from queue import Queue, Empty
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
+from queue import Queue, Empty
 
-from tensorflow.python.ops.logging_ops import Print
-from tqdm import tqdm
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import time
+from tqdm import tqdm
 
 # Add the parent directory of the script to sys.path to find Compiler_V2
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -20,6 +18,7 @@ if parent_dir not in sys.path:
 
 from Compiler_V2 import compile_dsl
 
+
 def setup_chrome_driver():
     """Set up headless Chrome driver."""
     chrome_options = Options()
@@ -28,6 +27,7 @@ def setup_chrome_driver():
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--window-size=1920,1080")
     return webdriver.Chrome(options=chrome_options)
+
 
 def screenshot_worker(task_queue, result_queue, progress_bar):
     """Worker function: process .gui files from task queue, take screenshots, and push to result queue."""
@@ -74,6 +74,7 @@ def screenshot_worker(task_queue, result_queue, progress_bar):
     finally:
         thread_local.driver.quit()
 
+
 def write_worker(result_queue):
     """Worker function: write screenshots from result queue to disk."""
     while True:
@@ -84,6 +85,7 @@ def write_worker(result_queue):
             result_queue.task_done()
         except Empty:
             break  # Result queue is empty, exit thread
+
 
 def main(input_folder, output_folder, screenshot_ratio=0.33):
     """Main function to process .gui files using two queues and multithreading."""
@@ -137,6 +139,7 @@ def main(input_folder, output_folder, screenshot_ratio=0.33):
     # Calculate and print execution time
     elapsed_time = time.time() - start_time
     print(f"Total execution time: {elapsed_time:.2f} seconds")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

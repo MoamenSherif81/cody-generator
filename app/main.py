@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from Model.sampleFromImage import load_model_and_sampler
 from app.config.database import engine, Base
 from app.routers import user, project, record, dsl
+
 # Load once at startup
 # from app.services.shared_ai_state import model, sampler
 

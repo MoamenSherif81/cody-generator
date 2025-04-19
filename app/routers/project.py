@@ -1,14 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 from typing import List, Optional
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from Compiler_V2 import compile_dsl
 from app.config.database import get_db
 from app.dependencies.auth import get_current_user
 from app.models.project import Project
 from app.models.record import Record
 from app.models.user import User
-from app.schemas.project import ProjectCreate, ProjectResponse, ProjectWithRecordsResponse
-from Compiler_V2 import compile_dsl
+from app.schemas.project import ProjectCreate, ProjectResponse
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
@@ -41,7 +42,7 @@ def read_project(project_id: int, db: Session = Depends(get_db), current_user: U
             "dsl_code": record.dsl_content,
             "html": compile_dsl_safe(record.dsl_content)[0],
             "css": compile_dsl_safe(record.dsl_content)[1],
-            "createdAt" :record.created_at
+            "createdAt": record.created_at
         }
         for record in records
     ]

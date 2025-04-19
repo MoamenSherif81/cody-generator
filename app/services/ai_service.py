@@ -1,9 +1,12 @@
-from fastapi import UploadFile, HTTPException
 from typing import List, Tuple
+
+from fastapi import UploadFile, HTTPException
+
 from Compiler_V2 import lint_dsl, compile_dsl
 from Model.sampleFromImage import run_sampler, get_preprocessed_img_from_bytes, IMAGE_SIZE
 # Assuming model and sampler are initialized elsewhere
 from app.services.shared_ai_state import model, sampler  # Replace with your actual import
+
 
 async def process_screenshots(uploaded_files: List[UploadFile]) -> Tuple[str, str, str]:
     """

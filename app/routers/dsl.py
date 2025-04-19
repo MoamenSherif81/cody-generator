@@ -1,7 +1,4 @@
-from typing import List
-
-from fastapi import APIRouter, HTTPException, UploadFile, File
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, HTTPException
 
 from Compiler_V2 import lint_dsl, compile_dsl
 from app.schemas.record import RecordResponse
@@ -9,9 +6,10 @@ from app.services.ai_service import process_screenshots
 
 router = APIRouter(prefix="/dsl", tags=["dsl"])
 
-from fastapi import APIRouter, UploadFile, File
+from fastapi import UploadFile, File
 from typing import List
 from fastapi.responses import JSONResponse
+
 
 @router.post(
     "/image",
@@ -20,7 +18,7 @@ from fastapi.responses import JSONResponse
     response_description="The created record object with screenshot_path as a URL.",
 )
 async def create_image_record(
-    screenshot: List[UploadFile] = File(...),
+        screenshot: List[UploadFile] = File(...),
 ):
     dsl, html, css = process_screenshots(screenshot)
     dsl = lint_dsl(dsl)
@@ -30,7 +28,9 @@ async def create_image_record(
         "dsl": dsl
     })
 
+
 from app.schemas.dsl import DSLContentRequest
+
 
 @router.post(
     "/text",
@@ -54,6 +54,7 @@ async def create_dsl_record(
         "css": css,
         "dsl": dsl_content
     })
+
 
 @router.post(
     "/lint",

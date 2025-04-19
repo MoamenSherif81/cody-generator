@@ -56,6 +56,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 def read_current_user(current_user: User = Depends(get_current_user)):
     return current_user
 
+
 @router.put(
     "/me",
     response_model=UserResponse,
@@ -64,9 +65,9 @@ def read_current_user(current_user: User = Depends(get_current_user)):
     response_description="The updated user object."
 )
 def update_current_user(
-    user: UserUpdate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+        user: UserUpdate,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
 ):
     db_user = db.query(User).filter(User.id == current_user.id).first()
     if db_user is None:

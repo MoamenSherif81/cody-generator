@@ -5,12 +5,11 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Body
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from werkzeug.exceptions import BadRequest
 
 from Compiler_V2 import lint_dsl, compile_dsl
 from app.config.database import get_db
 from app.dependencies.auth import get_current_user
-from app.models.record import Record, RecordListResponse
+from app.models.record import Record
 from app.models.user import User
 from app.schemas.record import RecordResponse
 from app.services.ai_service import process_screenshots
@@ -34,7 +33,9 @@ def compile_dsl_safe(dsl_content: Optional[str]) -> tuple[Optional[str], Optiona
     """Compile DSL content to HTML and CSS, handling None case."""
     return compile_dsl(dsl_content) if dsl_content else (None, None)
 
+
 from fastapi import Form
+
 
 @router.post(
     "/image",
@@ -42,8 +43,6 @@ from fastapi import Form
     description="Upload one or more screenshot images to generate DSL, HTML, and CSS. Optionally save to database with project ID and user authentication. Requires a valid JWT token for authenticated requests.",
     response_description="The created record object (if saved) with screenshot_path as a URL, and compiled HTML, CSS, and DSL."
 )
-
-
 async def create_image_record(
         screenshots: List[UploadFile] = File(...),
         project_id: Optional[int] = Form(None),
@@ -97,6 +96,8 @@ async def create_image_record(
         "css": css,
         "dsl": dsl
     })
+
+
 @router.post(
     "/dsl",
     response_model=RecordResponse,
