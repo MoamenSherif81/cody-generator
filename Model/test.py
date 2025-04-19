@@ -13,8 +13,6 @@ from tqdm import tqdm
 
 
 def token_level_accuracy(original, predicted):
-    print(original)
-    print(predicted)
     length_sum = 0
     match_sum = 0
     for idx, original_tokens in enumerate(original):
