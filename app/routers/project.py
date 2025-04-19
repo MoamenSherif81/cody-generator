@@ -27,7 +27,7 @@ def create_project(project: ProjectCreate, db: Session = Depends(get_db),
     return db_project
 
 
-@router.get("/{project_id}", response_model=ProjectWithRecordsResponse)
+@router.get("/{project_id}")
 def read_project(project_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_project = db.query(Project).filter(Project.id == project_id, Project.user_id == current_user.id).first()
     if not db_project:
@@ -40,7 +40,8 @@ def read_project(project_id: int, db: Session = Depends(get_db), current_user: U
             "screenshot_path": record.screenshot_path,
             "dsl_code": record.dsl_content,
             "html": compile_dsl_safe(record.dsl_content)[0],
-            "css": compile_dsl_safe(record.dsl_content)[1]
+            "css": compile_dsl_safe(record.dsl_content)[1],
+            "createdAt" :record.created_at
         }
         for record in records
     ]
