@@ -1,11 +1,11 @@
 import sys
 
 from os.path import basename, join, dirname
-from classes.Sampler import Sampler
-from classes.models.pix2code_model import pix2code_model
-from classes.models.config import CONTEXT_LENGTH, IMAGE_SIZE
-from classes.Vocabulary import START_TOKEN, END_TOKEN
-from Utils import Utils
+from .classes.Sampler import Sampler
+from .classes.models.pix2code_model import pix2code_model
+from .classes.models.config import CONTEXT_LENGTH, IMAGE_SIZE
+from .classes.Vocabulary import START_TOKEN, END_TOKEN
+from .Utils import Utils
 import numpy as np
 
 
