@@ -40,6 +40,7 @@ def sample(
         print("Result beam: {}".format(result))
     
     result = result.replace(START_TOKEN, "").replace(END_TOKEN, "")
+    return result
 
 
 if __name__ == "__main__":
