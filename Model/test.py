@@ -9,6 +9,7 @@ from classes.models.pix2code_model import pix2code_model
 from classes.Sampler import Sampler
 from Utils import Utils
 import tensorflow as tf
+from tqdm import tqdm
 
 
 def token_level_accuracy(original, predicted):
@@ -93,17 +94,22 @@ def test_gready(testing_path, model, sampler):
     print("greedy testing")
     original = []
     predicted = []
-    for f in os.listdir(testing_path):
-        if f.find(".gui") != -1:
-            gui = open("{}/{}".format(testing_path, f), "r")
-            file_name = f[: f.find(".gui")]
 
-            if os.path.isfile("{}/{}.png".format(testing_path, file_name)):
-                img = Utils.get_preprocessed_img(
-                    "{}/{}.png".format(testing_path, file_name), IMAGE_SIZE
-                )
-                original.append(gui)
-                predicted.append(sampler.predict_greedy(model, np.array([img])))
+    gui_files = [f for f in os.listdir(testing_path) if f.endswith(".gui")]
+
+    for f in tqdm(gui_files, desc="Processing GUI files"):
+        with open(f"{testing_path}/{f}", "r") as file:
+            contents = file.read()
+            gui = Utils.tokenize_dsl(contents)
+
+        file_name = f[: f.find(".gui")]
+
+        img_path = f"{testing_path}/{file_name}.png"
+        if os.path.isfile(img_path):
+            img = Utils.get_preprocessed_img(img_path, IMAGE_SIZE)
+            original.append(gui)
+            predicted.append(sampler.predict_greedy(model, np.array([img])))
+
     assert len(original) == len(predicted)
     token_level_accuracy(original, predicted)
     LCS_accuracy(original, predicted)
@@ -115,21 +121,26 @@ def test_beam_search(testing_path, beam_width, model, sampler):
     print("Beam search with k={} testing".format(beam_width))
     original = []
     predicted = []
-    for f in os.listdir(testing_path):
-        if f.find(".gui") != -1:
-            gui = open("{}/{}".format(testing_path, f), "r")
-            file_name = f[: f.find(".gui")]
 
-            if os.path.isfile("{}/{}.png".format(testing_path, file_name)):
-                img = Utils.get_preprocessed_img(
-                    "{}/{}.png".format(testing_path, file_name), IMAGE_SIZE
+    gui_files = [f for f in os.listdir(testing_path) if f.endswith(".gui")]
+
+    for f in tqdm(gui_files, desc="Processing GUI files"):
+        with open(f"{testing_path}/{f}", "r") as file:
+            contents = file.read()
+            gui = Utils.tokenize_dsl(contents)
+
+        file_name = f[: f.find(".gui")]
+        img_path = f"{testing_path}/{file_name}.png"
+
+        if os.path.isfile(img_path):
+            img = Utils.get_preprocessed_img(img_path, IMAGE_SIZE)
+            original.append(gui)
+            predicted.append(
+                sampler.predict_beam_search(
+                    model, np.array([img]), beam_width=beam_width
                 )
-                original.append(gui)
-                predicted.append(
-                    sampler.predict_beam_search(
-                        model, np.array([img], beam_width=beam_width)
-                    )
-                )
+            )
+
     assert len(original) == len(predicted)
     token_level_accuracy(original, predicted)
     LCS_accuracy(original, predicted)
