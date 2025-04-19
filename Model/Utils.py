@@ -38,6 +38,6 @@ class Utils:
         dsl = dsl.replace(",", " , ").replace("{", " { ").replace("}", " } ").split(" ")
         tokens = []
         for token in dsl:
-            if token not in [" ", "", "\n", "{", "}", ","]:
+            if token not in [" ", "", "\n"]:
                 tokens.append(token)
         return tokens
