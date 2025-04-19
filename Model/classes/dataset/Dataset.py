@@ -1,8 +1,8 @@
 import os
 import numpy as np
 from ..Vocabulary import START_TOKEN, END_TOKEN, PLACEHOLDER, Vocabulary
-from ...Utils import Utils
-from ..models.config import IMAGE_SIZE, CONTEXT_LENGTH
+from Utils import Utils
+from classes.models.config import IMAGE_SIZE, CONTEXT_LENGTH
 
 
 class Dataset:
