@@ -125,7 +125,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
@@ -181,3 +180,5 @@ bin
 bin.zip
 input
 Extra
+/test/
+uploads/

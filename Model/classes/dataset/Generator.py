@@ -27,11 +27,12 @@ class Generator:
 
                 token_sequence = [START_TOKEN]
                 for line in gui:
-                    line = line.replace(",", " ,").replace("\n", " \n")
+                    line = line.replace(",", " , ").replace("{", " { ").replace("}", " } ")
                     tokens = line.split(" ")
                     for token in tokens:
-                        voc.append(token)
-                        token_sequence.append(token)
+                        if token not in ["", "\n"]:
+                            voc.append(token)
+                            token_sequence.append(token)
                 token_sequence.append(END_TOKEN)
 
                 suffix = [PLACEHOLDER] * CONTEXT_LENGTH
@@ -63,7 +64,7 @@ class Generator:
 
                         if verbose:
                             print("Yield batch")
-                        yield ([batch_input_images, batch_partial_sequences], batch_next_words)
+                        yield ((batch_input_images, batch_partial_sequences), batch_next_words)
 
                         batch_input_images = []
                         batch_partial_sequences = []

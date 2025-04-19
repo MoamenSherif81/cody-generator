@@ -5,6 +5,7 @@ import sys
 import asyncio
 from playwright.async_api import async_playwright
 from compiler import compiler
+from tqdm import tqdm
 
 SEM_LIMIT = os.cpu_count()  # Number of concurrent operations
 
@@ -14,7 +15,7 @@ def extract_body_content(html):
     return match.group(1) if match else ""
 
 
-async def process_file(file_path, output_directory, css_file_content, browser, semaphore):
+async def process_file(file_path, output_directory, css_file_content, browser, semaphore, progress_bar):
     """
     Processes a single `.gui` file, compiles it to HTML, and captures a screenshot.
 
@@ -23,6 +24,7 @@ async def process_file(file_path, output_directory, css_file_content, browser, s
     :param css_file_content: CSS styles to be applied.
     :param browser: Playwright browser instance.
     :param semaphore: Semaphore to control concurrency.
+    :param progress_bar: tqdm progress bar instance.
     """
     async with semaphore:
         compiler_instance = compiler(output_directory)
@@ -57,6 +59,10 @@ async def process_file(file_path, output_directory, css_file_content, browser, s
         await page.close()
         await context.close()
 
+        # Update progress bar in a thread-safe manner
+        with progress_bar.get_lock():
+            progress_bar.update(1)
+
 
 async def do_work(directory_path, output_directory, css_file_content, thread_count=5):
     """
@@ -83,12 +89,17 @@ async def do_work(directory_path, output_directory, css_file_content, thread_cou
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
 
+        # Initialize progress bar
+        progress_bar = tqdm(total=len(gui_files), desc="Processing .gui files", unit="file")
+
         tasks = [
-            process_file(file_path, output_directory, css_file_content, browser, semaphore)
+            process_file(file_path, output_directory, css_file_content, browser, semaphore, progress_bar)
             for file_path in gui_files
         ]
         await asyncio.gather(*tasks)
 
+        # Close progress bar
+        progress_bar.close()
         await browser.close()
 
 

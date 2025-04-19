@@ -1,24 +1,28 @@
 {
   "root": {
     "term": false,
+    "consecutive": false, 
     "children": [
       "row"
     ]
   },
   "row": {
     "term": true,
+    "consecutive": true,
     "children": [
       "box"
     ]
   },
   "box": {
     "term": true,
+    "consecutive": true,
     "children": [
       "elements"
     ]
   },
   "elements": {
     "term": false,
+    "consecutive": true,
     "children": [
       "button",
       "title",
@@ -29,22 +33,27 @@
   },
   "button": {
     "term": true,
+    "consecutive": true,
     "children": []
   },
   "title": {
     "term": true,
+    "consecutive": false,
     "children": []
   },
   "text": {
     "term": true,
+    "consecutive": false,
     "children": []
   },
   "select-box": {
     "term": true,
+    "consecutive": true,
     "children": []
   },
   "input": {
     "term": true,
+    "consecutive": true,
     "children": []
   }
 }
