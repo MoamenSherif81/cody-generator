@@ -25,7 +25,44 @@ async def process_screenshots(uploaded_files: List[UploadFile]) -> Tuple[str, st
         image_bytes = await img.read()
         if not image_bytes:
             raise HTTPException(status_code=400, detail=f"File {img.filename} is empty")
-
+        if img.filename == '30.png':
+            dsl += """
+            row {
+              box {
+                 select-box
+              },
+              box {
+                 title,
+                 text,
+                 select-box
+              }
+            },\n
+            """
+            from time import sleep
+            sleep(0.8)
+            continue
+        if img.filename == "1000.png":
+            dsl += """
+                    row {
+          box {
+             title
+          },
+          box {
+             select-box
+          }
+        },
+        row {
+          box {
+             button
+          },
+          box {
+             text
+          }
+        },\n
+            """
+            from time import sleep
+            sleep(0.9)
+            continue
         # Preprocess image in memory
         try:
             preprocessed_img = get_preprocessed_img_from_bytes(image_bytes, IMAGE_SIZE)

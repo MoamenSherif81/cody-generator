@@ -25,7 +25,7 @@ def load_model_and_sampler(trained_weights_path, trained_model_name):
     return model, sampler
 
 
-def run_sampler(model, sampler, evaluation_img, search_method=0):
+def run_sampler(model, sampler, evaluation_img, search_method=3):
     if search_method == 0 or search_method == "greedy":
         result, _ = sampler.predict_greedy(model, np.array([evaluation_img]))
     else:
