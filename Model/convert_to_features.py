@@ -3,8 +3,8 @@ import os
 import numpy as np
 import shutil
 
-from .classes.models.config import IMAGE_SIZE
-from .Utils import Utils
+from classes.models.config import IMAGE_SIZE
+from Utils import Utils
 
 argv = sys.argv[1:]
 

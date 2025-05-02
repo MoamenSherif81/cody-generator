@@ -1,10 +1,10 @@
 import sys
 import numpy as np
 
-from .classes.dataset.Generator import Generator
-from .classes.dataset.Dataset import Dataset
-from .classes.Vocabulary import Vocabulary
-from .classes.models.config import BATCH_SIZE, IMAGE_SIZE, CONTEXT_LENGTH
+from classes.dataset.Generator import Generator
+from classes.dataset.Dataset import Dataset
+from classes.Vocabulary import Vocabulary
+from classes.models.config import BATCH_SIZE, IMAGE_SIZE, CONTEXT_LENGTH
 import tensorflow as tf
 
 
@@ -18,7 +18,7 @@ def run(
     np.random.seed(1234)
 
     # Import the ResnetTransformerModel class
-    from .classes.models.our_model import ResnetTransformerModel
+    from classes.models.our_model import ResnetTransformerModel
 
     training_dataset = Dataset()
     training_dataset.load(training_path, generate_binary_sequences=True)
