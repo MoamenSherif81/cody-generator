@@ -25,10 +25,7 @@
     "consecutive": true,
     "children": [
       "button",
-      "text",
-      "input",
-      "title",
-      "select-box"
+      "text"
     ]
   },
   "button": {
