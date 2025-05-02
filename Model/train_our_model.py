@@ -5,7 +5,6 @@ from .classes.dataset.Generator import Generator
 from .classes.dataset.Dataset import Dataset
 from .classes.Vocabulary import Vocabulary
 from .classes.models.config import BATCH_SIZE, IMAGE_SIZE, CONTEXT_LENGTH
-from .classes.models.pix2code_model import pix2code_model
 import tensorflow as tf
 
 
@@ -17,6 +16,9 @@ def run(
     pretrained_model=None,
 ):
     np.random.seed(1234)
+
+    # Import the ResnetTransformerModel class
+    from .classes.models.our_model import ResnetTransformerModel
 
     training_dataset = Dataset()
     training_dataset.load(training_path, generate_binary_sequences=True)
@@ -73,7 +75,8 @@ def run(
             generate_binary_sequences=True,
         )
 
-    model = pix2code_model(input_shape, output_size, output_path)
+    # Create the ResNet + Transformer model instead of pix2code
+    model = ResnetTransformerModel(input_shape, output_size, output_path)
 
     if pretrained_model is not None:
         model.model.load_weights(pretrained_model, skip_mismatch=True)

@@ -1,7 +1,7 @@
 import numpy as np
 
 from classes.Vocabulary import START_TOKEN, END_TOKEN, PLACEHOLDER
-from classes.dataset.Dataset import Dataset
+from .Dataset import Dataset
 from classes.models.config import IMAGE_SIZE, CONTEXT_LENGTH
 from Utils import Utils
 
