@@ -27,11 +27,11 @@ pip install playwright
 playwright install
 
 # Navigate to Compiler directory and run Renderer
-python3 Dataset/gui_screenshot.py Extra/input Extra/input
+python3 Dataset/gui_screenshot.py ../Extra/input ../Extra/input
 
 
 # Split the data
-python3 Model/build_datasets.py Extra/
+python3 Model/build_datasets.py Extra/input
 
 # Create training_features directory and convert input to features
 mkdir -p Extra/training_features
@@ -40,3 +40,10 @@ python3 Model/convert_to_features.py ./Extra/training ./Extra/training_features
 # Create validation_features directory and convert validation to features
 mkdir -p Extra/validation_features
 python3 Model/convert_to_features.py ./Extra/validation ./Extra/validation_features
+
+# Create bin directory and train the model
+mkdir -p Extra/bin
+python3 Model/train_our_model.py ./Extra/training_features ./Extra/validation_features ./Extra/bin 1
+
+# Zip the bin directory
+zip -r Extra/bin.zip Extra/bin/
