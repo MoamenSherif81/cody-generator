@@ -190,7 +190,7 @@ class ResnetTransformerModel:
     
     def get_callbacks(self):
         """Define callbacks for the training process"""
-        checkpoint_path = f"{self.output_path}/checkpoint.h5"
+        checkpoint_path = f"{self.output_path}/checkpoint.weights.h5"
         checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
             filepath=checkpoint_path,
             monitor='val_accuracy',
@@ -220,7 +220,7 @@ class ResnetTransformerModel:
     
     def save(self):
         """Save the model weights"""
-        self.model.save_weights(f"{self.output_path}/model_weights.h5")
+        self.model.save_weights(f"{self.output_path}/model_weights.weights.h5")
     
     def load(self, weights_path):
         """Load the model weights"""
