@@ -38,7 +38,13 @@ class ResnetTransformerModel:
         cnn_features = base_model.output
         
         # Add an adapter layer to project CNN features to transformer dimensions
-        adapter = layers.Dense(self.d_model, name="cnn_adapter")(cnn_features)
+        adapter = layers.Dense(1024, name="cnn_adapter1")(cnn_features)
+        adapter = layers.LayerNormalization(epsilon=1e-6)(adapter)
+        adapter = layers.Activation('gelu')(adapter)
+        adapter = layers.Dense(1024, name="cnn_adapter2")(adapter)
+        adapter = layers.LayerNormalization(epsilon=1e-6)(adapter)
+        adapter = layers.Activation('gelu')(adapter)
+        adapter = layers.Dense(self.d_model, name="cnn_adapter3")(adapter)
         adapter = layers.LayerNormalization(epsilon=1e-6)(adapter)
         
         return base_model.input, adapter
