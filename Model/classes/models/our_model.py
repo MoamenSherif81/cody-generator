@@ -53,17 +53,24 @@ class ResnetTransformerModel:
         
         # Add positional encoding
         pos_encoding = self.positional_encoding(CONTEXT_LENGTH, self.d_model)
-        seq_embedding = seq_embedding + pos_encoding
+        # CHANGED: Use layers.Add() and Lambda instead of direct addition
+        seq_embedding = layers.Add()([seq_embedding, layers.Lambda(lambda x: pos_encoding)(seq_embedding)])
         
         # Dropout for regularization
         decoder_input = layers.Dropout(self.dropout_rate)(seq_embedding)
         
         # Create a batch of identical CNN features to match sequence length
         cnn_context = layers.Dense(self.d_model)(cnn_features)
-        # Expand dimensions: [batch_size, 1, d_model]
-        cnn_context = tf.expand_dims(cnn_context, axis=1)
-        # Repeat CNN features for each position in the sequence
-        cnn_context = tf.repeat(cnn_context, repeats=CONTEXT_LENGTH, axis=1)
+        
+        # CHANGED: Instead of using tf.expand_dims and tf.repeat, use Keras layers
+        # First reshape to add a time dimension
+        cnn_context = layers.Reshape((1, self.d_model))(cnn_context)
+        
+        # Then repeat the features across the time dimension using Lambda
+        cnn_context = layers.Lambda(
+            lambda x: tf.repeat(x, repeats=CONTEXT_LENGTH, axis=1),
+            name="repeat_cnn_features"
+        )(cnn_context)
         
         # Stack transformer decoder layers
         decoder_output = decoder_input
@@ -77,8 +84,8 @@ class ResnetTransformerModel:
         # Final output projection
         final_output = layers.Dense(self.output_size, activation='softmax')(decoder_output)
         
-        # We only care about the prediction for the last token in the sequence
-        last_token_output = final_output[:, -1, :]
+        # CHANGED: We only care about the prediction for the last token in the sequence
+        last_token_output = layers.Lambda(lambda x: x[:, -1, :])(final_output)
         
         return seq_input, last_token_output
     
@@ -90,7 +97,8 @@ class ResnetTransformerModel:
             name=f"{name_prefix}_self_attn"
         )
         self_attn_output = layers.Dropout(self.dropout_rate)(self_attn_output)
-        self_attn_output = layers.LayerNormalization(epsilon=1e-6)(inputs + self_attn_output)
+        # CHANGED: Use layers.Add() instead of direct addition
+        self_attn_output = layers.LayerNormalization(epsilon=1e-6)(layers.Add()([inputs, self_attn_output]))
         
         # Cross attention with CNN features
         cross_attn_output = self.multi_head_attention(
@@ -98,12 +106,14 @@ class ResnetTransformerModel:
             name=f"{name_prefix}_cross_attn"
         )
         cross_attn_output = layers.Dropout(self.dropout_rate)(cross_attn_output)
-        cross_attn_output = layers.LayerNormalization(epsilon=1e-6)(self_attn_output + cross_attn_output)
+        # CHANGED: Use layers.Add() instead of direct addition
+        cross_attn_output = layers.LayerNormalization(epsilon=1e-6)(layers.Add()([self_attn_output, cross_attn_output]))
         
         # Feed forward network
         ffn_output = self.feed_forward_network(cross_attn_output, name=f"{name_prefix}_ffn")
         ffn_output = layers.Dropout(self.dropout_rate)(ffn_output)
-        output = layers.LayerNormalization(epsilon=1e-6)(cross_attn_output + ffn_output)
+        # CHANGED: Use layers.Add() instead of direct addition
+        output = layers.LayerNormalization(epsilon=1e-6)(layers.Add()([cross_attn_output, ffn_output]))
         
         return output
     
