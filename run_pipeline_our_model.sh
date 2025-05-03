@@ -22,12 +22,9 @@ cd ..
 # Run generator.py with the input number
 python3 Dataset/generator.py 281203 "$NUM_SAMPLES" ./Extra
 
-# Install Playwright and its dependencies
-pip install playwright
-playwright install
 
 # Navigate to Compiler directory and run Renderer
-python3 Dataset/gui_screenshot.py ../Extra/input ../Extra/input
+python3 Dataset/gui_screenshot.py ./Extra/input ./Extra/input
 
 
 # Split the data
