@@ -59,10 +59,11 @@ class ResnetTransformerModel:
         decoder_input = layers.Dropout(self.dropout_rate)(seq_embedding)
         
         # Create a batch of identical CNN features to match sequence length
-        # Expand dimensions to [batch_size, 1, d_model]
-        cnn_features_expanded = layers.Reshape((1, self.d_model))(cnn_features)
-        # Repeat to match sequence length [batch_size, seq_len, d_model]
-        cnn_context = layers.RepeatVector(CONTEXT_LENGTH)(cnn_features_expanded)
+        cnn_context = layers.Dense(self.d_model)(cnn_features)
+        # Expand dimensions: [batch_size, 1, d_model]
+        cnn_context = tf.expand_dims(cnn_context, axis=1)
+        # Repeat CNN features for each position in the sequence
+        cnn_context = tf.repeat(cnn_context, repeats=CONTEXT_LENGTH, axis=1)
         
         # Stack transformer decoder layers
         decoder_output = decoder_input
