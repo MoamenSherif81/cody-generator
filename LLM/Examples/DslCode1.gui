@@ -1,0 +1,21 @@
+row <color=(0,122,255)> {
+  box {
+     title <color=(34,34,34),size=24px>
+  }
+},
+row {
+  box <color=(245,245,245)> {
+     text <color=(34,34,34),size=16px>,
+     button <color=(52,199,89)>
+  },
+  box <color=(230,230,255)> {
+     text <color=(34,34,34),size=16px>
+  }
+},
+row {
+  box <color=(245,245,245)> {
+     input,
+     select-box <color=(0,122,255)>,
+     button <color=(52,199,89)>
+  }
+}

@@ -46,9 +46,7 @@ To use the project:
 
 1. Start the backend server:
    ```bash
-   cd app
-   uvicorn main:app --reload
-
+   uvicorn app.main:app --reload
    ```
 
 2. Access the frontend and upload a GUI image or screenshot to be converted into DSL code.
