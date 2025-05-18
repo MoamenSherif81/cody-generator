@@ -1,34 +1,31 @@
-from pydantic import json
+import json
 
-from LLM.Scheme.GenerateQuestions import GenerateQuestions
+from ..Scheme.GenerateQuestions import GenerateQuestions
 
-with open('../Examples/DslCode1.gui', 'r') as file:
-    DSLCodeExample = file.read()
 
-details_extraction_messages = [
-    {
-        "role": "system",
-        "content": "\n".join([
-            "You are an Frontend Developer.",
-            "Dsl Rules ={}",
-            f"DSL Example={DSLCodeExample}",
-            f"This is a target language (DSL) scheme{""}",
-            "You have to Generate Situations JSON details according the Pydantic details.",
-            "Use only Dsl Tokens.",
-            "Do not generate any introduction or conclusion."
-        ])
-    },
-    {
-        "role": "user",
-        "content": "\n".join([
-            "## Pydantic Details:",
-            json.dumps(
-                GenerateQuestions.model_json_schema(), ensure_ascii=False
-            ),
-            "",
-
-            "## Question :",
-            "```json"
-        ])
-    }
-]
+def GenerateMessage(DslRules):
+    return [
+        {
+            "role": "system",
+            "content": (
+                "You are a Frontend Developer you want to create web page by generating website using our own custom DSL.\n"
+                f"Dsl Rules = {DslRules}\n"
+                "You have to Generate Situation JSON details according the Pydantic details.\n"
+                "Use only Dsl Tokens.\n",
+                "Generate Random Situation\n",
+                "Do not generate any introduction or conclusion.",
+                "Be Creative on the situation",
+                "Add a bit complexity",
+                "Don't create situation only for inputs might be that or not"
+            )
+        },
+        {
+            "role": "user",
+            "content": (
+                "## Pydantic Details:\n"
+                f"{json.dumps(GenerateQuestions.model_json_schema(), ensure_ascii=False)}\n\n"
+                "## Question :\n"
+                "```json"
+            )
+        }
+    ]

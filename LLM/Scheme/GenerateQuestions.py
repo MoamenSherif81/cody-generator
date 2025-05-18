@@ -1,5 +1,4 @@
-from typing import List
-from pydantic import BaseModel, Field, Literal, constr
+from pydantic import BaseModel, Field
 
 
 class Situation(BaseModel):
@@ -12,11 +11,7 @@ class Situation(BaseModel):
 
 
 class GenerateQuestions(BaseModel):
-    id: constr(strict=True, min_length=1) = Field(description="Unique identifier for the question set")
-    Situations: List[Situation] = Field(
-        min_length=3, max_length=6,
-        description="Situations should have the same output structure"
-    )
+    id: int = Field(description="Unique identifier for the question set")
+    situation: Situation = Field(min_length=3, max_length=6,
+                                 description="Situation should have the same output structure and matches the same generated DSL")
     DslCode: str = Field(..., description="DSL Code Corresponding to the situations")
-    complexity: Literal[1, 2, 3, 4, 5] = Field(..., description="How complex the situation is. Values: 1 to 5")
-
