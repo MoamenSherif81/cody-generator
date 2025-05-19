@@ -25,7 +25,7 @@ def GenerateMessage(dsl_rules_path):
     with open(abs_path, 'r') as file:
         dsl_rules = file.read()
 
-    PromptMessage= [
+    PromptMessage = [
         {
             "role": "system",
             "content": (
@@ -37,8 +37,9 @@ def GenerateMessage(dsl_rules_path):
                 "Do not generate any introduction or conclusion."
                 "Be Creative on the situation\n"
                 "Add a bit complexity\n"
-                "Don't create situation only for inputs might be that or not"
-                "Ensure all situation chars be in arabic or english only"
+                "Don't create situation only for inputs might be that or not\n"
+                "Ensure all situation chars be in arabic or english only\n"
+                "All the colors selected should be in the same color scheme and have good looking and harmony "
             )
         },
         {
@@ -56,4 +57,3 @@ def GenerateMessage(dsl_rules_path):
         prompt += str(i)
         prompt += "\n"
     return prompt
-

@@ -65,9 +65,7 @@ def main(numberOfRequests=None):
             langs = ["SituationInArabic", "SituationInEgyptianArabic", "SituationInEnglish",
                      "SituationInArabicAndEnglish"]
             for lang in langs:
-                print(situation[lang])
                 append_to_json_file(datasetPath, id, situation[lang], dsl, lang)
-            print("&" * 80)
         except Exception as e:
             if numberOfRetries % maxRetries == 0:
                 sleep(sleepTime)
