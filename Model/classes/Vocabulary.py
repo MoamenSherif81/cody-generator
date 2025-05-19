@@ -1,4 +1,5 @@
 import sys
+
 import numpy as np
 
 START_TOKEN = "<START>"

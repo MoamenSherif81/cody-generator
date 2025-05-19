@@ -5,10 +5,9 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from .Utils import Utils
 from .classes.Sampler import Sampler
 from .classes.Vocabulary import START_TOKEN, END_TOKEN
-from .classes.models.config import CONTEXT_LENGTH, IMAGE_SIZE
+from .classes.models.config import CONTEXT_LENGTH
 from .classes.models.pix2code_model import pix2code_model
 
 

@@ -2,10 +2,12 @@
 # from .BeamSearch import *
 # from .Utils import *
 
+import numpy as np
+
+from .BeamSearch import Node, BeamSearch
 from .Vocabulary import Vocabulary, START_TOKEN, END_TOKEN, PLACEHOLDER
 from ..Utils import Utils
-import numpy as np
-from .BeamSearch import Node, BeamSearch
+
 
 class Sampler:
     def __init__(self, voc_path, input_shape, output_size, context_length):

@@ -1,6 +1,7 @@
+from random import shuffle
+
 from LLM.Utils import write_json_data
 from Utils import load_json_data
-from random import shuffle
 
 # Define path variable
 file_path = "FT_Dataset/situations.json"

@@ -57,4 +57,6 @@ def GenerateMessage(dsl_rules_path):
         prompt += str(i)
         prompt += "\n"
     return prompt
+
+
 print(GenerateMessage("Queries/DSL-Rules.json"))

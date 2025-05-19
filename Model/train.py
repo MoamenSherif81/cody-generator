@@ -1,20 +1,21 @@
 import sys
-import numpy as np
 
-from .classes.dataset.Generator import Generator
-from .classes.dataset.Dataset import Dataset
+import numpy as np
+import tensorflow as tf
+
 from .classes.Vocabulary import Vocabulary
+from .classes.dataset.Dataset import Dataset
+from .classes.dataset.Generator import Generator
 from .classes.models.config import BATCH_SIZE, IMAGE_SIZE, CONTEXT_LENGTH
 from .classes.models.pix2code_model import pix2code_model
-import tensorflow as tf
 
 
 def run(
-    training_path,
-    validation_path,
-    output_path,
-    is_memory_intensive=False,
-    pretrained_model=None,
+        training_path,
+        validation_path,
+        output_path,
+        is_memory_intensive=False,
+        pretrained_model=None,
 ):
     np.random.seed(1234)
 

@@ -1,7 +1,7 @@
 {
   "root": {
     "term": false,
-    "consecutive": false, 
+    "consecutive": false,
     "children": [
       "row"
     ]

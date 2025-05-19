@@ -1,12 +1,10 @@
 import json
 from pathlib import Path
-from tkinter.messagebox import askquestion
 
 from LLM.Scheme.AnswerQuestion import AnswerQuestion, AskQuestion
-from LLM.Scheme.GenerateQuestions import GenerateQuestions
 
 
-def AnswerPrompt(dsl_rules_path,prom):
+def AnswerPrompt(dsl_rules_path, prom):
     """
     Generate a message with DSL rules loaded from any directory.
     Args:
@@ -57,4 +55,6 @@ def AnswerPrompt(dsl_rules_path,prom):
         prompt += str(i)
         prompt += "\n"
     return prompt
-print(AnswerPrompt("DSL-Rules.json"," i want to make questionnaire form "))
+
+
+print(AnswerPrompt("DSL-Rules.json", " i want to make questionnaire form "))

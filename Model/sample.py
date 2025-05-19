@@ -1,19 +1,20 @@
 import sys
-
 from os.path import basename, join, dirname
-from .classes.Sampler import Sampler
-from .classes.models.pix2code_model import pix2code_model
-from .classes.models.config import CONTEXT_LENGTH, IMAGE_SIZE
-from .classes.Vocabulary import START_TOKEN, END_TOKEN
-from .Utils import Utils
+
 import numpy as np
+
+from .Utils import Utils
+from .classes.Sampler import Sampler
+from .classes.Vocabulary import START_TOKEN, END_TOKEN
+from .classes.models.config import CONTEXT_LENGTH, IMAGE_SIZE
+from .classes.models.pix2code_model import pix2code_model
 
 
 def sample(
-    input_path,
-    search_method=0,
-    trained_weights_path=join(dirname(__file__), "..", "Extra", "bin"),
-    trained_model_name="pix2code_model",
+        input_path,
+        search_method=0,
+        trained_weights_path=join(dirname(__file__), "..", "Extra", "bin"),
+        trained_model_name="pix2code_model",
 ):
     meta_dataset = np.load(
         "{}/meta_dataset.npy".format(trained_weights_path), allow_pickle=True

@@ -1,10 +1,11 @@
-import sys
 import os
-import numpy as np
 import shutil
+import sys
 
-from .classes.models.config import IMAGE_SIZE
+import numpy as np
+
 from .Utils import Utils
+from .classes.models.config import IMAGE_SIZE
 
 argv = sys.argv[1:]
 
