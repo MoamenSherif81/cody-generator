@@ -187,3 +187,4 @@ uploads/
 /ModelParameters/
 /code_generator.db
 .env
+LLM/FT_Dataset/

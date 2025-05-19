@@ -10,6 +10,8 @@ from LLM.Queries.GenerateQuestionsQuery import GenerateMessage
 from LLM.Utils import append_to_json_file, write_json_data
 from Utils import parse_json, load_json_data
 
+datasetPath = "FT_Dataset/dataset2.json"
+
 
 def main(numberOfRequests=None):
     """
@@ -35,21 +37,19 @@ def main(numberOfRequests=None):
 
     # Configure prompts
     dslRulesPath = "Queries/DSL-Rules.json"
-    promptMessage = GenerateMessage(dslRulesPath)
+    PromptMessage = GenerateMessage(dslRulesPath)
 
     # Dataset configurations
     successful_requests = 0
-    datasetPath = "FT_Dataset/situations.json"
     maxRetries = 5
     numberOfRetries = 1
     sleepTime = 10
     id = 1
-    print(promptMessage)
     # Main loop to make requests and process responses
     for i in tqdm(range(maxNumberOfRequest)):
         genai.configure(api_key=geminiKeys[currentKeyIdx])
         try:
-            response = model.generate_content(promptMessage)
+            response = model.generate_content(PromptMessage)
             successful_requests += 1
 
             # Parse the JSON response
@@ -65,8 +65,9 @@ def main(numberOfRequests=None):
             langs = ["SituationInArabic", "SituationInEgyptianArabic", "SituationInEnglish",
                      "SituationInArabicAndEnglish"]
             for lang in langs:
+                print(situation[lang])
                 append_to_json_file(datasetPath, id, situation[lang], dsl, lang)
-
+            print("&" * 80)
         except Exception as e:
             if numberOfRetries % maxRetries == 0:
                 sleep(sleepTime)
@@ -94,11 +95,11 @@ def __main__():
 
     # Fix the final JSON and update the IDs
     nwId = 1
-    data = load_json_data("FT_Dataset/situations.json")
+    data = load_json_data(datasetPath)
     for record in data:
         record["id"] = nwId
         nwId += 1
-    write_json_data("FT_Dataset/situations.json", data)
+    write_json_data(datasetPath, data)
 
 
 if __name__ == "__main__":

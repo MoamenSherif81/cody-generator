@@ -25,7 +25,7 @@ def GenerateMessage(dsl_rules_path):
     with open(abs_path, 'r') as file:
         dsl_rules = file.read()
 
-    message = [
+    PromptMessage= [
         {
             "role": "system",
             "content": (
@@ -51,4 +51,9 @@ def GenerateMessage(dsl_rules_path):
             )
         }
     ]
-    return json.dumps(message)
+    prompt = ""
+    for i in PromptMessage:
+        prompt += str(i)
+        prompt += "\n"
+    return prompt
+
