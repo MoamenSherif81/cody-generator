@@ -10,7 +10,7 @@ from LLM.Queries.GenerateQuestionsQuery import GenerateMessage
 from LLM.Utils import append_to_json_file, write_json_data
 from Utils import parse_json, load_json_data
 
-datasetPath = "FT_Dataset/situations.json"
+datasetPath = "FT_Dataset/db.json"
 
 
 def main(numberOfRequests=None):

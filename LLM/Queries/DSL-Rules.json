@@ -1,8 +1,10 @@
 {
   "grammar-rules": [
-    "Code blocks must be wrapped between opening_tag '{' and closing_tag '}'",
+    "start adding tokens directly",
+    "Don't add start and end tokens in the main page ",
     "Elements must be one of the defined tags in tokens",
     "Elements can be separated by commas",
+    "the main page contains only rows",
     "Container elements (row, box) can contain other elements",
     "Leaf elements (input, select-box, title, text, button) cannot contain other elements",
     "Attributes are specified in angle brackets after the tag: tag_name <attribute=value>",
