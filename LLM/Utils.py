@@ -96,7 +96,6 @@ def append_to_json_file(json_file_path, id, situation, dsl, lang):
         "dsl": dsl,
         "lang": lang
     }
-    print(new_record)
     # Append the new record to the data
     parsed_data.append(new_record)
 
