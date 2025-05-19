@@ -186,3 +186,4 @@ uploads/
 /.venv3/
 /ModelParameters/
 /code_generator.db
+.env
