@@ -70,7 +70,7 @@ def start_scheduler() -> BackgroundScheduler:
     Starts the APScheduler and sets up the background job.
     """
     scheduler = BackgroundScheduler()
-    scheduler.add_job(push_to_google_sheets, 'interval', seconds=60)  # Push records to Google Sheets every 60 seconds
+    scheduler.add_job(push_to_google_sheets, 'interval', seconds=60)
     scheduler.start()
     print("Scheduler started to push records every 60 seconds.")
     return scheduler
