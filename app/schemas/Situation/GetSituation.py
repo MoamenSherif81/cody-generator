@@ -7,7 +7,7 @@ from app.schemas.Situation.SituationLanguage import Language
 class GetSituation(BaseModel):
     language: Language
     aiModel: AiModel
-    SituationDescription: str = Field(..., description="Description with the asked language")
-    Dsl: str = Field(..., description="Dsl for the current situation")
-    Html: str = Field(..., description="Html for the Generated Dsl")
-    Css: str = Field(..., description="Css for the Generated Dsl")
+    situationDescription: str = Field(..., description="Description with the asked language")
+    dsl: str = Field(..., description="Dsl for the current situation")
+    html: str = Field(..., description="Html for the Generated Dsl")
+    css: str = Field(..., description="Css for the Generated Dsl")
