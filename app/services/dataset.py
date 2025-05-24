@@ -56,6 +56,16 @@ async def Generate_Situation(generate_situation: GenerateSituation) -> GetSituat
     try:
         dsl_code = response["DslCode"]
         situation_desc = response["situation"]["SituationDescription"]
+        # If dsl_code is a string with unwanted braces, clean and try to parse again
+        if isinstance(dsl_code, str) and dsl_code.startswith("{") and dsl_code.endswith("}"):
+            try:
+                cleaned = dsl_code[1:-1]  # remove first and last character
+                dsl_code = cleaned
+            except Exception as ex2:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Malformed DSL code after removing braces: {ex2}"
+                )
     except KeyError as ex:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
