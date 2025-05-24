@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, status
 
+from app.Jobs.GoogleSheetFlush import push_to_google_sheets
 from app.schemas.Situation.AcceptSituation import AcceptSituation
 from app.schemas.Situation.GenerateSituation import GenerateSituation
 from app.schemas.Situation.GetSituation import GetSituation
@@ -28,6 +29,15 @@ async def generate_new_situation(generate_situation: GenerateSituation = Depends
     description=AcceptSituation.get_AcceptSituation_description()
 )
 async def accept_situation(acceptSituation: AcceptSituation):
-    # todo: add service logic
     await Save_Situation(acceptSituation)
     return {"detail": "Accepted situation created successfully"}
+
+
+@router.post(
+    "/flush",
+    summary="Push data to google sheets",
+    status_code=status.HTTP_200_OK,
+)
+async def flush_situation():
+    push_to_google_sheets()
+    return {"detail": "situations Pushed successfully"}

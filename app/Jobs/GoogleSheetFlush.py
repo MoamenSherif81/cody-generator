@@ -40,9 +40,8 @@ def push_to_google_sheets() -> None:
         gc = gspread.service_account(filename=cred_path)
         sh = gc.open_by_key(sheet_id)
         with records_lock:
-            # Iterate over records and push them to respective sheets
             for sheet_name, rows in records.items():
-                if not rows:  # Skip empty sheets
+                if not rows:
                     continue
 
                 try:
