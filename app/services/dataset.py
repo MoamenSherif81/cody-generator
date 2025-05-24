@@ -1,15 +1,16 @@
 import os
+from datetime import datetime
 
 import google.generativeai as genai
-from fastapi import HTTPException, status
+from fastapi import status
 
 from Compiler_V2 import lint_dsl, compile_dsl
 from LLM.Queries.GenerateQuestionsOneLangQuery import GenerateMessage
 from LLM.Utils import parse_json
+from app.Jobs.GoogleSheetFlush import add_record
 from app.schemas.Situation.AcceptSituation import AcceptSituation
 from app.schemas.Situation.GenerateSituation import GenerateSituation
 from app.schemas.Situation.GetSituation import GetSituation
-from app.services.google_sheet import append_log, append_record
 
 
 async def Generate_Situation(generate_situation: GenerateSituation) -> GetSituation:
@@ -83,8 +84,12 @@ async def Generate_Situation(generate_situation: GenerateSituation) -> GetSituat
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error compiling DSL: {ex}"
         )
+    # logging
     log_statement = f"{generate_situation.userName} generated new situation with {generate_situation.language}"
-    append_log(generate_situation.userName, log_statement)
+    timestamp = datetime.now().strftime("%A, %Y-%m-%d %H:%M:%S")
+    record = [timestamp, generate_situation.userName, log_statement]
+    add_record("Logs", record)
+
     # Build response model
     return GetSituation(
         situationDescription=situation_desc,
@@ -113,15 +118,18 @@ async def Save_Situation(acceptSituation: AcceptSituation):
             detail=f"DSL is not compilable: {str(e)}"
         )
 
-    # Log the action if no exception occurred
-    log_statement = f"{acceptSituation.userName} Added new Situation with {acceptSituation.language}"
-
-    # Append to records and logs
-    append_record(
+    timestamp = datetime.now().strftime("%A, %Y-%m-%d %H:%M:%S")
+    # Push element to google sheet
+    record = [
         acceptSituation.userName,
         acceptSituation.aiModel,
+        timestamp,
         acceptSituation.situationDescription,
         acceptSituation.dsl,
-        acceptSituation.language
-    )
-    append_log(acceptSituation.userName, log_statement)
+    ]
+    add_record(acceptSituation.language, record)
+
+    # Log the action if no exception occurred
+    log_statement = f"{acceptSituation.userName} Added new Situation with {acceptSituation.language}"
+    record = [timestamp, acceptSituation.userName, log_statement]
+    add_record("Logs", record)
