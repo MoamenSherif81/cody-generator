@@ -3,4 +3,4 @@ from enum import Enum
 
 class AiModel(str, Enum):
     GeminiFlush2_0 = "GeminiFlush2_0"
-    GPT_4o = "GPT_4o"
+    GeminiFlash2_5 = "GeminiFlash2_5"

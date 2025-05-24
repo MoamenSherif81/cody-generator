@@ -5,11 +5,9 @@ from app.schemas.Situation.SituationLanguage import Language
 
 
 class GenerateSituation(BaseModel):
+    userName: str = Field(..., description="the name of the user asked for the situation")
     language: Language = Field(Language.Egyptian, description="Language of the target situation")
-    Issuer: str = Field(..., description="the name of the user asked for the situation")
     model: AiModel = Field(AiModel.GeminiFlush2_0, description="select model to generate the situation")
-    class Config:
-        use_enum_values = True
 
     @staticmethod
     def get_GenerateSituation_description() -> str:
