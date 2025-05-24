@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, status
 from app.schemas.Situation.AcceptSituation import AcceptSituation
 from app.schemas.Situation.GenerateSituation import GenerateSituation
 from app.schemas.Situation.GetSituation import GetSituation
+from app.services.dataset import Generate_Situation
 
 router = APIRouter(prefix="/dataset", tags=["dataset"])
 
@@ -15,7 +16,8 @@ router = APIRouter(prefix="/dataset", tags=["dataset"])
 )
 async def generate_new_situation(generate_situation: GenerateSituation = Depends()):
     # todo: add the service logic
-    situation = GetSituation()
+
+    situation = await Generate_Situation(generate_situation)
     return situation
 
 

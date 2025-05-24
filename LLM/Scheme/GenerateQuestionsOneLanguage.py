@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 
 
 class Situation(BaseModel):
-    SituationDescription: str = Field(description="Web page description in English",
+    SituationDescription: str = Field(description="Web page description",
                                       examples=["I wanna make login page"])
 
 

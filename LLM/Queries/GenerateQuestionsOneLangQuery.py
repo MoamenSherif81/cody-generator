@@ -4,7 +4,7 @@ from pathlib import Path
 from LLM.Scheme.GenerateQuestionsOneLanguage import GenerateQuestions
 
 
-def GenerateMessage(dsl_rules_path):
+def GenerateMessage(dsl_rules_path, lang="arabic"):
     """
     Generate a message with DSL rules loaded from any directory.
     Args:
@@ -39,9 +39,10 @@ def GenerateMessage(dsl_rules_path):
                 "Add a bit complexity\n"
                 "Don't create situation only for inputs might be that or not\n"
                 "Ensure all situation chars be in arabic or english only\n"
-                "All the colors selected should be in the same color scheme and have good looking and harmony "
-                "the text in the dsl should match the request language",
-                "don't use special chars on the text"
+                "All the colors selected should be in the same color scheme and have good looking and harmony\n"
+                "the text in the dsl should match the request language\n",
+                "don't use special chars on the text\n"
+                f"situation description should be in language : {lang}\n"
             )
         },
         {
@@ -59,6 +60,3 @@ def GenerateMessage(dsl_rules_path):
         prompt += str(i)
         prompt += "\n"
     return prompt
-
-
-print(GenerateMessage("Queries/DSL-Rules.json"))
