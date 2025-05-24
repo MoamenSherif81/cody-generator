@@ -1,13 +1,15 @@
 import os
+
 import google.generativeai as genai
+from fastapi import HTTPException, status
 
 from Compiler_V2 import lint_dsl, compile_dsl
 from LLM.Queries.GenerateQuestionsOneLangQuery import GenerateMessage
 from LLM.Utils import parse_json
 from app.schemas.Situation.GenerateSituation import GenerateSituation
 from app.schemas.Situation.GetSituation import GetSituation
+from app.services.google_sheet import append_log
 
-from fastapi import HTTPException, status
 
 async def Generate_Situation(generate_situation: GenerateSituation) -> GetSituation:
     """
@@ -80,7 +82,8 @@ async def Generate_Situation(generate_situation: GenerateSituation) -> GetSituat
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error compiling DSL: {ex}"
         )
-
+    log_statement = f"{generate_situation.userName} generated new situation with {generate_situation.language}"
+    append_log(generate_situation.userName, log_statement)
     # Build response model
     return GetSituation(
         situationDescription=situation_desc,

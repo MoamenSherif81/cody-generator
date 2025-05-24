@@ -1,1 +1,0 @@
-x =[{'DslCode': 'row <color=(240,240,240)> {box {title <color=(51,51,51),text = \', 'Form\': '', 'id': 123, 'situation': {'SituationDescription': 'Create a simple feedback form with a rating and a comment box.'}}, {'Rate us:\': 'select-box <color=(102,178,255),text = \', 'Rating\': ''}, {'Comments:\': 'input <color=(255,255,255),text = \', 'comments\': ''}, {'Submit\': ''}]
