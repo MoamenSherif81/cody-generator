@@ -1,7 +1,7 @@
 from enum import Enum
 
-class Language(Enum):
-    Arabic = 1
-    English = 2
-    Egyptian = 3
-    ArabicAndEnglish = 4
+class Language(str, Enum):
+    Arabic = "Arabic"
+    English = "English"
+    Egyptian = "Egyptian"
+    ArabicAndEnglish = "ArabicAndEnglish"

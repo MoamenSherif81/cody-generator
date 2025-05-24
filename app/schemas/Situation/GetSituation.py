@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
-from AiModels import AiModel
-from SituationLanguage import Language
+from app.schemas.Situation.AiModels import AiModel
+from app.schemas.Situation.SituationLanguage import Language
 
 
 class GetSituation(BaseModel):
