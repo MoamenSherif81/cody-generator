@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, status
 from app.schemas.Situation.AcceptSituation import AcceptSituation
 from app.schemas.Situation.GenerateSituation import GenerateSituation
 from app.schemas.Situation.GetSituation import GetSituation
-from app.services.dataset import Generate_Situation
+from app.services.dataset import Generate_Situation, Save_Situation
 
 router = APIRouter(prefix="/dataset", tags=["dataset"])
 
@@ -29,4 +29,5 @@ async def generate_new_situation(generate_situation: GenerateSituation = Depends
 )
 async def accept_situation(acceptSituation: AcceptSituation):
     # todo: add service logic
+    await Save_Situation(acceptSituation)
     return {"detail": "Accepted situation created successfully"}

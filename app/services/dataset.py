@@ -6,9 +6,10 @@ from fastapi import HTTPException, status
 from Compiler_V2 import lint_dsl, compile_dsl
 from LLM.Queries.GenerateQuestionsOneLangQuery import GenerateMessage
 from LLM.Utils import parse_json
+from app.schemas.Situation.AcceptSituation import AcceptSituation
 from app.schemas.Situation.GenerateSituation import GenerateSituation
 from app.schemas.Situation.GetSituation import GetSituation
-from app.services.google_sheet import append_log
+from app.services.google_sheet import append_log, append_record
 
 
 async def Generate_Situation(generate_situation: GenerateSituation) -> GetSituation:
@@ -93,3 +94,34 @@ async def Generate_Situation(generate_situation: GenerateSituation) -> GetSituat
         language=generate_situation.language,
         aiModel=generate_situation.model
     )
+
+
+from fastapi import HTTPException
+
+
+async def Save_Situation(acceptSituation: AcceptSituation):
+    """
+    1 - Test if the DSL is compilable.
+    2 - Log to the language log.
+    3 - Log to the logging sheet.
+    """
+    try:
+        compile_dsl(acceptSituation.dsl)
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"DSL is not compilable: {str(e)}"
+        )
+
+    # Log the action if no exception occurred
+    log_statement = f"{acceptSituation.userName} Added new Situation with {acceptSituation.language}"
+
+    # Append to records and logs
+    append_record(
+        acceptSituation.userName,
+        acceptSituation.aiModel,
+        acceptSituation.situationDescription,
+        acceptSituation.dsl,
+        acceptSituation.language
+    )
+    append_log(acceptSituation.userName, log_statement)
