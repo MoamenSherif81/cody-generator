@@ -36,6 +36,7 @@ def generate_html(node: ASTNode, tag_mappings: Dict[str, Dict], used_classes: Se
             if attr_name == "color" and isinstance(attr_value, tuple):
                 class_name = f"{attr_name}-{attr_value[0]}-{attr_value[1]}-{attr_value[2]}"
                 css_rule = f".{class_name} {{ {css_property}: rgb({attr_value[0]},{attr_value[1]},{attr_value[2]}); }}"
+                print(attr_value)
             else:
                 class_name = f"{attr_name}-{attr_value.replace(' ', '-')}"
                 css_rule = f".{class_name} {{ {css_property}: {attr_value}; }}"
@@ -57,6 +58,8 @@ def generate_html(node: ASTNode, tag_mappings: Dict[str, Dict], used_classes: Se
         if css_property:
             if attr_name == "color" and isinstance(attr_value, tuple):
                 style_parts.append(f"{css_property}: rgb({attr_value[0]},{attr_value[1]},{attr_value[2]})")
+            elif attr_name == "text":
+                print(attr_value)
             else:
                 style_parts.append(f"{css_property}: {attr_value}")
 
@@ -65,14 +68,28 @@ def generate_html(node: ASTNode, tag_mappings: Dict[str, Dict], used_classes: Se
     # Handle leaf nodes
     if not node.children:
         if html_tag == "input":
-            placeholder = generate_random_text(5)
+            if "text" in node.attributes:
+                placeholder = node.attributes["text"][1:-1]
+            else:
+                placeholder = generate_random_text(5)
             return " " * indent + f"<{html_tag}{class_attr}{style_attr} placeholder='{placeholder}'></{html_tag}>"
         elif html_tag == "select":
+            if "text" in  node.attributes:
+                option1 = node.attributes["text"][1:-1]
+            else:
+                option1 = "select-box"
             return " " * indent + f"<{html_tag}{class_attr}{style_attr}>\n" + \
-                " " * (indent + 2) + "<option value='' hidden selected>Select box</option>\n" + \
+                " " * (indent + 2) + f"<option value='' hidden selected>{option1}</option>\n" + \
                 " " * (indent + 2) + "<option value=''>Option 1</option>\n" + \
                 " " * (indent + 2) + "<option value=''>Option 2</option>\n" + \
                 " " * indent + f"</{html_tag}>"
+        elif "text" in node.attributes:
+            text_content = node.attributes["text"]
+            # Check if node tag is title or text and trim first two characters
+            if node.tag in ["title", "text", "button"]:
+                text_content = text_content[1:-1] if len(text_content) > 2 else text_content
+            return " " * indent + f"<{html_tag}{class_attr}{style_attr}>{text_content}</{html_tag}>"
+
         elif text_limit > 0:
             text = generate_random_text(text_limit)
             return " " * indent + f"<{html_tag}{class_attr}{style_attr}>{text}</{html_tag}>"
