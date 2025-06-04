@@ -1,19 +1,21 @@
-from typing import List, Tuple
+from typing import List
 
 from fastapi import UploadFile, HTTPException
 
-from Compiler_V2 import lint_dsl, compile_dsl
+from Compiler_V2 import is_compilable
 from Model.sampleFromImage import run_sampler, get_preprocessed_img_from_bytes, IMAGE_SIZE
 # Assuming model and sampler are initialized elsewhere
 from app.services.shared_ai_state import model, sampler  # Replace with your actual import
 
 
-async def process_screenshots(uploaded_files: List[UploadFile]) -> Tuple[str, str, str]:
+async def process_screenshots(uploaded_files: List[UploadFile]) -> str:
     """
     Process a list of uploaded images to generate DSL, HTML, and CSS.
     Reads file bytes once and processes them in memory.
     """
     dsl = ""
+    print(dsl)
+
     for img in uploaded_files:
         # Validate content type
         if not img.content_type.startswith("image/"):
@@ -36,19 +38,13 @@ async def process_screenshots(uploaded_files: List[UploadFile]) -> Tuple[str, st
             dsl += temp_dsl + ","
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"AI model failed for {img.filename}: {str(e)}")
-
     if not dsl:
         raise HTTPException(status_code=400, detail="No valid images processed")
 
     # Remove trailing comma and compile DSL
     dsl = dsl.rstrip(",")
-    try:
-        html, css = compile_dsl(dsl)
-        dsl = lint_dsl(dsl)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"DSL compilation failed: {str(e)}")
-
-    return dsl, html, css
+    is_compilable(dsl)
+    return dsl
 #
 # def get_preprocessed_img_from_bytes(image_bytes: bytes, image_size: int) -> np.ndarray:
 #     """

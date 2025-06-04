@@ -1,6 +1,8 @@
 import os
 from typing import Optional
 
+from fastapi import HTTPException
+
 from Compiler_V2.config import load_config
 from Compiler_V2.css_processor import filter_css, generate_css_template
 from Compiler_V2.generator import generate_html, generate_html_template
@@ -43,3 +45,11 @@ def lint_dsl(dsl: str) -> str:
 def compile_dsl_safe(dsl_content: Optional[str]) -> tuple[Optional[str], Optional[str]]:
     return compile_dsl(dsl_content) if dsl_content else (None, None)
 
+
+def is_compilable(dsl_content: Optional[str]):
+    if not dsl_content.strip():
+        raise HTTPException(status_code=400, detail="DSL content must not be empty")
+    try:
+        compile_dsl(dsl_content)
+    except:
+        raise HTTPException(status_code=400, detail="DSL is not compilable")
