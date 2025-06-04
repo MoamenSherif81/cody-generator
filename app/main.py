@@ -34,18 +34,18 @@ app.include_router(dsl.router)
 app.include_router(Dataset.router)
 
 
-# @app.on_event("startup")
-# async def startup_event():
-#     print("Background job started!")
-#     global scheduler
-#     scheduler = start_scheduler()
-#
-#
-# @app.on_event("shutdown")
-# async def shutdown_event():
-#     push_to_google_sheets()
-#     scheduler.shutdown()
-#     print("Background job stopped.")
+@app.on_event("startup")
+async def startup_event():
+    print("Background job started!")
+    global scheduler
+    scheduler = start_scheduler()
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    push_to_google_sheets()
+    scheduler.shutdown()
+    print("Background job stopped.")
 
 
 @app.get("/", summary="Root endpoint", description="Welcome message for the Code Generator API")

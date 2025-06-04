@@ -184,7 +184,8 @@ Extra
 uploads/
 /Dataset/Screenshots/
 /.venv3/
-/ModelParameters/
+/plus/ModelParameters/
 /code_generator.db
 .env
 LLM/FT_Dataset/
+plus/
