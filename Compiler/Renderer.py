@@ -1,13 +1,16 @@
+import asyncio
 import os
 import re
-import time
 import sys
-import asyncio
+import time
+
 from playwright.async_api import async_playwright
-from compiler import compiler
 from tqdm import tqdm
 
+from compiler import compiler
+
 SEM_LIMIT = os.cpu_count()  # Number of concurrent operations
+
 
 def extract_body_content(html):
     """Extracts the content inside the <body> tag from an HTML string."""
