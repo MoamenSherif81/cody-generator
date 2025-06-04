@@ -1,8 +1,8 @@
-from typing import List, Tuple
+from typing import List
 
 from fastapi import UploadFile, HTTPException
 
-from Compiler_V2 import lint_dsl, compile_dsl
+from Compiler_V2 import is_compilable
 from Model.sampleFromImage import run_sampler, get_preprocessed_img_from_bytes, IMAGE_SIZE
 # Assuming model and sampler are initialized elsewhere
 from app.services.shared_ai_state import model, sampler  # Replace with your actual import
@@ -43,12 +43,7 @@ async def process_screenshots(uploaded_files: List[UploadFile]) -> str:
 
     # Remove trailing comma and compile DSL
     dsl = dsl.rstrip(",")
-    try:
-        html, css = compile_dsl(dsl)
-        dsl = lint_dsl(dsl)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"DSL compilation failed: {str(e)}")
-
+    is_compilable(dsl)
     return dsl
 #
 # def get_preprocessed_img_from_bytes(image_bytes: bytes, image_size: int) -> np.ndarray:
