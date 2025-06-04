@@ -180,7 +180,7 @@ bin
 bin.zip
 input
 Extra
-/test/
+/app/test/
 uploads/
 /Dataset/Screenshots/
 /.venv3/

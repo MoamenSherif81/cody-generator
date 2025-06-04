@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -33,20 +34,22 @@ app.include_router(dsl.router)
 app.include_router(Dataset.router)
 
 
-@app.on_event("startup")
-async def startup_event():
-    print("Background job started!")
-    global scheduler
-    scheduler = start_scheduler()
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    push_to_google_sheets()
-    scheduler.shutdown()
-    print("Background job stopped.")
+# @app.on_event("startup")
+# async def startup_event():
+#     print("Background job started!")
+#     global scheduler
+#     scheduler = start_scheduler()
+#
+#
+# @app.on_event("shutdown")
+# async def shutdown_event():
+#     push_to_google_sheets()
+#     scheduler.shutdown()
+#     print("Background job stopped.")
 
 
 @app.get("/", summary="Root endpoint", description="Welcome message for the Code Generator API")
 def read_root():
     return {"message": "What the Fuck are u doing here it's root !"}
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=5000)

@@ -5,6 +5,7 @@ import json
 import gspread
 from dotenv import load_dotenv
 from LLM.Scheme.AnswerQuestion import AnswerQuestion
+from tqdm import tqdm  # Added tqdm import
 
 # Load environment variables
 load_dotenv()
@@ -36,12 +37,12 @@ def shuffle_data(data, seed_value):
     random.shuffle(data)
 
 def prepare_finetuning_data(records, dsl_rules_path, system_message):
-    """Prepare the data for LLM fine-tuning."""
+    """Prepare the data for LLM fine-tuning with progress bar."""
     llm_finetunning_data = []
     with open(dsl_rules_path, 'r') as file:
         dsl_rules = file.read()
 
-    for rec in records:
+    for rec in tqdm(records, desc="Processing records"):  # Added tqdm progress bar
         llm_finetunning_data.append({
             "system": system_message,
             "instruction": "\n".join([

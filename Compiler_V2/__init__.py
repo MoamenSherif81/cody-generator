@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from Compiler_V2.config import load_config
 from Compiler_V2.css_processor import filter_css, generate_css_template
@@ -37,3 +38,8 @@ def lint_dsl(dsl: str) -> str:
     json_file = os.path.join(base_dir, "config.json")
     tag_mappings, opening_tag, closing_tag = load_config(json_file)
     return lint_and_format_dsl(dsl, tag_mappings, opening_tag, closing_tag)
+
+
+def compile_dsl_safe(dsl_content: Optional[str]) -> tuple[Optional[str], Optional[str]]:
+    return compile_dsl(dsl_content) if dsl_content else (None, None)
+
