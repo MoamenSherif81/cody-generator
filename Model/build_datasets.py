@@ -1,6 +1,6 @@
-import sys
-import shutil
 import random
+import shutil
+import sys
 from pathlib import Path
 
 
@@ -52,6 +52,7 @@ def main():
                     shutil.copy(str(src), str(dst))
 
     print(f"Split completed! {total} samples distributed into training, validation, and testing.")
+
 
 if __name__ == "__main__":
     main()

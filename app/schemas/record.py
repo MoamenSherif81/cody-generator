@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional, List
 
 from pydantic import BaseModel
@@ -5,10 +6,11 @@ from pydantic import BaseModel
 
 class RecordItem(BaseModel):
     record_id: int
-    screenshot_path: Optional[str]  # Allow None for DSL-based records
+    screenshot_path: Optional[str]
     dsl_code: Optional[str]
     html: Optional[str]
     css: Optional[str]
+    createdAt : datetime
 
 
 class RecordListResponse(BaseModel):

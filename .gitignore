@@ -180,9 +180,11 @@ bin
 bin.zip
 input
 Extra
-/test/
+/app/test/
 uploads/
 /Dataset/Screenshots/
 /.venv3/
 /ModelParameters/
 /code_generator.db
+.env
+LLM/FT_Dataset/

@@ -1,10 +1,10 @@
 import json
 from pathlib import Path
 
-from LLM.Scheme.GenerateQuestions import GenerateQuestions
+from LLM.Scheme.AnswerQuestion import AnswerQuestion, AskQuestion
 
 
-def GenerateMessage(dsl_rules_path):
+def AnswerPrompt(dsl_rules_path, prom):
     """
     Generate a message with DSL rules loaded from any directory.
     Args:
@@ -29,25 +29,23 @@ def GenerateMessage(dsl_rules_path):
         {
             "role": "system",
             "content": (
-                "You are a Frontend Developer you want to create web page by generating website using our own custom DSL.\n"
+                "You are a professional Frontend Developer that can generate webpage using our own custom DSL.\n"
+                "Generate the dsl for the provided situation"
                 f"Dsl Rules = {dsl_rules}\n"
-                "You have to Generate Situation JSON details according the Pydantic details.\n"
+                f"You have to Generate response JSON {json.dumps(AnswerQuestion.model_json_schema(), ensure_ascii=False)} according the Pydantic details.\n"
                 "Use only Dsl Tokens.\n"
-                "Generate Random Situation\n"
                 "Do not generate any introduction or conclusion."
-                "Be Creative on the situation\n"
-                "Add a bit complexity\n"
-                "Don't create situation only for inputs might be that or not\n"
-                "Ensure all situation chars be in arabic or english only\n"
-                "All the colors selected should be in the same color scheme and have good looking and harmony "
+                "Use a simple, visually appealing random color scheme, ensuring all selected colors belong to it."
+                "don't give color to text or title token"
+                "Be Creative"
             )
         },
         {
             "role": "user",
             "content": (
                 "## Pydantic Details:\n"
-                f"{json.dumps(GenerateQuestions.model_json_schema(), ensure_ascii=False)}\n\n"
-                "## Question :\n"
+                f"{json.dumps(AskQuestion.model_json_schema(), ensure_ascii=False)}\n\n"
+                f"## Question :\n {prom} \n"
                 "```json"
             )
         }
@@ -59,4 +57,4 @@ def GenerateMessage(dsl_rules_path):
     return prompt
 
 
-print(GenerateMessage("Queries/DSL-Rules.json"))
+print(AnswerPrompt("DSL-Rules.json", " i want to make questionnaire form "))

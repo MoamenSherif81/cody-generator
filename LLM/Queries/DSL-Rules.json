@@ -1,0 +1,45 @@
+{
+  "grammar-rules": [
+    "start adding tokens directly",
+    "Don't add start and end tokens in the main page ",
+    "Elements must be one of the defined tags in tokens",
+    "Elements can be separated by commas",
+    "the main page contains only rows",
+    "Container elements (row, box) can contain other elements",
+    "Leaf elements (input, select-box, title, text, button) cannot contain other elements",
+    "Attributes are specified in angle brackets after the tag: tag_name <attribute=value>",
+    "Color attributes must be in RGB format: <color=(r,g,b)> where r,g,b are between 0-255",
+    "Multiple attributes can be specified using commas: <attr1=value1,attr2=value2>",
+    "Empty DSL input is not allowed",
+    "Provide text for each text as parameter after using tag text = (element text)",
+    "If text provided should be max of 3 words and one parameter and no special characters ",
+    "if text provided should match the main language of the request",
+    "if text provided should be between ()",
+    "provide text for each select box or title ",
+    "Consecutive commas are not allowed",
+    "Each opening tag must have a matching closing tag",
+    "Select-box elements automatically generate options in the HTML output",
+    "Input elements automatically generate placeholder text",
+    "Each element can have both predefined CSS classes and dynamic CSS attributes",
+    "Invalid or unknown tokens will raise validation errors"
+  ],
+  "tokens": {
+    "{": "opening tag that should be in the beginning of the code and after any token row,box",
+    "}": "closing tag should be in the end of the code and match opening tags",
+    ",": "separator between elements at the same level",
+    "<>": "attribute wrapper that contains element properties",
+    "row": "container element that represents horizontal layout, can contain multiple boxes",
+    "box": "container element that represents vertical layout, can contain multiple unit elements",
+    "button": "leaf element that represents a clickable button",
+    "title": "leaf element that represents a heading text",
+    "text": "leaf element that represents regular text content",
+    "select-box": "leaf element that represents a dropdown selection menu",
+    "input": "leaf element that represents a text input field"
+  },
+  "examples": {
+    "basic": "{ row { box { title, input, button } } }",
+    "with_attributes": "{ row { box <color=(255,0,0)> { title <color=(0,0,255),text =(hello)>, button } } }",
+    "multiple_containers": "{ row { box { input<text=(Enter your name)> }, box { select-box } } }",
+    "complex_code": "row <color=(0,122,255)> {box{title <color=(34,34,34),size=24px>}},row {box <color=(245,245,245)> {text <color=(34,34,34),size=16px,text =(confirm to updates)>,button <color=(52,199,89),text = (confirm)>},box <color=(230,230,255)> {text <color=(34,34,34),size=16px, text = (section 2)>}},row {box <color=(245,245,245)> {input<text=(enter your name)>,select-box <color=(0,122,255),text = (hello)>,button <color=(52,199,89),text=(confirm)>}}"
+  }
+}
