@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.config.database import get_db
 from app.dependencies.auth import get_current_user
 from app.models.user import User
-from app.schemas.project import ProjectCreate, ProjectResponse, UpdateProject, GetAllProjectsResponse
+from app.schemas.project import ProjectCreate, ProjectResponse, UpdateProject, GetAllProjectsResponse, GetFullProject
 from app.services.ProjectService import ProjectService
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
@@ -22,7 +22,7 @@ def create_project(
     return service.add_new_project(project)
 
 
-@router.get("/{project_id}")
+@router.get("/{project_id}", response_model=GetFullProject)
 def read_project(
         project_id: int,
         service: ProjectService = Depends(get_project_service)

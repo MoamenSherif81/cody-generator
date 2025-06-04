@@ -22,7 +22,7 @@ class RecordService:
             self,
             screenshots: List[UploadFile],
             project_id: Optional[int]
-    ):
+    ) -> GetRecordResponse:
         if not screenshots:
             raise HTTPException(status_code=400, detail="Please upload at least 1 image")
         dsl = await process_screenshots(screenshots)
@@ -47,7 +47,7 @@ class RecordService:
             self,
             dsl_content: str,
             project_id: Optional[int]
-    ):
+    ) -> GetRecordResponse:
         if not dsl_content.strip():
             raise HTTPException(status_code=400, detail="DSL content must not be empty")
         if not self._is_project_exist(project_id):
@@ -66,7 +66,7 @@ class RecordService:
 
         return GetRecordResponse.from_record(db_record)
 
-    def get_records_with_no_project(self):
+    def get_records_with_no_project(self)->GetAllRecordResponse:
         records = (
             self.db.query(Record)
             .filter(Record.user_id == self.current_user.id, Record.project_id.is_(None))
@@ -80,7 +80,7 @@ class RecordService:
     def get_single_record(
             self,
             record_id: int,
-    ):
+    )->GetRecordResponse:
         db_record = self._get_record(record_id)
         return GetRecordResponse.from_record(db_record)
 
@@ -88,7 +88,7 @@ class RecordService:
             self,
             record_id: int,
             updateRecord: UpdateRecord
-    ):
+    )->GetRecordResponse:
         db_record = self._get_record(record_id)
         is_compilable(updateRecord.dsl_content)
         db_record.dsl_content = updateRecord.dsl_content
