@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.Jobs.GoogleSheetFlush import start_scheduler, push_to_google_sheets
 from app.config.database import engine, Base
-from app.routers import user, project, record, dsl, Dataset
+from app.routers import user, project, record, dsl, Dataset,message
 
 app = FastAPI(title="Cody-generator BackEnd")
 
@@ -32,6 +32,7 @@ app.include_router(project.router)
 app.include_router(record.router)
 app.include_router(dsl.router)
 app.include_router(Dataset.router)
+app.include_router(message.router)
 
 
 @app.on_event("startup")

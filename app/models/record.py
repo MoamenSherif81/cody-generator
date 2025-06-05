@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 from app.config.database import Base
+from app.models.message import Message
 
 
 class Record(Base):
@@ -18,18 +19,5 @@ class Record(Base):
 
     user = relationship("User", back_populates="records")
     project = relationship("Project", back_populates="records")
-
-
-from pydantic import BaseModel
-from typing import List, Optional
-
-
-class RecordItem(BaseModel):
-    screenshotPath: Optional[str]  # Allow None for screenshotPath
-    dsl_code: Optional[str]
-    Html: Optional[str]
-    Css: Optional[str]
-
-
-class RecordListResponse(BaseModel):
-    data: List[RecordItem]
+    messages = relationship("Message", back_populates="record", cascade="all, delete-orphan",
+                            order_by=lambda: Message.timestamp)

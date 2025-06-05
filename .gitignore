@@ -189,3 +189,6 @@ uploads/
 .env
 LLM/FT_Dataset/
 plus/
+LLM/ManualDataset
+Dataset/basic_generator
+Dataset/include
