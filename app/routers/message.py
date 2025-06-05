@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.schemas.message import MessageCreate, MessageResponse, ChatResponse
+from app.schemas.code import AnonymousCodeResponse
+from app.schemas.message import MessageCreate, MessageResponse, ChatResponse, SendMessageResponse
 from app.services.message_service import MessageService
 from app.config.database import get_db
 
@@ -17,7 +18,7 @@ def get_chat(record_id: int, service: MessageService = Depends(get_message_servi
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@router.post("/message", response_model=MessageResponse)
+@router.post("/message", response_model=SendMessageResponse)
 def send_message(record_id: int, message: MessageCreate, service: MessageService = Depends(get_message_service)):
     try:
         return service.send_message(record_id, message)
