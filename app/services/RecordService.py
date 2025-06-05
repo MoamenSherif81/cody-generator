@@ -9,8 +9,10 @@ from Compiler_V2 import is_compilable
 from app.models.project import Project
 from app.models.record import Record
 from app.models.user import User
+from app.schemas.message import MessageCreate
 from app.schemas.record import GetRecordResponse, GetAllRecordResponse, UpdateRecord
 from app.services.ai_service import process_screenshots
+from app.services.message_service import MessageService
 
 
 class RecordService:
@@ -66,7 +68,20 @@ class RecordService:
 
         return GetRecordResponse.from_record(db_record)
 
-    def get_records_with_no_project(self)->GetAllRecordResponse:
+    def create_prompt_record(self, prompt: str, project_id: int) -> GetRecordResponse:
+        db_record = self.create_dsl_record(dsl_content="row{}", project_id=project_id)
+        message_Service = MessageService(self.db)
+        msg = message_Service.send_message(db_record.record_id, MessageCreate(
+            content=prompt
+        ))
+        return self.update_record(
+            db_record.record_id,
+            UpdateRecord(
+                dsl_content=msg.code
+            )
+        )
+
+    def get_records_with_no_project(self) -> GetAllRecordResponse:
         records = (
             self.db.query(Record)
             .filter(Record.user_id == self.current_user.id, Record.project_id.is_(None))
@@ -80,7 +95,7 @@ class RecordService:
     def get_single_record(
             self,
             record_id: int,
-    )->GetRecordResponse:
+    ) -> GetRecordResponse:
         db_record = self._get_record(record_id)
         return GetRecordResponse.from_record(db_record)
 
@@ -88,7 +103,7 @@ class RecordService:
             self,
             record_id: int,
             updateRecord: UpdateRecord
-    )->GetRecordResponse:
+    ) -> GetRecordResponse:
         db_record = self._get_record(record_id)
         is_compilable(updateRecord.dsl_content)
         db_record.dsl_content = updateRecord.dsl_content

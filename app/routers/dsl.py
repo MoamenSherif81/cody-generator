@@ -4,7 +4,11 @@ from fastapi import APIRouter
 from fastapi import UploadFile, File
 
 from Compiler_V2 import is_compilable
+from LLM.Utils import parse_json
+from app.models.message import Message
 from app.schemas.code import AnonymousCodeResponse
+from app.schemas.message import LLmMessageFormat
+from app.services.KaggleService import LLMService
 from app.services.ai_service import process_screenshots
 
 router = APIRouter(prefix="/dsl", tags=["dsl"])
@@ -34,6 +38,25 @@ async def create_dsl_record(
         dsl_content: str,
 ):
     return AnonymousCodeResponse.from_dsl(dsl_content)
+
+
+@router.post(
+    "/prompt",
+    summary="Create a record with DSL content",
+    description="Create a record with mandatory DSL content, returns compiled HTML & CSS.",
+    response_model=AnonymousCodeResponse
+)
+async def create_dsl_record(
+        prompt: str,
+):
+    llm_service = LLMService()
+    message = LLmMessageFormat(
+        role="user",
+        content=prompt
+    )
+    llm_response = llm_service.GenerateResponse(message, [])["response"]
+    dsl = parse_json(llm_response)['dsl']
+    return AnonymousCodeResponse.from_dsl(dsl)
 
 
 @router.post(
