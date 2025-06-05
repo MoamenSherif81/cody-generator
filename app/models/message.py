@@ -13,7 +13,7 @@ class Message(Base):
     timestamp = Column(DateTime, default=datetime.utcnow)
     content = Column(Text, nullable=False)
     code = Column(Text, nullable=True)
-
+    role = Column(Text, nullable=False)
     record = relationship("Record", back_populates="messages")
 
     @classmethod

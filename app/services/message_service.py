@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 
 from sqlalchemy.orm import Session
@@ -6,7 +5,7 @@ from sqlalchemy.orm import Session
 from LLM.Utils import parse_json
 from app.models.message import Message
 from app.models.record import Record
-from app.schemas.message import MessageCreate, MessageResponse, ChatResponse, SendMessageResponse
+from app.schemas.message import MessageCreate, MessageResponse, ChatResponse, SendMessageResponse, LLmMessageFormat
 from app.services.KaggleService import LLMService
 
 
@@ -32,15 +31,18 @@ class MessageService:
             record_id=record_id,
             content=data.content,
             code=data.code,
-            timestamp=datetime.utcnow()
+            timestamp=datetime.utcnow(),
+            role="user"
         )
-        llm_response =llm_service.GenerateResponse(message.to_llm_message())["response"]
-        dsl= self._clean_response(llm_response)
+        history = self._get_message_history(record_id,10)
+        llm_response = llm_service.GenerateResponse(message.to_llm_message(),history)["response"]
+        dsl = self._clean_response(llm_response)
         aiResponse = Message(
             record_id=record_id,
-            content="",
+            content=dsl,
             code=dsl,
-            timestamp=datetime.utcnow()
+            timestamp=datetime.utcnow(),
+            role="system"
         )
         self.db.add(message)
         self.db.add(aiResponse)
@@ -57,10 +59,27 @@ class MessageService:
         self.db.query(Message).filter_by(record_id=record_id).delete()
         self.db.commit()
         return ChatResponse(record_id=record.id, messages=[])
-    def _clean_response(self,res:str)->str:
-        jsn  = parse_json(res)
-        return jsn["dsl"]
-    def _get_message_history(self):
-        """
 
+    def _clean_response(self, res: str) -> str:
+        jsn = parse_json(res)
+        return jsn["dsl"]
+
+    def _get_message_history(self, record_id, limit):
         """
+        Returns the last `limit` messages for the given record_id,
+        ordered by timestamp ascending (oldest first).
+        """
+        messages = (
+            self.db.query(Message)
+            .filter(Message.record_id == record_id)
+            .order_by(Message.timestamp.asc())
+            .limit(limit)
+            .all()
+        )
+        if not messages:
+            return []
+        ret_messages = [LLmMessageFormat(
+            role=mes.role,
+            content=mes.content
+        ) for mes in messages]
+        return ret_messages

@@ -17,14 +17,15 @@ class MessageResponse(BaseModel):
     timestamp: datetime
     content: str
     code: Optional[str]
-
+    role:str
     @classmethod
     def from_message(cls, message: Message):
         return cls(
             id=message.id,
             timestamp=message.timestamp,
             content=message.content,
-            code=message.code
+            code=message.code,
+            role=message.role
         )
 
 class SendMessageResponse(MessageResponse):
@@ -39,7 +40,8 @@ class SendMessageResponse(MessageResponse):
             timestamp=message.timestamp,
             content=message.content,
             code=message.code,
-            compiled=code
+            compiled=code,
+            role=message.role
         )
 
 class ChatResponse(BaseModel):
