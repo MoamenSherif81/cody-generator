@@ -10,7 +10,7 @@ from app.models.record import Record
 class RecordItem(BaseModel):
     record_id: int
     screenshot_path: Optional[str]
-    dsl_code: Optional[str]
+    dsl: Optional[str]
     html: Optional[str]
     css: Optional[str]
     createdAt: datetime
