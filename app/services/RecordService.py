@@ -71,9 +71,11 @@ class RecordService:
     def create_prompt_record(self, prompt: str, project_id: int) -> GetRecordResponse:
         db_record = self.create_dsl_record(dsl_content="row{}", project_id=project_id)
         message_Service = MessageService(self.db)
-        msg = message_Service.send_message(db_record.record_id, MessageCreate(
-            content=prompt
-        ))
+        msg = message_Service.send_message(
+            db_record.record_id,
+            MessageCreate(
+                content=prompt
+            ))
         return self.update_record(
             db_record.record_id,
             UpdateRecord(

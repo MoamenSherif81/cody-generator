@@ -16,15 +16,14 @@ class Message(Base):
     role = Column(Text, nullable=False)
     record = relationship("Record", back_populates="messages")
 
-    @classmethod
-    def to_llm_message(cls):
-        llm_message = ""
-        if cls.code:
+    def to_llm_message(self)->str:
+        llm_message :str= ""
+        if self.code:
             llm_message += "apply this edit to the dsl code i will provide\n"
-            llm_message += cls.content
+            llm_message += self.content
             llm_message += "```dsl \n"
-            llm_message += cls.code
+            llm_message += self.code
             llm_message += "```"
         else:
-            llm_message += cls.content
+            llm_message += self.content
         return llm_message

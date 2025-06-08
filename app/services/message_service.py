@@ -34,8 +34,9 @@ class MessageService:
             timestamp=datetime.utcnow(),
             role="user"
         )
-        history = self._get_message_history(record_id,10)
-        llm_response = llm_service.GenerateResponse(message.to_llm_message(),history)["response"]
+        history = self._get_message_history(record_id, 10)
+        msg = message.to_llm_message()
+        llm_response = llm_service.GenerateResponse(msg, history)["response"]
         dsl = self._clean_response(llm_response)
         aiResponse = Message(
             record_id=record_id,
@@ -61,8 +62,16 @@ class MessageService:
         return ChatResponse(record_id=record.id, messages=[])
 
     def _clean_response(self, res: str) -> str:
-        jsn = parse_json(res)
-        return jsn["dsl"]
+        try:
+            jsn = parse_json(res)
+            return jsn["dsl"]
+        except:
+            res = res.replace("`", "")
+            res = res.replace("dsl", "")
+            res = res.replace("\n", "")
+            if res.startswith("{") and res.endswith("}"):
+                res = res[1:-1]
+            return res
 
     def _get_message_history(self, record_id, limit):
         """

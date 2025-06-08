@@ -13,7 +13,7 @@ load_dotenv()
 class LLMService:
     _dsl_rules = os.path.join(os.getcwd(), "LLM/Queries/DSL-Rules.json")
 
-    def GenerateResponse(self, message, history=None):
+    def GenerateResponse(self, message:str, history=None):
         if history is None:
             history = []
         kaggleBaseUrl = os.getenv("KAGGLE_BASE_URL", "")
@@ -30,7 +30,7 @@ class LLMService:
         print(response)
         return response.json()
 
-    def _AnswerPrompt(self, prom):
+    def _AnswerPrompt(self, prom:str):
         with open(self._dsl_rules, 'r') as file:
             dsl_rules = file.read()
 
