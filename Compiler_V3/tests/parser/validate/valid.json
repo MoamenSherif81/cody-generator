@@ -1,0 +1,112 @@
+[
+  {
+    "test_name": "header_missing_attr_block",
+    "test_description": "Header tag provided without angle brackets",
+    "dsl": "header"
+  },
+  {
+    "test_name": "header_with_args",
+    "test_description": "Valid header with multiple args",
+    "dsl": "header<args=[\"Home\", \"About\"]>"
+  },
+  {
+    "test_name": "header_with_empty_args",
+    "test_description": "Valid header with empty args",
+    "dsl": "header<args=[]>"
+  },
+  {
+    "test_name": "header_without_attributes",
+    "test_description": "Valid header with no attributes",
+    "dsl": "header<>"
+  },
+  {
+    "test_name": "side_nav_with_args",
+    "test_description": "Valid side_nav with multiple args",
+    "dsl": "side_nav<args=[\"Menu1\", \"Menu2\"]>"
+  },
+  {
+    "test_name": "footer_with_args",
+    "test_description": "Valid footer with args list",
+    "dsl": "footer<args=[\"Contact\", \"Terms\"]>"
+  },
+  {
+    "test_name": "full_structure_with_all_blocks",
+    "test_description": "Header, side_nav, rows, and footer all included",
+    "dsl": "header<args=[\"Top\"]>\nside_nav<args=[\"Nav\"]>\nrow {\n  box {\n    title<text=(\"X\")>\n  }\n},\nrow {\n  box {\n    button<text=(\"Y\")>\n  }\n}\nfooter<args=[\"Bottom\"]>"
+  },
+  {
+    "test_name": "row_with_multiple_boxes",
+    "test_description": "Row with two boxes each with different leaf tags",
+    "dsl": "row {\n  box {\n    title<text=(\"Title1\")>, text<text=(\"Info1\")>\n  },\n  box {\n    input<text=(\"Email\")>, button<text=(\"Send\")>\n  }\n}"
+  },
+  {
+    "test_name": "box_with_all_leaf_tags",
+    "test_description": "Box containing one of each leaf tag",
+    "dsl": "row {\n  box {\n    title<text=(\"T\")>,\n    text<text=(\"Some text\")>,\n    input<text=(\"Email\")>,\n    button<text=(\"Click\")>,\n    select_box<text=(\"Choose\")>,\n    image<src=(\"img.png\")>\n  }\n}"
+  },
+  {
+    "test_name": "leaf_with_color_tuple",
+    "test_description": "Box with color attribute using RGB tuple",
+    "dsl": "row {\n  box<color=(255,255,255)> {\n    title<text=(\"White\")>\n  }\n}"
+  },
+  {
+    "test_name": "row_with_attr_and_empty_body",
+    "test_description": "Row with attributes and no box",
+    "dsl": "row<id=(\"row1\")> {}"
+  },
+  {
+    "test_name": "box_with_empty_body",
+    "test_description": "Box defined with no content",
+    "dsl": "row {\n  box {}\n}"
+  },
+  {
+    "test_name": "empty_dsl_allowed",
+    "test_description": "Completely empty DSL input is valid",
+    "dsl": ""
+  },
+  {
+    "test_name": "single_leaf_only",
+    "test_description": "DSL with only one valid leaf element",
+    "dsl": "row {\n  box {\n    title<text=(\"Just One\")>\n  }\n}"
+  },
+  {
+    "test_name": "box_with_no_attributes",
+    "test_description": "Box defined without attribute block",
+    "dsl": "row {\n  box {\n    button<text=(\"Click\")>\n  }\n}"
+  },
+  {
+    "test_name": "header_with_spaces_and_newlines",
+    "test_description": "Header block with extra whitespace and newlines",
+    "dsl": "   header<args=[ \"H1\" ,  \"H2\"  ]>\n"
+  },
+  {
+    "test_name": "single_row_single_box_single_leaf",
+    "test_description": "A single row with one box containing one title tag",
+    "dsl": "row {\n  box {\n    title<text=(\"Hello\")>\n  }\n}"
+  },
+  {
+    "test_name": "nested_box_multiple_leafs",
+    "test_description": "Box contains all leaf tags with valid attribute syntax",
+    "dsl": "row {\n  box {\n    title<text=(\"Title\")>,\n    text<text=(\"Body\")>,\n    input<text=(\"Email\")>,\n    button<text=(\"Click\")>,\n    select_box<text=(\"Pick\")>,\n    image<src=(\"img.png\")>\n  }\n}"
+  },
+  {
+    "test_name": "multiple_rows_each_with_boxes",
+    "test_description": "Two rows, each with one box and one title",
+    "dsl": "row {\n  box {\n    title<text=(\"Row 1\")>\n  }\n},\nrow {\n  box {\n    title<text=(\"Row 2\")>\n  }\n}"
+  },
+  {
+    "test_name": "nested_boxes_inside_multiple_rows",
+    "test_description": "Two rows with multiple boxes and multiple leaf tags",
+    "dsl": "row {\n  box {\n    title<text=(\"A1\")>, text<text=(\"B1\")>\n  },\n  box {\n    button<text=(\"Next\")>\n  }\n},\nrow {\n  box {\n    input<text=(\"Field\")>\n  }\n}"
+  },
+  {
+    "test_name": "row_with_empty_box",
+    "test_description": "Row with one box but no leaf inside",
+    "dsl": "row {\n  box {}\n}"
+  },
+  {
+    "test_name": "valid_all_tags_case",
+    "test_description": "A DSL structure that includes all tags (header, side_nav, row, box, and all leaf tags)",
+    "dsl": "header<args=[\"Home\", \"About\"]>\nside_nav<args=[\"Option1\", \"Option2\"]>\nrow {\n  box {\n    title<text=(\"Welcome\")>,\n    text<text=(\"This is a test page.\")>,\n    input<text=(\"Email\")>,\n    button<text=(\"Submit\")>,\n    select_box<text=(\"Select one\")>,\n    image<src=(\"logo.png\")>\n  }\n},\nrow {\n  box {\n    title<text=(\"Row 2 Title\")>,\n    button<text=(\"Click Me\")>\n  }\n},\nfooter<args=[\"Contact\", \"Terms\"]>"
+  }
+]
