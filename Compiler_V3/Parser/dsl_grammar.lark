@@ -1,0 +1,38 @@
+start: maybe_header maybe_side_nav maybe_rows maybe_footer
+
+maybe_header: tag_header?
+maybe_side_nav: tag_side_nav?
+maybe_footer: tag_footer?
+maybe_rows: tag_row (COMMA tag_row)*
+
+tag_header: "header" attr_block
+tag_footer: "footer" attr_block
+tag_side_nav: "side_nav" attr_block
+
+tag_row: "row" attr_block? "{" row_body? "}"
+row_body: (tag_box (COMMA tag_box)*)?
+
+tag_box: "box" attr_block? "{" box_body? "}"
+box_body: (leaf_tag (COMMA leaf_tag)*)?
+
+leaf_tag: LEAF_TAG attr_block?
+
+LEAF_TAG: "button" | "title" | "text" | "select_box" | "input" | "image"
+
+attr_block: "<" attr (COMMA attr)* ">"
+attr: NAME "=" tuple_value
+
+tuple_value: "(" value_list? ")"
+value_list: value (COMMA value)*
+
+value: ESCAPED_STRING | NUMBER
+
+COMMA: ","
+COMMENT: /#[^\n]*/
+
+%ignore COMMENT
+%import common.CNAME -> NAME
+%import common.ESCAPED_STRING
+%import common.SIGNED_NUMBER -> NUMBER
+%import common.WS
+%ignore WS
