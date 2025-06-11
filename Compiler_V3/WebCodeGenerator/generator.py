@@ -19,8 +19,10 @@ def handle_layout_node(node: ASTNode) -> (str, str):
     args = node.attributes["args"] if "args" in node.attributes else []
     if isinstance(args, str):
         args = [args]
+    color = node.attributes["color"] if "color" in node.attributes else "#4a90e2"
+    title = node.attributes["title"][0] if "title" in node.attributes else "Logo"
     if node.tag == "header":
-        return add_header(node.attributes["args"])
+        return add_header(args=node.attributes["args"], main_color=color,logo_text=title)
     elif node.tag == "footer":
         return add_footer(args)
     elif node.tag == "side_nav":
@@ -37,7 +39,7 @@ def build_css_class(attrs: Dict[str, any], tag_css_attrs: Dict[str, str], base_c
     custom_class = random_text(6)
     css_block = f".{custom_class} " + "{\n"
     for key, value in attrs.items():
-        key =key.replace('_','-')
+        key = key.replace('_', '-')
         if key == "text":
             continue
         if key in tag_css_attrs:

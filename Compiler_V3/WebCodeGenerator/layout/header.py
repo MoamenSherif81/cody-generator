@@ -1,8 +1,26 @@
-from typing import List
+from typing import List, Tuple, Union
+from string import Template
 
 
-def add_header(args: List[str]) -> (str, str):
-    # Initialize elements for the dynamic navigation links
+def add_header(
+        args: Union[List[str], str] = [],
+        logo_text: str = "Logo",
+        main_color: str = "#00796b",
+        dark_color: str = "#004d40"
+) -> Tuple[str, str]:
+    """
+    Generate HTML and CSS for a responsive header with dynamic navigation links.
+
+    Args:
+        args: List of navigation item names or single string
+        logo_text: Text to display as the logo
+        main_color: Primary color for the theme (default: teal)
+        dark_color: Darker shade for hover effects (default: dark teal)
+
+    Returns:
+        Tuple containing (HTML string, CSS string)
+    """
+    # Generate navigation links with original preprocessing
     elements = ""
     if len(args) != 0:
         elements = '<nav class="nav"><ul class="nav-list">'
@@ -18,20 +36,22 @@ def add_header(args: List[str]) -> (str, str):
 
         elements += '</ul></nav>'
 
-    # Header HTML structure
-    html = f"""
+    # HTML template
+    html_template = Template("""
     <header class="header">
         <div class="container">
             <div class="logo-container">
-                <a href="#" class="logo-link">Logo</a>
+                <a href="#" class="logo-link">$logo_text</a>
             </div>
-            {elements}
+            $nav_html
         </div>
     </header>
-    """
+    """)
 
-    # Refactored CSS for modern and minimal styling
-    css = """
+    html = html_template.substitute(logo_text=logo_text, nav_html=elements)
+
+    # CSS template
+    css_template = Template("""
     .header {
         padding-right: 5%;
         background-color: #ffffff;
@@ -57,13 +77,12 @@ def add_header(args: List[str]) -> (str, str):
 
     .logo-link {
         font-size: 1.5rem;
-        color: #00796b;
+        color: $main_color;
         text-decoration: none;
         font-weight: bold;
         text-transform: uppercase;
     }
 
-    /* Navigation Styling */
     .nav-list {
         list-style-type: none;
         display: flex;
@@ -81,12 +100,11 @@ def add_header(args: List[str]) -> (str, str):
     }
 
     .nav-item:hover {
-        color: #00796b;
+        color: $main_color;
         background-color: #f1f1f1;
         border-radius: 5px;
     }
 
-    /* Call to Action Button */
     .cta {
         display: flex;
         align-items: center;
@@ -94,7 +112,7 @@ def add_header(args: List[str]) -> (str, str):
 
     .cta-button {
         padding: 12px 24px;
-        background-color: #00796b;
+        background-color: $main_color;
         color: #ffffff;
         text-decoration: none;
         border-radius: 5px;
@@ -104,10 +122,9 @@ def add_header(args: List[str]) -> (str, str):
     }
 
     .cta-button:hover {
-        background-color: #004d40;
+        background-color: $dark_color;
     }
 
-    /* Responsive Design */
     @media (max-width: 768px) {
         .container {
             flex-direction: column;
@@ -125,6 +142,8 @@ def add_header(args: List[str]) -> (str, str):
             text-align: center;
         }
     }
-    """
+    """)
+
+    css = css_template.substitute(main_color=main_color, dark_color=dark_color)
 
     return html, css

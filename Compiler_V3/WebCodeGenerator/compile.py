@@ -20,10 +20,10 @@ def compile_to_web(dslCode: str):
         css_file.write(css)
 
 dsl = """
-header<args=["Home", "Shop", "Sale", "Categories", "Contact"]>
+header<title=("Louis Viton"),args=["Home", "Shop", "Sale", "Categories", "Contact"]>
 side_nav<args=["All Products", "New Arrivals", "Best Sellers", "Sale", "Brands", "Price Range"]>
 row{
-    box{
+    box<align_items=("center")>{
      title<text=("Products")>
      }
 },
@@ -43,9 +43,25 @@ row<testtag=("product-row")>{
         title<text=("Denim Shorts")>,
         text<text=("1,890.00$")>
     }
+},
+row<testtag=("product-row")>{
+    box<align_items=("center")>{
+        image<src=("https://us.louisvuitton.com/images/is/image/lv/1/PP_VP_L/louis-vuitton-signature-cap--M5148M_PM2_Front%20view.png?wid=1090&hei=1090")>,
+        title<text=("Cap")>,
+        text<text=("545.00$")>
+    },
+    box<align_items=("center")>{
+        image<src=("https://us.louisvuitton.com/images/is/image/lv/1/PP_VP_L/louis-vuitton-lv-venice-mule--BTHI2SGC02_PM2_Front%20view.png?wid=1090&hei=1090")>,
+        title<text=("Venice")>,
+        text<text=("925.00$")>
+    },
+    box<align_items=("center")>{
+        image<src=("https://us.louisvuitton.com/images/is/image/lv/1/PP_VP_L/louis-vuitton-wallet-on-chain-ivy--M82154_PM2_Front%20view.png?wid=1090&hei=1090")>,
+        title<text=("Wallet")>,
+        text<text=("1,990.00$")>
+    }
 }
-
-footer<args=["Privacy Policy", "Terms of Service", "Contact Us"]>
+footer<color=(3,4,5),args=["Privacy Policy", "Terms of Service", "Contact Us"]>
 """
 print(validate_dsl(dsl))
 compile_to_web(dsl)
