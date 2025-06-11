@@ -63,4 +63,8 @@ select, input{
   background-color: white;
   outline: none;
 }
+.img{
+height : 75px;
+width : 75px;
+}
     """+css_content

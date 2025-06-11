@@ -37,6 +37,7 @@ def build_css_class(attrs: Dict[str, any], tag_css_attrs: Dict[str, str], base_c
     custom_class = random_text(6)
     css_block = f".{custom_class} " + "{\n"
     for key, value in attrs.items():
+        key =key.replace('_','-')
         if key == "text":
             continue
         if key in tag_css_attrs:
@@ -84,13 +85,35 @@ def build_special_html(node: ASTNode, tag_conf: TagConfig) -> (str, str):
     return "", ""  # fallback for unknown
 
 
+def handle_image(node: ASTNode, base_classes: list[str]) -> (str, str):
+    # Set default image source
+    src = "https://i.etsystatic.com/38592990/r/il/3a9205/4497455433/il_794xN.4497455433_24je.jpg"
+
+    # Update the source if 'src' attribute exists in node
+    if "src" in node.attributes:
+        src = node.attributes["src"][0]
+
+    # Join base classes into a single string
+    css_classes = " ".join(base_classes)
+
+    # Create the HTML image tag
+    html = f'<{node.tag} src="{src}" class="{css_classes}">'
+
+    # Return the HTML with no additional CSS for now
+    return html, ""
+
+
 def build_html_body(node: ASTNode, tag_map: Dict[str, TagConfig]) -> (str, str):
     html = ""
     css = ""
     if node.tag not in tag_map:
         raise Exception("Tag not mapped in config")
     tag_conf = tag_map[node.tag]
-
+    if node.tag == "image":
+        html2, css2 = handle_image(node, tag_conf.cssClasses)
+        html += html2
+        css += css2
+        return html, css
     # Special handling for input and select_box
     if node.tag in ("input", "select_box"):
         retHtml, retCss = build_special_html(node, tag_conf)
@@ -141,8 +164,8 @@ def generate_html(ast_nodes: list, indent: int = 0) -> (str, str):
                 html += row_html
                 css += row_css
     if is_side_nav_exist:
-        html+="</div>"
-        html2,css2 = handle_layout_node(side_nav)
-        html+=html2
+        html += "</div>"
+        html2, css2 = handle_layout_node(side_nav)
+        html += html2
         css += css2
     return html, css

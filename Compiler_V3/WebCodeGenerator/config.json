@@ -114,7 +114,7 @@
     "image": {
       "htmlTag": "image",
       "cssClasses": [
-        "text"
+        "img"
       ],
       "textLimit": 20,
       "defaultColor": [
