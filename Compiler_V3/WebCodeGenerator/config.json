@@ -64,7 +64,7 @@
         "color": "background-color"
       }
     },
-    "select-box": {
+    "select_box": {
       "htmlTag": "select",
       "cssClasses": [
         "select-box"
@@ -110,8 +110,22 @@
         "color": "color",
         "size": "font-size"
       }
+    },
+    "image": {
+      "htmlTag": "image",
+      "cssClasses": [
+        "text"
+      ],
+      "textLimit": 20,
+      "defaultColor": [
+        0,
+        0,
+        0
+      ],
+      "cssAttributes": {
+        "color": "color",
+        "size": "font-size"
+      }
     }
-  },
-  "openingTag": "{",
-  "closingTag": "}"
+  }
 }
