@@ -26,6 +26,7 @@ body{
   box-sizing: border-box;
   background-color: white;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  margin-right: 2%;
 }
 
 .row {

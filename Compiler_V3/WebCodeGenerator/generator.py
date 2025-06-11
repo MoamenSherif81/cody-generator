@@ -4,6 +4,9 @@ import string
 from typing import Dict
 
 from Compiler_V3.WebCodeGenerator.config import TagConfig, load_web_config_from_json
+from Compiler_V3.WebCodeGenerator.layout.footer import add_footer
+from Compiler_V3.WebCodeGenerator.layout.header import add_header
+from Compiler_V3.WebCodeGenerator.layout.side_nav import add_side_nav
 from Compiler_V3.models import ASTNode
 
 
@@ -12,8 +15,18 @@ def random_text(length: int) -> str:
     return ''.join(random.choices(string.ascii_lowercase, k=length))
 
 
-def handle_layout_node(node: ASTNode) -> str:
-    return "\n"
+def handle_layout_node(node: ASTNode) -> (str, str):
+    args = node.attributes["args"] if "args" in node.attributes else []
+    if isinstance(args, str):
+        args = [args]
+    if node.tag == "header":
+        return add_header(node.attributes["args"])
+    elif node.tag == "footer":
+        return add_footer(args)
+    elif node.tag == "side_nav":
+        return add_side_nav(args)
+    else:
+        return "", ""
 
 
 def build_css_class(attrs: Dict[str, any], tag_css_attrs: Dict[str, str], base_classes: list[str]) -> (str, str):
@@ -104,14 +117,32 @@ def generate_html(ast_nodes: list, indent: int = 0) -> (str, str):
     tag_map, opening_tag, closing_tag = load_web_config_from_json(config_path)
     html = ""
     css = ""
+    is_side_nav_exist = False
+    side_nav = None
+    for node in ast_nodes:
+        if isinstance(node, ASTNode):
+            if node.tag == "side_nav":
+                is_side_nav_exist = True
+                side_nav = node
+    if is_side_nav_exist:
+        html += '<div class="main-content">'
     for node in ast_nodes:
         # Handle layout node (header, footer, side-nav)
         if isinstance(node, ASTNode):
-            html += handle_layout_node(node)
+            html2, css2 = handle_layout_node(node)
+            html += html2
+            css += css2
+            if node.tag == "side_nav":
+                continue
         # Handle rows (lists of ASTNode)
         if isinstance(node, list):
             for row_node in node:
                 row_html, row_css = build_html_body(row_node, tag_map)
                 html += row_html
                 css += row_css
+    if is_side_nav_exist:
+        html+="</div>"
+        html2,css2 = handle_layout_node(side_nav)
+        html+=html2
+        css += css2
     return html, css
