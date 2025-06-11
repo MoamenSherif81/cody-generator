@@ -26,7 +26,7 @@ def handle_layout_node(node: ASTNode) -> (str, str):
     elif node.tag == "footer":
         return add_footer(args=args, main_color=color,logo_text=title)
     elif node.tag == "side_nav":
-        return add_side_nav(args)
+        return add_side_nav(args=args, main_color=color,logo_text=title)
     else:
         return "", ""
 
