@@ -1,109 +1,152 @@
+from typing import List, Dict, Any
 from lark import Transformer, Token
 
 
+class ASTNode:
+    def __init__(self, tag: str, children: List['ASTNode'] = None, attributes: Dict[str, Any] = None):
+        self.tag = tag  # Stores the tag name (e.g., 'row', 'box')
+        self.children = children if children is not None else []
+        self.attributes = attributes if attributes is not None else {}
+
+    def __repr__(self):
+        return f"ASTNode(tag={self.tag}, attributes={self.attributes}, children={len(self.children)})"
+
+
 class DSLTransformer(Transformer):
-    """Transforms the parse tree into a structured AST."""
-
     def start(self, items):
-        return items  # List of rows
+        return [item for item in items if item is not None]
 
+    def maybe_header(self, items):
+        return items[0] if items else None
+
+    def maybe_side_nav(self, items):
+        return items[0] if items else None
+
+    def maybe_footer(self, items):
+        return items[0] if items else None
+
+    def tag_header(self, items):
+        attrs = items[0] if items else {}
+        return ASTNode("header", children=[], attributes=attrs)
+
+    def tag_footer(self, items):
+        attrs = items[0] if items else {}
+        return ASTNode("footer", children=[], attributes=attrs)
+
+    def tag_side_nav(self, items):
+        attrs = items[0] if items else {}
+        return ASTNode("side_nav", children=[], attributes=attrs)
+
+    def tag_row(self, items):
+        attrs = {}
+        children = []
+        for item in items:
+            if isinstance(item, dict):
+                attrs = item
+            elif isinstance(item, list):
+                children = item
+        return ASTNode("row", children=children, attributes=attrs)
+
+    def row_body(self, items):
+        # Filter out Token objects, keeping only ASTNode objects
+        return [item for item in items if not isinstance(item, Token)]
+
+    def tag_box(self, items):
+        attrs = {}
+        children = []
+        for item in items:
+            if isinstance(item, dict):
+                attrs = item
+            elif isinstance(item, list):
+                children = item
+        return ASTNode("box", children=children, attributes=attrs)
+
+    def box_body(self, items):
+        # Filter out Token objects, keeping only ASTNode objects
+        return [item for item in items if not isinstance(item, Token)]
+
+    def leaf_tag(self, items):
+        tag_name = items[0].value  # tag name like 'title', 'button', etc.
+        attrs = items[1] if len(items) > 1 else {}
+        return ASTNode(tag_name, children=[], attributes=attrs)
+
+    def attr_block(self, items):
+        """Safely handle attribute blocks that might have missing values"""
+        if not items:
+            return {}
+
+        attributes = {}
+
+        # Handle case where items is a single list containing all attributes
+        if len(items) == 1 and isinstance(items[0], list):
+            items = items[0]
+
+        # Filter out comma tokens and process only tuples
+        for item in items:
+            # Skip comma tokens
+            if isinstance(item, Token) and item.type == 'COMMA':
+                continue
+
+            if isinstance(item, tuple) and len(item) == 2:
+                key, value = item
+
+                # If value is a nested list, flatten it
+                if isinstance(value, list) and len(value) == 1:
+                    value = value[0]
+
+                # Now we have the final key-value pair
+                attributes[key] = value
+            else:
+                # Only raise error for non-comma tokens that aren't proper tuples
+                if not (isinstance(item, Token) and item.type == 'COMMA'):
+                    raise ValueError(f"Invalid attribute format: {item}")
+
+        return attributes
+
+    def attr_list(self, items):
+        return items
+
+    def args_attribute(self, items):
+        return ("args", items[0])  # items[0] is already the transformed array_value
+
+    def generic_attribute(self, items):
+        """Safely handle attributes and ensure the correct number of items"""
+        if len(items) == 1:
+            return (items[0], None)  # If there's no value, assign None
+        elif len(items) == 2:
+            return (items[0].value, items[1])  # (key, value) pair
+        else:
+            raise ValueError(f"Unexpected attribute format: {items}")
+
+    def array_value(self, items):
+        return items[0] if items else []  # items[0] is string_list or None
+
+    def string_list(self, items):
+        return [item for item in items if isinstance(item, str)]
+
+    def tuple_value(self, items):
+        # Filter out comma tokens from tuple values too
+        filtered_items = [item for item in items if not (isinstance(item, Token) and item.type == 'COMMA')]
+        return filtered_items
+
+    def value_list(self, items):
+        # Filter out comma tokens from value lists
+        filtered_items = [item for item in items if not (isinstance(item, Token) and item.type == 'COMMA')]
+        return filtered_items
+
+    def value(self, items):
+        return items[0]
+
+    def ESCAPED_STRING(self, token):
+        return token.value.strip('"')
+
+    def NUMBER(self, token):
+        return float(token)
+
+    def rows(self, items):
+        # If there's a specific rule for multiple rows
+        return [item for item in items if not isinstance(item, Token)]
+
+    # Other methods for header, side_nav, row, box, etc.
     def row(self, items):
-        attrs = items[0] if items and isinstance(items[0], dict) and "attributes" in items[0] else {}
-        content = items[1] if len(items) > 1 else []
-        return {"type": "row", "attributes": attrs, "content": content}
-
-    def box(self, items):
-        attrs = items[0] if items and isinstance(items[0], dict) and "attributes" in items[0] else {}
-        content = items[1] if len(items) > 1 else []
-        return {"type": "box", "attributes": attrs, "content": content}
-
-    def content(self, items):
-        return items  # List of elements
-
-    def element(self, items):
-        return items[0]  # Either container or leaf
-
-    def container(self, items):
-        return items[0]  # Either row or box
-
-    def leaf(self, items):
-        return items[0]  # Either button, title, text, select_box, or input
-
-    def button(self, items):
-        attrs = items[0] if items and isinstance(items[0], dict) and "attributes" in items[0] else {}
-        text = items[1] if len(items) > 1 else None
-        return {"type": "button", "attributes": attrs, "text": text}
-
-    def title(self, items):
-        attrs = items[0] if items and isinstance(items[0], dict) and "attributes" in items[0] else {}
-        text = items[1] if len(items) > 1 else None
-        return {"type": "title", "attributes": attrs, "text": text}
-
-    def text(self, items):
-        attrs = items[0] if items and isinstance(items[0], dict) and "attributes" in items[0] else {}
-        text = items[1] if len(items) > 1 else None
-        return {"type": "text", "attributes": attrs, "text": text}
-
-    def select_box(self, items):
-        attrs = items[0] if items and isinstance(items[0], dict) and "attributes" in items[0] else {}
-        text = items[1] if len(items) > 1 else None
-        return {"type": "select-box", "attributes": attrs, "text": text}
-
-    def input(self, items):
-        attrs = items[0] if items and isinstance(items[0], dict) and "attributes" in items[0] else {}
-        text = items[1] if len(items) > 1 else None
-        return {"type": "input", "attributes": attrs, "text": text}
-
-    def attributes(self, items):
-        return {"attributes": dict(items)}
-
-    def attribute(self, items):
-        return (items[0], items[1])  # (attr_name, attr_value)
-
-    def attr_name(self, items):
-        # Handle both single token and list of items
-        if isinstance(items, list):
-            token = items[0]
-        else:
-            token = items
-
-        if isinstance(token, Token):
-            return token.value
-        else:
-            return str(token)
-
-    def attr_value(self, items):
-        return items[0]  # rgb_color, text_value, or size_value
-
-    def rgb_color(self, items):
-        return {"type": "color", "value": tuple(map(int, items))}
-
-    def text_value(self, items):
-        return {"type": "text", "value": items[0]}
-
-    def size_value(self, items):
-        return {"type": "size", "value": int(items[0]), "unit": "px"}
-
-    def NUMBER(self, items):
-        # Handle both single token and list of items
-        if isinstance(items, list):
-            token = items[0]
-        else:
-            token = items
-
-        if isinstance(token, Token):
-            return int(token.value)
-        else:
-            return int(str(token))
-
-    def ESCAPED_STRING(self, items):
-        # Handle both single token and list of items
-        if isinstance(items, list):
-            token = items[0]
-        else:
-            token = items
-
-        if isinstance(token, Token):
-            return token.value.strip('"')
-        else:
-            return str(token).strip('"')
+        return ASTNode(tag="row", children=items)
