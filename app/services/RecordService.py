@@ -5,7 +5,6 @@ from typing import Optional, List
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
-from Compiler_V2 import is_compilable
 from app.models.project import Project
 from app.models.record import Record
 from app.models.user import User
@@ -54,7 +53,7 @@ class RecordService:
             raise HTTPException(status_code=400, detail="DSL content must not be empty")
         if not self._is_project_exist(project_id):
             project_id = None
-        is_compilable(dsl_content)
+        is_v(dsl_content)
         db_record = Record(
             screenshot_path=None,
             dsl_content=dsl_content,

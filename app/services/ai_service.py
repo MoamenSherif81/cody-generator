@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import UploadFile, HTTPException
 
-from Compiler_V2 import is_compilable
+from Compiler_V3 import safe_compile_to_web
 from Model.sampleFromImage import run_sampler, get_preprocessed_img_from_bytes, IMAGE_SIZE
 # Assuming model and sampler are initialized elsewhere
 from app.services.shared_ai_state import model, sampler  # Replace with your actual import
@@ -43,7 +43,7 @@ async def process_screenshots(uploaded_files: List[UploadFile]) -> str:
 
     # Remove trailing comma and compile DSL
     dsl = dsl.rstrip(",")
-    is_compilable(dsl)
+    _, _ = safe_compile_to_web(dsl)
     return dsl
 #
 # def get_preprocessed_img_from_bytes(image_bytes: bytes, image_size: int) -> np.ndarray:

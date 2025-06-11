@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from Compiler_V2 import compile_dsl, lint_dsl
+from Compiler_V3 import linter_formatter, safe_compile_to_web
 from app.models.record import Record
 
 
@@ -43,8 +43,8 @@ class GetRecordResponse(BaseModel):
 
     @classmethod
     def from_record(cls, record: Record):
-        html, css = compile_dsl(record.dsl_content)
-        dsl = lint_dsl(record.dsl_content)
+        html, css = safe_compile_to_web(record.dsl_content)
+        dsl = linter_formatter(record.dsl_content)
         return cls(
             record_id=record.id,
             project_id=record.project_id,

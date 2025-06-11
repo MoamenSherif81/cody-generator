@@ -10,13 +10,13 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from tqdm import tqdm
 
+from Compiler_V3 import compile_to_web
+
 # Add the parent directory of the script to sys.path to find Compiler_V2
 script_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(script_dir)
 if parent_dir not in sys.path:
     sys.path.append(parent_dir)
-
-from Compiler_V2 import compile_dsl
 
 
 def setup_chrome_driver():
@@ -44,7 +44,7 @@ def screenshot_worker(task_queue, result_queue, progress_bar):
                 with open(gui_file, 'r', encoding='utf-8') as f:
                     content = f.read()
                 # Compile to HTML and CSS
-                html_content, css_content = compile_dsl(content)
+                html_content, css_content, error = compile_to_web(content)
                 # Combine HTML and CSS
                 html_with_css = f"""
                 <!DOCTYPE html>
