@@ -3,7 +3,7 @@ import random
 import string
 from typing import Dict
 
-from Compiler_V3.WebCodeGenerator.config import Config, TagConfig
+from Compiler_V3.WebCodeGenerator.config import TagConfig, load_web_config_from_json
 from Compiler_V3.models import ASTNode
 
 
@@ -101,7 +101,7 @@ def generate_html(ast_nodes: list, indent: int = 0) -> (str, str):
     """Compile DSL AST to HTML and CSS files."""
     base_dir = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(base_dir, "config.json")
-    tag_map, opening_tag, closing_tag = Config.from_json(config_path)
+    tag_map, opening_tag, closing_tag = load_web_config_from_json(config_path)
     html = ""
     css = ""
     for node in ast_nodes:
