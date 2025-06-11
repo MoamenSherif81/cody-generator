@@ -1,8 +1,26 @@
-from typing import List
+from typing import List, Tuple, Union
+from string import Template
 
 
-def add_footer(args: List[str]) -> (str, str):
-    # Footer links logic (same as your original code)
+def add_footer(
+        args: Union[List[str], str] = [],
+        logo_text: str = "Logo",
+        main_color: str = "#00796b",
+        dark_color: str = "#004d40"
+) -> Tuple[str, str]:
+    """
+    Generate HTML and CSS for a responsive footer with dynamic navigation links.
+
+    Args:
+        args: List of navigation item names or single string
+        logo_text: Text to display as the logo
+        main_color: Primary color for the theme (default: teal)
+        dark_color: Darker shade for hover effects (default: dark teal)
+
+    Returns:
+        Tuple containing (HTML string, CSS string)
+    """
+    # Generate navigation links with original preprocessing
     elements = ""
     if len(args) != 0:
         elements = '<nav class="footer-nav"><ul class="footer-nav-list">'
@@ -18,23 +36,25 @@ def add_footer(args: List[str]) -> (str, str):
 
         elements += '</ul></nav>'
 
-    # Footer HTML structure
-    html = f"""
+    # HTML template
+    html_template = Template("""
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-logo">
-                <a href="#" class="footer-logo-link">Logo</a>
+                <a href="#" class="footer-logo-link">$logo_text</a>
             </div>
-            {elements}
+            $nav_html
             <div class="footer-cta">
                 <a href="#contact" class="footer-cta-button">Contact Us</a>
             </div>
         </div>
     </footer>
-    """
+    """)
 
-    # Footer CSS with consistent design from the header
-    css = """
+    html = html_template.substitute(logo_text=logo_text, nav_html=elements)
+
+    # CSS template
+    css_template = Template("""
     .footer {
         background-color: #ffffff;
         box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
@@ -54,13 +74,12 @@ def add_footer(args: List[str]) -> (str, str):
 
     .footer-logo-link {
         font-size: 1.5rem;
-        color: #00796b;  /* Matching the logo color */
+        color: $main_color;
         text-decoration: none;
         font-weight: 700;
         text-transform: uppercase;
     }
 
-    /* Navigation Styling */
     .footer-nav {
         flex: 1;
         display: flex;
@@ -82,12 +101,11 @@ def add_footer(args: List[str]) -> (str, str):
     }
 
     .footer-nav-item:hover {
-        color: #00796b;  /* Matching header hover color */
+        color: $main_color;
         background-color: #f1f1f1;
         border-radius: 5px;
     }
 
-    /* Call to Action Button */
     .footer-cta {
         display: flex;
         align-items: center;
@@ -95,7 +113,7 @@ def add_footer(args: List[str]) -> (str, str):
 
     .footer-cta-button {
         padding: 12px 24px;
-        background-color: #00796b;
+        background-color: $main_color;
         color: #ffffff;
         text-decoration: none;
         border-radius: 5px;
@@ -105,10 +123,9 @@ def add_footer(args: List[str]) -> (str, str):
     }
 
     .footer-cta-button:hover {
-        background-color: #004d40;
+        background-color: $dark_color;
     }
 
-    /* Responsive Design */
     @media (max-width: 768px) {
         .footer-container {
             flex-direction: column;
@@ -126,6 +143,8 @@ def add_footer(args: List[str]) -> (str, str):
             text-align: center;
         }
     }
-    """
+    """)
+
+    css = css_template.substitute(main_color=main_color, dark_color=dark_color)
 
     return html, css

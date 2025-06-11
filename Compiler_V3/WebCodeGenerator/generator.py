@@ -22,9 +22,9 @@ def handle_layout_node(node: ASTNode) -> (str, str):
     color = node.attributes["color"] if "color" in node.attributes else "#4a90e2"
     title = node.attributes["title"][0] if "title" in node.attributes else "Logo"
     if node.tag == "header":
-        return add_header(args=node.attributes["args"], main_color=color,logo_text=title)
+        return add_header(args=args, main_color=color,logo_text=title)
     elif node.tag == "footer":
-        return add_footer(args)
+        return add_footer(args=args, main_color=color,logo_text=title)
     elif node.tag == "side_nav":
         return add_side_nav(args)
     else:

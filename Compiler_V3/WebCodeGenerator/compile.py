@@ -61,7 +61,7 @@ row<testtag=("product-row")>{
         text<text=("1,990.00$")>
     }
 }
-footer<color=(3,4,5),args=["Privacy Policy", "Terms of Service", "Contact Us"]>
+footer<title=("LV"),args=["Privacy Policy", "Terms of Service", "Contact Us"]>
 """
 print(validate_dsl(dsl))
 compile_to_web(dsl)
