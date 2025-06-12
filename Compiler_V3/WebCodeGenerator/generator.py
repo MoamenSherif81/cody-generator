@@ -4,9 +4,7 @@ import string
 from typing import Dict
 
 from Compiler_V3.WebCodeGenerator.config import TagConfig, load_web_config_from_json
-from Compiler_V3.WebCodeGenerator.layout.footer import add_footer
-from Compiler_V3.WebCodeGenerator.layout.header import add_header
-from Compiler_V3.WebCodeGenerator.layout.side_nav import add_side_nav
+from Compiler_V3.WebCodeGenerator.layout import add_footer, add_header, add_side_nav
 from Compiler_V3.models import ASTNode
 
 
@@ -22,13 +20,24 @@ def handle_layout_node(node: ASTNode) -> (str, str):
     color = node.attributes["color"] if "color" in node.attributes else "#4a90e2"
     title = node.attributes["title"][0] if "title" in node.attributes else "Logo"
     if node.tag == "header":
-        return add_header(args=args, main_color=color,logo_text=title)
+        return add_header(args=args, main_color=color, logo_text=title)
     elif node.tag == "footer":
-        return add_footer(args=args, main_color=color,logo_text=title)
+        return add_footer(args=args, main_color=color, logo_text=title)
     elif node.tag == "side_nav":
-        return add_side_nav(args=args, main_color=color,logo_text=title)
+        return add_side_nav(args=args, main_color=color, logo_text=title)
     else:
         return "", ""
+
+
+def handle_color(value, css_prop) -> str:
+    base = f"{css_prop} : "
+    if isinstance(value, list) and len(value) == 3:
+        base += f"rgb{tuple(value)};\n"
+    elif len(value) == 1:
+        base += f"{value[0]};\n"
+    else:
+        base += f"{value};\n"
+    return base
 
 
 def build_css_class(attrs: Dict[str, any], tag_css_attrs: Dict[str, str], base_classes: list[str]) -> (str, str):
@@ -45,11 +54,7 @@ def build_css_class(attrs: Dict[str, any], tag_css_attrs: Dict[str, str], base_c
         if key in tag_css_attrs:
             css_prop = tag_css_attrs[key]
             if key == "color":
-                css_block += f"{css_prop} : rgb{tuple(value)};\n"
-            else:
-                css_block += f"{css_prop} : {value};\n"
-        else:
-            css_block += f"{key} : {value[0]};\n"
+                css_block += handle_color(value, css_prop)
         attr_count += 1
     css_block += "}\n"
     classes = classes + " " + custom_class

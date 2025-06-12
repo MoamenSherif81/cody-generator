@@ -108,5 +108,10 @@
     "test_name": "valid_all_tags_case",
     "test_description": "A DSL structure that includes all tags (header, side_nav, row, box, and all leaf tags)",
     "dsl": "header<args=[\"Home\", \"About\"]>\nside_nav<args=[\"Option1\", \"Option2\"]>\nrow {\n  box {\n    title<text=(\"Welcome\")>,\n    text<text=(\"This is a test page.\")>,\n    input<text=(\"Email\")>,\n    button<text=(\"Submit\")>,\n    select_box<text=(\"Select one\")>,\n    image<src=(\"logo.png\")>\n  }\n},\nrow {\n  box {\n    title<text=(\"Row 2 Title\")>,\n    button<text=(\"Click Me\")>\n  }\n},\nfooter<args=[\"Contact\", \"Terms\"]>"
+  },
+  {
+    "test_name": "validate_color_attr",
+    "test_description": "send color attr other than rgb",
+    "dsl": "row<color=(\"#1121\")>{}"
   }
 ]
