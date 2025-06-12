@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from Ai_Agents.AiAgent import AiAgent
 from Ai_Agents.models.models import ModelMessage, ModelResponse
+from LLM.Utils import parse_json
 
 
 class Gemini(AiAgent):
@@ -13,7 +14,7 @@ class Gemini(AiAgent):
     Gemini AI agent for Google Generative AI chat interface.
     """
 
-    def __init__(self, geminiModel="gemini-2.5-flash"):
+    def __init__(self, geminiModel="gemini-1.5-flash"):
         """
         Load API keys from environment and set up the Gemini model.
         """
@@ -89,18 +90,16 @@ class Gemini(AiAgent):
         Change Gemini API response to ModelResponse.
         Splits text and code if present.
         """
-        full_message = []
-        full_code = []
-        if gemini_response and hasattr(gemini_response, "candidates"):
-            for candidate in gemini_response.candidates:
-                if hasattr(candidate, 'content') and hasattr(candidate.content, 'parts'):
-                    for part in candidate.content.parts:
-                        if hasattr(part, 'text'):
-                            text_content = part.text
-                            if text_content.startswith('```') and text_content.endswith('```'):
-                                full_code.append(text_content.strip('`').strip())
-                            else:
-                                full_message.append(text_content)
-        response_message = "\n".join(full_message) if full_message else None
-        response_code = "\n".join(full_code) if full_code else None
-        return ModelResponse(message=response_message, code=response_code)
+        if not gemini_response or not hasattr(gemini_response, "candidates"):
+            return ModelResponse(message=None, code=None)
+        candidate = gemini_response.candidates[0]
+        if hasattr(candidate, "content") and hasattr(candidate.content, "parts"):
+            for part in candidate.content.parts:
+                if hasattr(part, "text"):
+                    text_content = part.text
+                    gemini_response = parse_json(text_content)
+                    message_response = gemini_response["Response"]
+                    code_response = gemini_response["Dsl"]
+                    ret = ModelResponse(message=message_response, code=code_response)
+                    return ret
+        return ModelResponse(message=None, code=None)

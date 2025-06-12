@@ -49,12 +49,20 @@ def build_css_class(attrs: Dict[str, any], tag_css_attrs: Dict[str, str], base_c
     css_block = f".{custom_class} " + "{\n"
     for key, value in attrs.items():
         key = key.replace('_', '-')
-        if key == "text":
+        if key in ["src", "text"]:
             continue
+
         if key in tag_css_attrs:
             css_prop = tag_css_attrs[key]
             if key == "color":
                 css_block += handle_color(value, css_prop)
+        else:
+            css_block += f"{key}: "
+            if isinstance(value, list):
+                css_block += value[0]
+            else:
+                css_block += str(value)
+            css_block += " ;\n"
         attr_count += 1
     css_block += "}\n"
     classes = classes + " " + custom_class
@@ -92,22 +100,18 @@ def build_special_html(node: ASTNode, tag_conf: TagConfig) -> (str, str):
     return "", ""  # fallback for unknown
 
 
-def handle_image(node: ASTNode, base_classes: list[str]) -> (str, str):
+def handle_image(node: ASTNode, tag_conf: TagConfig) -> (str, str):
     # Set default image source
     src = "https://i.etsystatic.com/38592990/r/il/3a9205/4497455433/il_794xN.4497455433_24je.jpg"
 
     # Update the source if 'src' attribute exists in node
     if "src" in node.attributes:
         src = node.attributes["src"][0]
-
-    # Join base classes into a single string
-    css_classes = " ".join(base_classes)
-
-    # Create the HTML image tag
-    html = f'<{node.tag} src="{src}" class="{css_classes}">'
+    class_names, css_code = build_css_class(node.attributes, tag_conf.cssAttributes, tag_conf.cssClasses)
+    html = f'<{node.tag} src="{src}" class="{class_names}">'
 
     # Return the HTML with no additional CSS for now
-    return html, ""
+    return html, css_code
 
 
 def build_html_body(node: ASTNode, tag_map: Dict[str, TagConfig]) -> (str, str):
@@ -117,7 +121,7 @@ def build_html_body(node: ASTNode, tag_map: Dict[str, TagConfig]) -> (str, str):
         raise Exception("Tag not mapped in config")
     tag_conf = tag_map[node.tag]
     if node.tag == "image":
-        html2, css2 = handle_image(node, tag_conf.cssClasses)
+        html2, css2 = handle_image(node, tag_conf)
         html += html2
         css += css2
         return html, css
