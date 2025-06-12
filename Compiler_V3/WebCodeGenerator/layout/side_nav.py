@@ -1,7 +1,6 @@
 from typing import List, Tuple, Union
 from string import Template
 
-
 def add_side_nav(
         args: Union[List[str], str] = [],
         logo_text: str = "Logo",
@@ -27,19 +26,18 @@ def add_side_nav(
         if isinstance(args, str):
             elements += f'<li><a href="#{args}" class="side-nav-item">{args}</a></li>'
         else:
-            ar = []
-            for arg in args:
-                if arg == ',':
-                    continue
-                ar.append(arg)
+            ar = [arg for arg in args if arg != ',']
             for arg in ar:
                 elements += f'<li><a href="#{arg}" class="side-nav-item">{arg}</a></li>'
         elements += '</ul>'
 
-    # HTML template
+    # Updated HTML template with toggle functionality
     html_template = Template("""
+    <input type="checkbox" id="side-nav-toggle" class="side-nav-toggle-input">
+    <label for="side-nav-toggle" class="side-nav-toggle-label">☰</label>
     <div class="side-nav">
         <div class="side-nav-container">
+            <label for="side-nav-toggle" class="side-nav-close-label">×</label>
             <div class="side-nav-logo">
                 <a href="#" class="side-nav-logo-link">$logo_text</a>
             </div>
@@ -50,7 +48,7 @@ def add_side_nav(
 
     html = html_template.substitute(logo_text=logo_text, nav_html=elements)
 
-    # CSS template
+    # Updated CSS template with responsive design
     css_template = Template("""
 .side-nav {
     position: fixed;
@@ -64,6 +62,8 @@ def add_side_nav(
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     padding-top: 20px;
     z-index: 100;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
 }
 
 .side-nav-container {
@@ -130,6 +130,49 @@ def add_side_nav(
 .side-nav-footer-link:hover {
     background-color: $dark_color;
     color: white;
+}
+
+.side-nav-toggle-input {
+    display: none;
+}
+
+.side-nav-toggle-label {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 101;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 10px;
+}
+
+.side-nav-close-label {
+    display: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 10px;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .side-nav {
+        transform: translateX(-100%);
+        width: 80%;
+    }
+    .side-nav-toggle-label {
+        display: block;
+    }
+    .side-nav-toggle-input:checked ~ .side-nav {
+        transform: translateX(0);
+    }
+    .side-nav-close-label {
+        display: block;
+    }
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
 }
     """)
 
