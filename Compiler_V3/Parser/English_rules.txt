@@ -1,0 +1,14 @@
+1 - might have a header tag at the beginning or not might have side-nav bar or not
+2 - then in the body zero, one, or multiple rows
+3 - might have a footer tag or not
+4 - row can contain boxes, and boxes can contain any tag but row
+5 - Each other tag is considered a leaf and can not contain other tags
+6 - Each tag in the language might have attributes or not
+7 - If any attributes should be between ()
+8 - each attribute separated by a comma from the other
+9 - any tag separated by a comma from the other
+10 - current tags leaf: button | title | text | select_box | input | image | footer | header
+11 - container: row | box
+12 - header and footer have param args that takes list as input example footer<args=["aboutme","about them"]>
+
+

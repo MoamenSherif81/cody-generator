@@ -192,3 +192,4 @@ plus/
 LLM/ManualDataset
 Dataset/basic_generator
 Dataset/include
+test*[0-9].py

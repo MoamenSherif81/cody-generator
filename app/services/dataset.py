@@ -4,7 +4,7 @@ from datetime import datetime
 import google.generativeai as genai
 from fastapi import status
 
-from Compiler_V2 import lint_dsl, compile_dsl
+from Compiler_V3 import validate_dsl, linter_formatter, compile_to_web
 from LLM.Queries.GenerateQuestionsOneLangQuery import GenerateMessage
 from LLM.Utils import parse_json
 from app.Jobs.GoogleSheetFlush import add_record
@@ -76,14 +76,15 @@ async def Generate_Situation(generate_situation: GenerateSituation) -> GetSituat
             detail=f"Missing expected keys in AI response: {ex}"
         )
 
-    try:
-        linted_dsl = lint_dsl(dsl_code)
-        html, css = compile_dsl(dsl_code)
-    except Exception as ex:
+    is_valid, error = validate_dsl(dsl_code)
+    if not is_valid:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error compiling DSL: {ex}"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=error
         )
+    linted_dsl = linter_formatter(dsl_code)
+    html, css, error = compile_to_web(dsl_code)
+
     # logging
     log_statement = f"{generate_situation.userName} generated new situation with {generate_situation.language}"
     timestamp = datetime.now().strftime("%A, %Y-%m-%d %H:%M:%S")
@@ -110,9 +111,7 @@ async def Save_Situation(acceptSituation: AcceptSituation):
     2 - Log to the language log.
     3 - Log to the logging sheet.
     """
-    try:
-        compile_dsl(acceptSituation.dsl)
-    except Exception as e:
+    if not validate_dsl(acceptSituation.dsl):
         raise HTTPException(
             status_code=400,
             detail=f"DSL is not compilable: {str(e)}"

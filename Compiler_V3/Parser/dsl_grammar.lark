@@ -1,0 +1,49 @@
+// Entry point — enforces strict one-of-each block, ordered
+start: maybe_header maybe_side_nav rows? maybe_footer
+
+maybe_header: tag_header?
+maybe_side_nav: tag_side_nav?
+maybe_footer: tag_footer?
+
+rows: tag_row (COMMA tag_row)*
+
+tag_header: "header" attr_block?
+tag_footer: "footer" attr_block?
+tag_side_nav: "side_nav" attr_block?
+
+tag_row: "row" attr_block? "{" row_body? "}"
+row_body: (tag_box (COMMA tag_box)*)?
+
+tag_box: "box" attr_block? "{" box_body? "}"
+box_body: (leaf_tag (COMMA leaf_tag)*)?
+
+leaf_tag: LEAF_TAG attr_block?
+
+LEAF_TAG: "button" | "title" | "text" | "select_box" | "input" | "image"
+
+// Attributes
+attr_block: "<" attr_list? ">"
+attr_list: attr (COMMA attr)*
+
+attr: "args" "=" array_value       -> args_attribute
+    | NAME "=" tuple_value         -> generic_attribute
+
+// args=["a", "b"]
+array_value: "[" string_list? "]"
+string_list: ESCAPED_STRING (COMMA ESCAPED_STRING)*
+
+// text=("hello"), color=(255,255,255)
+tuple_value: "(" value_list? ")"
+value_list: value (COMMA value)*
+
+value: ESCAPED_STRING | NUMBER
+
+COMMA: ","
+COMMENT: /#[^\n]*/
+
+%ignore COMMENT
+%import common.CNAME -> NAME
+%import common.ESCAPED_STRING
+%import common.SIGNED_NUMBER -> NUMBER
+%import common.WS
+%ignore WS

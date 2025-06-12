@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from Compiler_V2 import is_compilable, compile_dsl, lint_dsl
+from Compiler_V3 import safe_compile_to_web, linter_formatter
 
 
 class AnonymousCodeResponse(BaseModel):
@@ -10,9 +10,8 @@ class AnonymousCodeResponse(BaseModel):
 
     @classmethod
     def from_dsl(cls, dsl: str):
-        is_compilable(dsl)
-        html, css = compile_dsl(dsl)
-        dsl = lint_dsl(dsl)
+        html, css = safe_compile_to_web(dsl)
+        dsl = linter_formatter(dsl)
         return cls(
             dsl=dsl,
             html=html,

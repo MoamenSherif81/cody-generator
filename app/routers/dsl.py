@@ -3,9 +3,8 @@ from typing import List
 from fastapi import APIRouter
 from fastapi import UploadFile, File
 
-from Compiler_V2 import is_compilable
+from Compiler_V3 import safe_compile_to_web
 from LLM.Utils import parse_json
-from app.models.message import Message
 from app.schemas.code import AnonymousCodeResponse
 from app.schemas.message import LLmMessageFormat
 from app.services.KaggleService import LLMService
@@ -69,5 +68,5 @@ async def create_dsl_record(
 async def create_dsl_record(
         dsl_content: str,
 ):
-    is_compilable(dsl_content)
+    _, _ = safe_compile_to_web(dsl_content)
     return AnonymousCodeResponse.from_dsl(dsl_content)
