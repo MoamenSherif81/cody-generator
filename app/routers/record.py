@@ -49,6 +49,21 @@ async def create_dsl_record(
     return service.create_dsl_record(dsl_content, project_id)
 
 
+@router.post(
+    "/prompt",
+    summary="Create a record with prompt",
+    description="Create a record with prompt. Project ID is optional. Requires a valid JWT token (Bearer <token>).",
+    response_model=GetRecordResponse
+
+)
+async def create_prompt_record(
+        dsl_content: str = Body(...),
+        project_id: Optional[int] = None,
+        service: RecordService = Depends(get_record_service),
+):
+    return service.create_prompt_record(dsl_content, project_id)
+
+
 @router.get(
     "/all",
     summary="Get all records with no project",

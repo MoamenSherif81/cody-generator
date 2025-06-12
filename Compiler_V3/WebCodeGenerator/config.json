@@ -1,0 +1,131 @@
+{
+  "tagMappings": {
+    "row": {
+      "htmlTag": "div",
+      "cssClasses": [
+        "row"
+      ],
+      "text penultimateLimit": 0,
+      "defaultColor": [
+        0,
+        0,
+        0
+      ],
+      "cssAttributes": {
+        "style": "default-style",
+        "color": "background-color",
+        "size": "font-size"
+      },
+      "textLimit": 0
+    },
+    "box": {
+      "htmlTag": "div",
+      "cssClasses": [
+        "box"
+      ],
+      "textLimit": 0,
+      "defaultColor": [
+        227,
+        226,
+        226
+      ],
+      "cssAttributes": {
+        "color": "background-color"
+      }
+    },
+    "button": {
+      "htmlTag": "button",
+      "cssClasses": [
+        "button"
+      ],
+      "textLimit": 7,
+      "defaultColor": [
+        255,
+        255,
+        255
+      ],
+      "cssAttributes": {
+        "color": "background-color",
+        "size": "font-size"
+      }
+    },
+    "input": {
+      "htmlTag": "input",
+      "cssClasses": [
+        "input"
+      ],
+      "textLimit": 0,
+      "defaultColor": [
+        255,
+        255,
+        255
+      ],
+      "cssAttributes": {
+        "color": "background-color"
+      }
+    },
+    "select_box": {
+      "htmlTag": "select",
+      "cssClasses": [
+        "select-box"
+      ],
+      "textLimit": 0,
+      "defaultColor": [
+        255,
+        255,
+        255
+      ],
+      "cssAttributes": {
+        "color": "background-color"
+      }
+    },
+    "title": {
+      "htmlTag": "h1",
+      "cssClasses": [
+        "title"
+      ],
+      "textLimit": 5,
+      "defaultColor": [
+        0,
+        0,
+        0
+      ],
+      "cssAttributes": {
+        "color": "color",
+        "size": "font-size"
+      }
+    },
+    "text": {
+      "htmlTag": "p",
+      "cssClasses": [
+        "text"
+      ],
+      "textLimit": 20,
+      "defaultColor": [
+        0,
+        0,
+        0
+      ],
+      "cssAttributes": {
+        "color": "color",
+        "size": "font-size"
+      }
+    },
+    "image": {
+      "htmlTag": "image",
+      "cssClasses": [
+        "img"
+      ],
+      "textLimit": 20,
+      "defaultColor": [
+        0,
+        0,
+        0
+      ],
+      "cssAttributes": {
+        "color": "color",
+        "size": "font-size"
+      }
+    }
+  }
+}

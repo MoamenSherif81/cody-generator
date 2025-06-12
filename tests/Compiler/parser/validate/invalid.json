@@ -1,0 +1,92 @@
+[
+  {
+    "test_name": "invalid_args_in_wrong_tuple_format",
+    "test_description": "Header uses tuple instead of list for args (violates square brackets rule)",
+    "dsl": "header<args=(\"Home\", \"About\")>"
+  },
+  {
+    "test_name": "invalid_args_with_unquoted_strings",
+    "test_description": "Args list contains unquoted values",
+    "dsl": "header<args=[Home, About]>"
+  },
+  {
+    "test_name": "invalid_multiple_headers",
+    "test_description": "More than one header is defined",
+    "dsl": "header<args=[\"One\"]>, header<args=[\"Two\"]>"
+  },
+  {
+    "test_name": "invalid_footer_before_row",
+    "test_description": "Footer appears before the main row structure",
+    "dsl": "footer<args=[\"Bye\"]>\nrow {\n  box {\n    title<text=(\"Hello\")>\n  }\n}"
+  },
+  {
+    "test_name": "invalid_row_nested_inside_box",
+    "test_description": "A row is nested inside a box, which violates hierarchy",
+    "dsl": "row {\n  box {\n    row {\n      box {\n        title<text=(\"Invalid\")>\n      }\n    }\n  }\n}"
+  },
+  {
+    "test_name": "invalid_leaf_with_missing_parens",
+    "test_description": "Text value is not wrapped in parentheses",
+    "dsl": "title<text=\"No parens\">"
+  },
+  {
+    "test_name": "invalid_tuple_value_missing_commas",
+    "test_description": "Tuple value provided without commas between RGB values",
+    "dsl": "box<color=(255 255 255)>"
+  },
+  {
+    "test_name": "invalid_attr_block_with_braces",
+    "test_description": "Attribute block is provided with curly braces instead of angle brackets",
+    "dsl": "header{args=[\"Bad\"]}"
+  },
+  {
+    "test_name": "invalid_unknown_tag_used",
+    "test_description": "DSL contains an undefined tag 'column'",
+    "dsl": "row {\n  column {\n    title<text=(\"Oops\")>\n  }\n}"
+  },
+  {
+    "test_name": "invalid_non_escaped_string_value",
+    "test_description": "Attribute value is not an escaped string or number",
+    "dsl": "title<text=(Hello)>"
+  },
+  {
+    "test_name": "invalid_comma_between_attr_pairs",
+    "test_description": "Extra comma at end of attribute list",
+    "dsl": "title<text=(\"Welcome\"),>"
+  },
+  {
+    "test_name": "invalid_empty_dsl",
+    "test_description": "DSL is empty or just whitespace",
+    "dsl": "     "
+  },
+  {
+    "test_name": "invalid_row_missing_box_block",
+    "test_description": "Row opened without closing properly or without a box",
+    "dsl": "row<id=(\"row1\")> {"
+  },
+   {
+    "test_name": "row_directly_contains_leaf",
+    "test_description": "Leaf tag used directly inside row instead of inside a box",
+    "dsl": "row {\n  title<text=(\"Invalid\")>\n}"
+  },
+  {
+    "test_name": "box_contains_another_box",
+    "test_description": "Box improperly nested inside another box",
+    "dsl": "row {\n  box {\n    box {\n      title<text=(\"Too deep\")>\n    }\n  }\n}"
+  },
+  {
+    "test_name": "box_with_invalid_leaf_tag",
+    "test_description": "Box contains a tag that is not defined in LEAF_TAG or container",
+    "dsl": "row {\n  box {\n    paragraph<text=(\"Oops\")>\n  }\n}"
+  },
+  {
+    "test_name": "leaf_tag_contains_another_leaf",
+    "test_description": "A leaf tag improperly contains another leaf tag",
+    "dsl": "row {\n  box {\n    title<text=(\"Main\")> {\n      button<text=(\"Inner\")>\n    }\n  }\n}"
+  },
+  {
+    "test_name": "row_contains_box_and_leaf_side_by_side",
+    "test_description": "Row contains both a box and a leaf at same level",
+    "dsl": "row {\n  box {\n    title<text=(\"Valid\")>\n  },\n  button<text=(\"Invalid\")>\n}"
+  }
+]

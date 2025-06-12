@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from Compiler_V2 import compile_dsl_safe
+from Compiler_V3 import linter_formatter, safe_compile_to_web
 from app.models.project import Project
 from app.models.record import Record
 from app.schemas.record import RecordItem
@@ -47,9 +47,9 @@ class GetFullProject(BaseModel):
             RecordItem(
                 record_id=record.id,
                 screenshot_path=record.screenshot_path,
-                dsl_code=record.dsl_content,
-                html=compile_dsl_safe(record.dsl_content)[0],
-                css=compile_dsl_safe(record.dsl_content)[1],
+                dsl=linter_formatter(record.dsl_content),
+                html=safe_compile_to_web(record.dsl_content)[0],
+                css=safe_compile_to_web(record.dsl_content)[1],
                 createdAt=record.created_at
             )
             for record in records
