@@ -27,7 +27,7 @@ def handle_layout_node(node: ASTNode) -> (str, str):
     elif node.tag == "footer":
         return add_footer(args=args, main_color=color, logo_text=title, text_color=text_color, logo_color=logo_color)
     elif node.tag == "side_nav":
-        return add_side_nav(args=args, main_color=color, logo_text=title,text_color=text_color,logo_color=logo_color)
+        return add_side_nav(args=args, main_color=color, logo_text=title, text_color=text_color, logo_color=logo_color)
     else:
         return "", ""
 
@@ -75,10 +75,12 @@ def build_css_class(attrs: Dict[str, any], tag_css_attrs: Dict[str, str], base_c
         return classes, ""
 
 
-def extract_text(attrs) -> str:
+def extract_text(node: ASTNode, attrs) -> str:
     if "text" in attrs:
         txt = attrs["text"][0]
         return f"{txt}"
+    elif node.tag in ["input", "title", "button", "text"]:
+        return random_text(6)
     return ""
 
 
@@ -90,7 +92,7 @@ def build_special_html(node: ASTNode, tag_conf: TagConfig) -> (str, str):
 
     # Handle input element
     if node.tag == "input":
-        placeholder = extract_text(node.attributes)
+        placeholder = extract_text(node, node.attributes)
         return f'<{html_tag} class="{class_names}" id="{unique_id}" placeholder="{placeholder}"/>', css_code
 
     # Handle select_box element
@@ -138,7 +140,7 @@ def build_html_body(node: ASTNode, tag_map: Dict[str, TagConfig]) -> (str, str):
     html_tag = tag_conf.htmlTag
     class_names, css_code = build_css_class(node.attributes, tag_conf.cssAttributes, tag_conf.cssClasses)
     html += f'<{html_tag} class="{class_names}">'
-    html += extract_text(node.attributes)
+    html += extract_text(node, node.attributes)
     for child in node.children:
         child_html, child_css = build_html_body(child, tag_map)
         html += child_html
