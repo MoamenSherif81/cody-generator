@@ -4,6 +4,7 @@ from lark import Tree
 
 from Compiler_V3 import validate_dsl, generate_ast
 from Compiler_V3.Parser.transformer import ASTNode
+from Compiler_V3.support_old_valid_grammar import _support_old_valid_grammar
 
 
 def format_attributes(attributes: Dict[str, Any]) -> str:
@@ -12,24 +13,19 @@ def format_attributes(attributes: Dict[str, Any]) -> str:
         return ""
     formatted_attrs = []
     for key, value in attributes.items():
-        if key == "args":
-            if isinstance(value, str):
-                formatted_value = "[" + f'"{value}"' + "]"
-            elif isinstance(value, list):
-                value = [v for v in value if v != ',']
-                formatted_value = "[" + ", ".join(f'"{v}"' for v in value) + "]"
-            else:
-                formatted_value = "[]"
-            formatted_attrs.append(f"args={formatted_value}")
+        if isinstance(value, list):
+            value = [v for v in value if v != ',']
+            formatted_value = "[" + ", ".join(f'"{v}"' for v in value) + "]"
+            formatted_attr = f"{key}={formatted_value}"
         else:
-            formatted_value = "(" + ", ".join(f'"{v}"' if isinstance(v, str) else str(v) for v in value) + ")"
-            formatted_attrs.append(f"{key}={formatted_value}")
+            formatted_attr = f"{key}=\"{value}\""
+        formatted_attrs.append(formatted_attr)
     return " <" + ", ".join(formatted_attrs) + ">"
 
 
 def format_node(node: ASTNode, indent_level: int, spc: str) -> str:
     """Recursively format an AST node with proper indentation."""
-    if node is None:
+    if node is None or node==",":
         return ""
     indent = spc * indent_level
     tag = node.tag
@@ -46,8 +42,8 @@ def format_node(node: ASTNode, indent_level: int, spc: str) -> str:
         return f"{indent}{tag}{attr_block} {{\n{children_str}\n{indent}}}" if children_str else f"{indent}{tag}{attr_block}"
     else:
         # check if the tag is container
-        if tag in ["row","box"]:
-            return f"{indent}{tag}" + "{}"
+        if tag in ["row", "box"]:
+            return f"{indent}{tag}{attr_block}" + "{}"
         return f"{indent}{tag}{attr_block}"
 
 
@@ -62,6 +58,7 @@ def linter_formatter(dsl_code: str, spc: str = "    ") -> str:
     Returns:
         str: The formatted DSL code or an error message if invalid.
     """
+    dsl_code = _support_old_valid_grammar(dsl_code)
     # Step 1: Validate the DSL code
     if dsl_code.strip() == "":
         return ""
@@ -71,19 +68,39 @@ def linter_formatter(dsl_code: str, spc: str = "    ") -> str:
 
     # Step 2: Generate the AST
     ast = generate_ast(dsl_code)
+
     # Step 3: Format the AST
     formatted_parts = []
     for item in ast:
-        if isinstance(item, Tree):
-            item = item.children
-        if isinstance(item, list):  # Handle the rows list
-            formatted_rows = [format_node(row, 0, spc) for row in item if row]
-            formatted_rows = [fr for fr in formatted_rows if fr]
-            if formatted_rows:
-                formatted_parts.append(",\n".join(formatted_rows))
-        elif item:  # Handle single nodes like header, side_nav, footer
+        if isinstance(item, Tree) and item.data == "comma":
+            formatted_parts.append(",")
+        if isinstance(item, Tree) and item.data == "maybe_body":  # Handle the rows list
+            if hasattr(item, 'children') and len(item.children) > 0:
+                child1 = item.children[0]
+                if hasattr(child1, 'children') and len(child1.children) > 0:
+                    item = item.children[0].children[0]
+                else:
+                    continue
+            else:
+                continue
+            li = []
+            for row in item:
+                r = format_node(row, 1, spc)
+                if r:
+                    li.append(r)
+            if li:
+                formatted_parts.append("body{")
+                formatted_parts.append(",\n".join(li))
+                formatted_parts.append("}")
+        elif item and isinstance(item, ASTNode):  # Handle single nodes like header, side_nav, footer
             formatted_part = format_node(item, 0, spc)
             if formatted_part:
                 formatted_parts.append(formatted_part)
-
-    return "\n".join(formatted_parts) if formatted_parts else ""
+    ret = ""
+    for i in range(len(formatted_parts)):
+        part = formatted_parts[i]
+        if i + 1 < len(formatted_parts) and formatted_parts[i + 1] == ',':
+            ret += part
+        else:
+            ret += f"{part}\n"
+    return ret

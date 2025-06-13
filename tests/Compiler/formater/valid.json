@@ -6,7 +6,7 @@
   },
   {
     "test_name": "Valid Test Case 2",
-    "dsl": "row{box{title,title<text=(\"sdfasdf\")>},box{text}}",
+    "dsl": "row{box{title,title<text=\"sdfasdf\">},box{text}}",
     "test_description": "Test formatting for row with boxes and titles"
   },
   {
@@ -26,7 +26,7 @@
   },
   {
     "test_name": "Valid Test Case 6",
-    "dsl": "row{box{title<text=(\"Sample Text\")>,title<text=(\"More Text\")>}}",
+    "dsl": "row{box{title<text=\"Sample Text\">,title<text=\"More Text\">}}\n",
     "test_description": "Test row with nested titles containing text attributes"
   },
   {
@@ -36,17 +36,17 @@
   },
   {
     "test_name": "Valid Test Case 8",
-    "dsl": "row{box{select_box<text=(\"Option 1\")>},box{select_box<text=(\"Option 2\")>}}",
+    "dsl": "row{box{select_box<text=\"Option 1\">},box{select_box<text=\"Option 2\">}}",
     "test_description": "Test row with two select_box elements"
   },
   {
     "test_name": "Valid Test Case 9",
-    "dsl": "row{box{title<text=(\"This is a long text for testing\")>}}",
+    "dsl": "row{box{title<text=\"This is a long text for testing\">}}",
     "test_description": "Test formatting of title tag with long text"
   },
   {
     "test_name": "Valid Test Case 10",
-    "dsl": "row{box{title<text=(\"Title with special chars!@#$%^&*\")>}}",
+    "dsl": "row{box{title<text=\"Title with special chars!@#$%^&*\">}}",
     "test_description": "Test title tag with special characters in the text"
   },
   {
@@ -66,7 +66,7 @@
   },
   {
     "test_name": "Edge Case 4",
-    "dsl": "row{box{title<text=(\">!<script>alert('XSS')</script>\")>}}",
+    "dsl": "row{box{title<text=\">!<script>alert'XSS'</script>\">}}",
     "test_description": "Test box tag with text containing HTML special characters"
   },
   {
@@ -76,17 +76,17 @@
   },
   {
     "test_name": "Complex Test Case 1",
-    "dsl": "row{box{title<text=(\"Main Title\")>},box{title<text=(\"Subtitle\")>},box{title<text=(\"Footer Title\")>}}",
+    "dsl": "row{box{title<text=\"Main Title\">},box{title<text=\"Subtitle\">},box{title<text=\"Footer Title\">}}",
     "test_description": "Test row with multiple boxes, each having a title"
   },
   {
     "test_name": "Complex Test Case 2",
-    "dsl": "row{box{title<text=(\"Header Title\")>},box{select_box<text=(\"Option 1\")>},box{title<text=(\"Another Title\")>}}",
+    "dsl": "row{box{title<text=\"Header Title\">},box{select_box<text=\"Option 1\">},box{title<text=\"Another Title\">}}",
     "test_description": "Test row with multiple boxes including a select_box"
   },
   {
     "test_name": "Complex Test Case 3",
-    "dsl": "row{box{title<text=(\"First Box\")>},box{title<text=(\"Second Box\")>},box{title<text=(\"Third Box\")>}}",
+    "dsl": "row{box{title<text=\"First Box\">},box{title<text=\"Second Box\">},box{title<text=\"Third Box\">}}",
     "test_description": "Test multiple boxes in a row, all with title attributes"
   }
 ]
