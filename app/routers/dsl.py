@@ -6,7 +6,6 @@ from fastapi import UploadFile, File
 from Ai_Agents import get_agent
 from Ai_Agents.models.models import ModelMessage
 from Compiler_V3 import safe_compile_to_web
-from LLM.Backend.query.prompt import AnswerPrompt
 from app.schemas.code import AnonymousCodeResponse
 from app.services.ai_service import process_screenshots
 
@@ -48,8 +47,11 @@ async def create_dsl_record(
 async def create_dsl_record(
         prompt: str,
 ):
-    instruction,message = AnswerPrompt(prompt)
-    llm_response = get_agent().chat(message,[instruction])
+    message = ModelMessage(
+        role="user",
+        message=prompt
+    )
+    llm_response = get_agent().chat(message)
     dsl = llm_response.code
     return AnonymousCodeResponse.from_dsl(dsl)
 

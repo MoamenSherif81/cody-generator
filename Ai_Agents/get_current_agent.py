@@ -1,9 +1,12 @@
 import os
 from typing import Optional
+
 from dotenv import load_dotenv
 
 from Ai_Agents.AiAgent import AiAgent
 from Ai_Agents.Gemini import Gemini
+from Ai_Agents.Local import LocalModel
+
 
 def get_agent(agent: Optional[AiAgent] = None) -> AiAgent:
     """
@@ -21,9 +24,8 @@ def get_agent(agent: Optional[AiAgent] = None) -> AiAgent:
     # Add other agent implementations here in the future
     if agent_name == "gemini":
         return Gemini()
-    # elif agent_name == "openai":
-    #     return OpenAIAgent()
-    # Add more agents as needed
+    elif agent_name == "local":
+        return LocalModel()
 
     # Default fallback
     return Gemini()
