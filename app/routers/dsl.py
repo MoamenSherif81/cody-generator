@@ -3,11 +3,11 @@ from typing import List
 from fastapi import APIRouter
 from fastapi import UploadFile, File
 
+from Ai_Agents import get_agent
+from Ai_Agents.models.models import ModelMessage
 from Compiler_V3 import safe_compile_to_web
-from LLM.Utils import parse_json
+from LLM.Backend.query.prompt import AnswerPrompt
 from app.schemas.code import AnonymousCodeResponse
-from app.schemas.message import LLmMessageFormat
-from app.services.KaggleService import LLMService
 from app.services.ai_service import process_screenshots
 
 router = APIRouter(prefix="/dsl", tags=["dsl"])
@@ -48,13 +48,9 @@ async def create_dsl_record(
 async def create_dsl_record(
         prompt: str,
 ):
-    llm_service = LLMService()
-    message = LLmMessageFormat(
-        role="user",
-        content=prompt
-    )
-    llm_response = llm_service.GenerateResponse(message, [])["response"]
-    dsl = parse_json(llm_response)['dsl']
+    instruction,message = AnswerPrompt(prompt)
+    llm_response = get_agent().chat(message,[instruction])
+    dsl = llm_response.code
     return AnonymousCodeResponse.from_dsl(dsl)
 
 

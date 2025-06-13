@@ -105,6 +105,7 @@ You MUST ONLY use tokens, nesting, and parameter syntax allowed by the provided 
 - Make colors visually appealing but consistent.
 - Don't add COMMA between row and  footer
 - The grammar is STRICT. Invalid code will be REJECTED.
+- Can't Add Parameter Value as list EXCEPT FOR header,side_nav,footer
 
 # Good Example DSL:
 {dsl_example}
@@ -119,6 +120,15 @@ header <title=('Login Page')>
 # Correction:
 header <title=(\"Login Page\")>
 
+# Additional Bad DSL (Incorrect):
+select_box <options=([\"Excellent\", \"Good\", \"Fair\", \"Poor\", \"T\n])
+# Correction:
+select_box <text=("rating")>
+
+# Additional Bad DSL (Incorrect):
+header <title=\"Egypt Match Feedback\", args=[\"Home\"]>\n"
+# Correction:
+header <title=(\"Egypt Match Feedback\"), args=[\"Home\"]>\n"
 # Response format:
 {{
     "Dsl" : "The Dsl code you generated",
