@@ -4,6 +4,7 @@ from typing import Tuple, Optional
 from lark import Lark, UnexpectedInput, UnexpectedToken, UnexpectedCharacters
 
 from Compiler_V3.Parser.transformer import DSLTransformer
+from Compiler_V3.support_old_valid_grammar import _support_old_valid_grammar
 
 GRAMMAR_FILE = os.path.join(os.path.dirname(__file__), "dsl_grammar.lark")
 with open(GRAMMAR_FILE, "r", encoding="utf-8") as f:
@@ -13,12 +14,14 @@ parser = Lark(GRAMMAR, parser="lalr", start="start")
 
 def validate_dsl(dsl_code: str) -> tuple[bool, str | None]:
     if not dsl_code.strip():
-        return False, "DSL is empty or contains only whitespace."
+        return True, None
     try:
+        dsl_code = _support_old_valid_grammar(dsl_code)
         parser.parse(dsl_code)
         return True, None
     except (UnexpectedInput, UnexpectedToken, UnexpectedCharacters) as e:
         return False, f"Syntax error at line {e.line}, column {e.column}:\n{e.get_context(dsl_code)}"
+
 
 def generate_ast(dsl_code: str) -> dict:
     tree = parser.parse(dsl_code)
