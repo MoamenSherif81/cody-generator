@@ -4,8 +4,9 @@ from string import Template
 def add_footer(
         args: Union[List[str], str] = [],
         logo_text: str = "Logo",
-        main_color: str = "#00796b",
-        dark_color: str = "#004d40"
+        text_color: str = "#333",
+        logo_color: str = "#222",
+        main_color: str = "#f9f9f9"
 ) -> Tuple[str, str]:
     """
     Generate HTML and CSS for a responsive footer with dynamic navigation links.
@@ -13,11 +14,15 @@ def add_footer(
     Args:
         args: List of navigation item names or single string
         logo_text: Text to display as the logo
-        main_color: Primary color for the theme (default: teal)
-        dark_color: Darker shade for hover effects (default: dark teal)
+        text_color: Color for the navigation items (default: #333)
+        logo_color: Color for the logo text and CTA button background (default: #222)
+        main_color: Background color for the footer (default: #f9f9f9)
 
     Returns:
         Tuple containing (HTML string, CSS string)
+
+    Note:
+        Ensure colors provide sufficient contrast for readability.
     """
     # Generate navigation links with original preprocessing
     elements = ""
@@ -48,9 +53,10 @@ def add_footer(
 
     html = html_template.substitute(logo_text=logo_text, nav_html=elements)
 
+    # CSS template with updated colors
     css_template = Template("""
     .footer {
-        background: #fff;
+        background: $main_color;
         box-shadow: 0 -4px 16px rgba(0,0,0,0.09);
         padding: 32px 0 22px 0;
         margin-top: 56px;
@@ -60,7 +66,6 @@ def add_footer(
         z-index: 10;
         overflow-x: auto;
     }
-
     .footer-container {
         display: flex;
         align-items: center;
@@ -74,7 +79,6 @@ def add_footer(
         flex-wrap: wrap;
         box-sizing: border-box;
     }
-
     .footer-logo,
     .footer-nav,
     .footer-cta {
@@ -87,7 +91,7 @@ def add_footer(
     }
     .footer-logo-link {
         font-size: 1.4rem;
-        color: $main_color;
+        color: $logo_color;
         text-decoration: none;
         font-weight: 800;
         text-transform: uppercase;
@@ -99,7 +103,6 @@ def add_footer(
         text-overflow: ellipsis;
         max-width: 100%;
     }
-
     .footer-nav {
         flex: 1 1 0;
         display: flex;
@@ -119,7 +122,7 @@ def add_footer(
     .footer-nav-item {
         text-decoration: none;
         font-size: 1.05rem;
-        color: #313131;
+        color: $text_color;
         padding: 7px 18px;
         border-radius: 7px;
         transition: color 0.2s, background 0.2s;
@@ -133,10 +136,9 @@ def add_footer(
     }
     .footer-nav-item:hover,
     .footer-nav-item:focus {
-        color: $main_color;
+        color: $text_color;
         background: #f3f6f6;
     }
-
     .footer-cta {
         flex: 0 1 auto;
         min-width: 0;
@@ -146,14 +148,14 @@ def add_footer(
     }
     .footer-cta-button {
         padding: 12px 30px;
-        background: $main_color;
+        background: $logo_color;
         color: #fff;
         text-decoration: none;
         border-radius: 6px;
         font-weight: 700;
         font-size: 1rem;
         box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-        transition: background 0.25s;
+        transition: filter 0.25s;
         border: none;
         cursor: pointer;
         display: inline-block;
@@ -165,9 +167,8 @@ def add_footer(
     }
     .footer-cta-button:hover,
     .footer-cta-button:focus {
-        background: $dark_color;
+        filter: brightness(0.9);
     }
-
     @media (max-width: 900px) {
         .footer-container {
             gap: 18px;
@@ -184,7 +185,6 @@ def add_footer(
             padding: 11px 16px;
         }
     }
-
     @media (max-width: 700px) {
         .footer {
             padding: 20px 0 12px 0;
@@ -240,6 +240,5 @@ def add_footer(
     }
     """)
 
-    css = css_template.substitute(main_color=main_color, dark_color=dark_color)
-
+    css = css_template.substitute(text_color=text_color, logo_color=logo_color, main_color=main_color)
     return html, css

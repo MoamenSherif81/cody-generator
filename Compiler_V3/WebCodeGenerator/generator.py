@@ -17,14 +17,17 @@ def handle_layout_node(node: ASTNode) -> (str, str):
     args = node.attributes["args"] if "args" in node.attributes else []
     if isinstance(args, str):
         args = [args]
-    color = node.attributes["color"] if "color" in node.attributes else "#4a90e2"
+    color = node.attributes["color"][0] if "color" in node.attributes else "#f9f9f9"
+    text_color = node.attributes["text_color"][0] if "text_color" in node.attributes else "#333"
+    logo_color = node.attributes["logo_color"][0] if "logo_color" in node.attributes else "#222"
+
     title = node.attributes["title"][0] if "title" in node.attributes else "Logo"
     if node.tag == "header":
-        return add_header(args=args, main_color=color, logo_text=title)
+        return add_header(args=args, main_color=color, logo_text=title, text_color=text_color, logo_color=logo_color)
     elif node.tag == "footer":
-        return add_footer(args=args, main_color=color, logo_text=title)
+        return add_footer(args=args, main_color=color, logo_text=title, text_color=text_color, logo_color=logo_color)
     elif node.tag == "side_nav":
-        return add_side_nav(args=args, main_color=color, logo_text=title)
+        return add_side_nav(args=args, main_color=color, logo_text=title,text_color=text_color,logo_color=logo_color)
     else:
         return "", ""
 

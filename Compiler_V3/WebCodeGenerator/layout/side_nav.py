@@ -4,8 +4,9 @@ from string import Template
 def add_side_nav(
         args: Union[List[str], str] = [],
         logo_text: str = "Logo",
-        main_color: str = "#4a90e2",
-        dark_color: str = "#357abd"
+        main_color: str = "#ffffff",
+        text_color: str = "#333333",
+        logo_color: str = "#4a90e2"
 ) -> Tuple[str, str]:
     """
     Generate HTML and CSS for a responsive side navigation bar with dynamic links.
@@ -13,8 +14,9 @@ def add_side_nav(
     Args:
         args: List of navigation item names or single string
         logo_text: Text to display as the logo
-        main_color: Primary color for the theme (default: blue)
-        dark_color: Darker shade for hover effects (default: dark blue)
+        main_color: Background color for the navigation bar (default: white)
+        text_color: Color for navigation items (default: dark gray)
+        logo_color: Color for the logo text (default: blue)
 
     Returns:
         Tuple containing (HTML string, CSS string)
@@ -31,7 +33,7 @@ def add_side_nav(
                 elements += f'<li><a href="#{arg}" class="side-nav-item">{arg}</a></li>'
         elements += '</ul>'
 
-    # Updated HTML template with toggle functionality
+    # HTML template with toggle functionality (unchanged)
     html_template = Template("""
     <input type="checkbox" id="side-nav-toggle" class="side-nav-toggle-input">
     <label for="side-nav-toggle" class="side-nav-toggle-label">☰</label>
@@ -48,7 +50,7 @@ def add_side_nav(
 
     html = html_template.substitute(logo_text=logo_text, nav_html=elements)
 
-    # Updated CSS template with responsive design
+    # Updated CSS template with new color parameters and hover effects
     css_template = Template("""
 .side-nav {
     position: fixed;
@@ -56,8 +58,8 @@ def add_side_nav(
     left: 0;
     height: 100%;
     width: 15%;
-    background-color: #ffffff;
-    color: #333;
+    background-color: $main_color;
+    color: $text_color;
     border-right: 1px solid #e0e0e0;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     padding-top: 20px;
@@ -82,11 +84,16 @@ def add_side_nav(
 
 .side-nav-logo-link {
     font-size: 1.5rem;
-    color: $main_color;
+    color: $logo_color;
     text-decoration: none;
     font-weight: 700;
     text-transform: uppercase;
     text-align: center;
+    transition: color 0.3s;
+}
+
+.side-nav-logo-link:hover {
+    color: #666666;
 }
 
 .side-nav-list {
@@ -96,7 +103,7 @@ def add_side_nav(
 }
 
 .side-nav-item {
-    color: #333;
+    color: $text_color;
     text-decoration: none;
     font-size: 1.1rem;
     padding: 12px 20px;
@@ -107,7 +114,7 @@ def add_side_nav(
 
 .side-nav-item:hover {
     background-color: #f0f4f8;
-    color: $main_color;
+    color: #666666;
 }
 
 .side-nav-footer {
@@ -118,7 +125,7 @@ def add_side_nav(
 
 .side-nav-footer-link {
     font-size: 1rem;
-    color: #333;
+    color: $text_color;
     text-decoration: none;
     display: inline-block;
     padding: 10px 15px;
@@ -128,8 +135,8 @@ def add_side_nav(
 }
 
 .side-nav-footer-link:hover {
-    background-color: $dark_color;
-    color: white;
+    background-color: #d0d4d8;
+    color: #333333;
 }
 
 .side-nav-toggle-input {
@@ -176,6 +183,6 @@ def add_side_nav(
 }
     """)
 
-    css = css_template.substitute(main_color=main_color, dark_color=dark_color)
+    css = css_template.substitute(main_color=main_color, text_color=text_color, logo_color=logo_color)
 
     return html, css
