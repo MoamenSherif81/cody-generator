@@ -1,5 +1,21 @@
 {
   "tagMappings": {
+    "body": {
+      "htmlTag": "body",
+      "cssClasses": [
+        "main-content"
+      ],
+      "text penultimateLimit": 0,
+      "defaultColor": [
+        0,
+        0,
+        0
+      ],
+      "cssAttributes": {
+        "color": "background-color"
+      },
+      "textLimit": 0
+    },
     "row": {
       "htmlTag": "div",
       "cssClasses": [

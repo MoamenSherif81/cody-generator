@@ -1,6 +1,3 @@
-import os
-
-
 def html_wrapper(html_content: str) -> str:
     """Wrap HTML content in a basic HTML template."""
     return f"""<!DOCTYPE html>
@@ -11,11 +8,11 @@ def html_wrapper(html_content: str) -> str:
       <title>DSL Example</title>
       <link rel="stylesheet" href="style.css">
     </head>
-    <body>
     {html_content}
-    </body>
     </html>"""
-def css_wrapper(css_content)->str:
+
+
+def css_wrapper(css_content) -> str:
     return """
     *{
   margin: 0;
@@ -67,4 +64,4 @@ select, input{
 height : 75px;
 width : 75px;
 }
-    """+css_content
+    """ + css_content

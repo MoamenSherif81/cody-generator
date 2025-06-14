@@ -10,8 +10,9 @@ class AnonymousCodeResponse(BaseModel):
 
     @classmethod
     def from_dsl(cls, dsl: str):
-        html, css = safe_compile_to_web(dsl)
         dsl = linter_formatter(dsl)
+        print(dsl)
+        html, css = safe_compile_to_web(dsl)
         return cls(
             dsl=dsl,
             html=html,

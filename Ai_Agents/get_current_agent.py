@@ -1,9 +1,13 @@
 import os
 from typing import Optional
+
 from dotenv import load_dotenv
 
 from Ai_Agents.AiAgent import AiAgent
 from Ai_Agents.Gemini import Gemini
+from Ai_Agents.Local import LocalModel
+from Ai_Agents.OpenAi import OpenAIModel
+
 
 def get_agent(agent: Optional[AiAgent] = None) -> AiAgent:
     """
@@ -15,15 +19,15 @@ def get_agent(agent: Optional[AiAgent] = None) -> AiAgent:
     if agent is not None:
         return agent
 
-    load_dotenv()
+    load_dotenv(override=True)
     agent_name = os.getenv("AGENT", "Gemini").lower()
-
+    open_ai_model = os.getenv("OPENAI_MODEL", "gpt-4o")
     # Add other agent implementations here in the future
     if agent_name == "gemini":
         return Gemini()
-    # elif agent_name == "openai":
-    #     return OpenAIAgent()
-    # Add more agents as needed
+    elif agent_name == "local":
+        return LocalModel()
+    elif agent_name == "openai":
+        return OpenAIModel(open_ai_model)
 
-    # Default fallback
     return Gemini()

@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class ModelMessage(BaseModel):
     role: Literal["user", "system"]
     message: str
-    code: Optional[str] =None
+    code: Optional[str] = None
 
 
 class ModelResponse(BaseModel):

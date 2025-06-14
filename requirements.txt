@@ -193,3 +193,7 @@ wheel==0.45.1
 wrapt==1.17.2
 wsproto==1.2.0
 yarg==0.1.9
+
+openai~=1.84.0
+json_repair~=0.29.1
+lark-parser~=0.12.0

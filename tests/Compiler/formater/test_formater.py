@@ -15,10 +15,12 @@ def load_cases(json_path):
 valid_cases = load_cases(VALID_JSON)
 invalid_cases = load_cases(INVALID_JSON)
 
-def comp(s1: str, s2: str):
-    s1 = s1.replace("\n", '').replace('\t', '').replace(' ', '')
-    s2 = s2.replace("\n", '').replace('\t', '').replace(' ', '')
-    return s1 == s2
+def comp(original: str, formatted: str):
+    original = original.replace("\n", '').replace('\t', '').replace(' ', '')
+    formatted = formatted.replace("\n", '').replace('\t', '').replace(' ', '')
+    if formatted.startswith("body{"):
+        formatted=formatted[5:-1]
+    return original == formatted
 
 @pytest.mark.parametrize("test_name,dsl_code,desc", valid_cases, ids=[v[0] for v in valid_cases])
 def test_valid_dsl_cases(test_name, dsl_code, desc):

@@ -1,7 +1,7 @@
 [
   {
     "test_name": "Invalid Test Case 1",
-    "dsl": "row{box<text=(\"dfasdf\")},box{}",
+    "dsl": "row{box<text=\"dfasdf\"},box{}",
     "test_description": "Test invalid DSL due to missing closing tag"
   },
   {
@@ -11,7 +11,7 @@
   },
   {
     "test_name": "Invalid Test Case 3",
-    "dsl": "row{box<text=(\"Title, text with a missing quote)>}",
+    "dsl": "row{box<text=\"Title, text with a missing quote>}",
     "test_description": "Test invalid DSL due to unescaped quote in attribute value"
   },
   {
@@ -21,12 +21,12 @@
   },
   {
     "test_name": "Invalid Test Case 5",
-    "dsl": "box{title<text=(\"Special chars: !@#%\")>}",
+    "dsl": "box{title<text=\"Special chars: !@#%\">}",
     "test_description": "Test invalid DSL due to missing parenthesis in attribute"
   },
   {
     "test_name": "Invalid Test Case 6",
-    "dsl": "row{box{title<text=(\"No closing bracket\")}}",
+    "dsl": "row{box{title<text=\"No closing bracket\"}}",
     "test_description": "Test invalid DSL due to missing closing parenthesis for tuple value"
   },
   {
@@ -46,7 +46,7 @@
   },
   {
     "test_name": "Invalid Test Case 10",
-    "dsl": "row{box{title<text=(\"valid text\")},,box{title}}",
+    "dsl": "row{box{title<text=\"valid text\"},,box{title}}",
     "test_description": "Test invalid DSL due to extra commas between elements"
   }
 ]

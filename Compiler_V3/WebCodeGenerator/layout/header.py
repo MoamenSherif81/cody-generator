@@ -4,8 +4,9 @@ from string import Template
 def add_header(
         args: Union[List[str], str] = [],
         logo_text: str = "Logo",
-        main_color: str = "#00796b",
-        dark_color: str = "#004d40"
+        text_color: str = "#333",
+        logo_color: str = "#222",
+        main_color: str = "#f9f9f9"
 ) -> Tuple[str, str]:
     """
     Generate HTML and CSS for a responsive header with dynamic navigation links and a hamburger menu for mobile.
@@ -13,8 +14,9 @@ def add_header(
     Args:
         args: List of navigation item names or single string
         logo_text: Text to display as the logo
-        main_color: Primary color for the theme (default: teal)
-        dark_color: Darker shade for hover effects (default: dark teal)
+        text_color: Color for the navigation items (default: #333)
+        logo_color: Color for the logo text (default: #222)
+        main_color: Background color for the header (default: #f9f9f9)
 
     Returns:
         Tuple containing (HTML string, CSS string)
@@ -54,7 +56,7 @@ def add_header(
     # Modern, responsive CSS with hamburger and mobile nav
     css_template = Template("""
     .header {
-        background: #fff;
+        background: $main_color;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         padding: 18px 24px;
         border-radius: 16px;
@@ -78,7 +80,7 @@ def add_header(
         font-size: 1.7rem;
         font-weight: bold;
         text-decoration: none;
-        color: $main_color;
+        color: $logo_color;
         text-transform: uppercase;
         letter-spacing: 1.5px;
         transition: color 0.3s;
@@ -99,7 +101,7 @@ def add_header(
     .nav-item {
         text-decoration: none;
         font-size: 1rem;
-        color: #222;
+        color: $text_color;
         padding: 8px 18px;
         border-radius: 6px;
         transition: color 0.2s, background 0.2s;
@@ -110,7 +112,7 @@ def add_header(
     }
     .nav-item:hover,
     .nav-item:focus {
-        color: $main_color;
+        color: $text_color;
         background: #f3f6f6;
     }
     /* Hamburger for mobile */
@@ -127,7 +129,7 @@ def add_header(
     .menu-toggle span {
         height: 4px;
         width: 28px;
-        background: $main_color;
+        background: $text_color;
         margin: 4px 0;
         border-radius: 2px;
         display: block;
@@ -211,5 +213,5 @@ def add_header(
     }
     """)
 
-    css = css_template.substitute(main_color=main_color, dark_color=dark_color)
+    css = css_template.substitute(text_color=text_color, logo_color=logo_color, main_color=main_color)
     return html, css

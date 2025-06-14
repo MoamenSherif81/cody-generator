@@ -1,4 +1,4 @@
-header <title=("Louis Viton"), args=["Home", "Shop", "Sale", "Categories", "Contact"]>
+header <color=("#23272e"),text_color=("#ffffff"),logo_color=("#ffffff"),title=("Louis Viton"), args=["Home", "Shop", "Sale", "Categories", "Contact"]>
 side_nav <title=("Louis"), args=["All Products", "New Arrivals", "Best Sellers", "Sale", "Brands", "Price Range"]>
 row {
     box <align_items=("center")> {

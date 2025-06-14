@@ -1,22 +1,15 @@
 import os
 from typing import List, Optional
 
-import google.generativeai as genai
 from dotenv import load_dotenv
+from google import genai
 
 from Ai_Agents.AiAgent import AiAgent
 from Ai_Agents.models.models import ModelMessage, ModelResponse
 
 
 class Gemini(AiAgent):
-    """
-    Gemini AI agent for Google Generative AI chat interface.
-    """
-
-    def __init__(self, geminiModel="gemini-2.5-flash"):
-        """
-        Load API keys from environment and set up the Gemini model.
-        """
+    def __init__(self, geminiModel="gemini-1.5-flash"):
         load_dotenv()
         self.geminiKeys = [key.strip() for key in os.getenv("GEMINI_API_KEY", "").split(";") if key.strip()]
         if not self.geminiKeys:
@@ -24,83 +17,89 @@ class Gemini(AiAgent):
         self.numOfKeys = len(self.geminiKeys)
         self.currentKeyIdx = 0
         self.geminiModel = geminiModel
-        self.model = genai.GenerativeModel(geminiModel)
+        self.client = genai.Client()
+
+    def _convert_message_to_gemini_content(self, msg: ModelMessage) -> genai.types.Content:
+        parts = []
+        if msg.message:
+            # Here, genai.types.Part.from_text() is used correctly
+            parts.append(genai.types.Part.from_text(msg.message))
+        if msg.code:
+            parts.append(genai.types.Part.from_text(f"```\n{msg.code}\n```"))
+        return genai.types.Content(parts=parts, role=msg.role)
 
     def chat(self, message: ModelMessage, history: Optional[List[ModelMessage]] = None) -> ModelResponse:
-        """
-        Send a message and history to Gemini and return the response.
-        Tries all API keys until one succeeds.
-        """
-        gemini_history = self._convert_history_to_gemini_history(history)
-        gemini_message = self._convert_message_to_gemini_message(message)
+        full_contents = [
+            {
+                "role": "user",
+                "parts": [
+                    {
+                        "text": "List a few popular cookie recipes, and include the amounts of ingredients."
+                    }
+                ]
+            },
+            {
+                "role": "model",
+                "parts": [
+                    {
+                        "text": (
+                            "Here are a few popular cookie recipes:\n\n"
+                            "1. **Chocolate Chip Cookies**\n"
+                            "   - 1 cup (2 sticks) unsalted butter, softened\n"
+                            "   - 3/4 cup granulated sugar\n"
+                            "   - 3/4 cup packed light brown sugar\n"
+                            "   - 2 large eggs\n"
+                            "   - 1 teaspoon vanilla extract\n"
+                            "   - 2 1/4 cups all-purpose flour\n"
+                            "   - 1 teaspoon baking soda\n"
+                            "   - 1/2 teaspoon salt\n"
+                            "   - 2 cups (12 oz) semi-sweet chocolate chips\n\n"
+                            "2. **Oatmeal Raisin Cookies**\n"
+                            "   - 1 cup (2 sticks) unsalted butter, softened\n"
+                            "   - 1 cup packed light brown sugar\n"
+                            "   - 1/2 cup granulated sugar\n"
+                            "   - 2 large eggs\n"
+                            "   - 1 teaspoon vanilla extract\n"
+                            "   - 1 1/2 cups all-purpose flour\n"
+                            "   - 1 teaspoon baking soda\n"
+                            "   - 1 teaspoon cinnamon\n"
+                            "   - 1/2 teaspoon salt\n"
+                            "   - 3 cups old-fashioned rolled oats\n"
+                            "   - 1 1/2 cups raisins"
+                        )
+                    }
+                ]
+            },
+            {
+                "role": "user",
+                "parts": [
+                    {
+                        "text": "Now, from those, can you list only the chocolate cookie recipes?"
+                    }
+                ]
+            }
+        ]
+
         for key in self.geminiKeys:
             try:
-                genai.configure(api_key=key)
-                chat = self.model.start_chat(history=gemini_history)
-                if not gemini_message:
-                    raise ValueError("Converted message is empty, cannot send to Gemini.")
-                response = chat.send_message(gemini_message)
-                return self._convert_gemini_response_to_model_response(response)
+                # self.client._api_client.api_key = key
+                self.client = genai.Client(api_key=key)
+                raw_response = self.client.models.generate_content(
+                    model=self.geminiModel,
+                    contents=full_contents,
+                    config={
+                        "response_mime_type": "application/json",
+                        "response_schema": ModelResponse,
+                    },
+                )
+                return raw_response.parsed
             except Exception as e:
                 print(f"Error with key (last 5 chars): ...{key[-5:]}: {e}")
                 continue
+
         print("All Gemini API keys failed.")
         return ModelResponse(message="Error: All Gemini API keys failed to get a response.")
 
-    def send_message(self, message: str):
-        """
-        Send a single message (no history) to Gemini and get the response.
-        """
-        msg = ModelMessage(role="user", message=message)
+    def send_message(self, message: str) -> ModelResponse:
+        msg = ModelMessage(role="user", message=message, code="")
         return self.chat(msg, history=None)
-
-    def _convert_message_to_gemini_message(self, message: ModelMessage):
-        """
-        Change ModelMessage to Gemini's format (list of message parts).
-        """
-        parts = []
-        if message.message:
-            parts.append(message.message)
-        if message.code:
-            parts.append(f"```DSL\n{message.code}\n```")
-        if not parts:
-            return None
-        return parts
-
-    def _convert_history_to_gemini_history(self, history: Optional[List[ModelMessage]] = None):
-        """
-        Change a list of ModelMessage to Gemini's chat history format.
-        """
-        if history is None:
-            return []
-        gemini_formatted_history = []
-        for msg in history:
-            content_parts = []
-            if msg.message:
-                content_parts.append(msg.message)
-            if msg.code:
-                content_parts.append(f"```\n{msg.code}\n```")
-            gemini_role = "user" if msg.role == "user" else "model"
-            gemini_formatted_history.append({"role": gemini_role, "parts": content_parts})
-        return gemini_formatted_history
-
-    def _convert_gemini_response_to_model_response(self, gemini_response) -> ModelResponse:
-        """
-        Change Gemini API response to ModelResponse.
-        Splits text and code if present.
-        """
-        full_message = []
-        full_code = []
-        if gemini_response and hasattr(gemini_response, "candidates"):
-            for candidate in gemini_response.candidates:
-                if hasattr(candidate, 'content') and hasattr(candidate.content, 'parts'):
-                    for part in candidate.content.parts:
-                        if hasattr(part, 'text'):
-                            text_content = part.text
-                            if text_content.startswith('```') and text_content.endswith('```'):
-                                full_code.append(text_content.strip('`').strip())
-                            else:
-                                full_message.append(text_content)
-        response_message = "\n".join(full_message) if full_message else None
-        response_code = "\n".join(full_code) if full_code else None
-        return ModelResponse(message=response_message, code=response_code)

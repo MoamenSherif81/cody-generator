@@ -6,4 +6,5 @@ class AskQuestion(BaseModel):
 
 
 class AnswerQuestion(BaseModel):
+    Response: str = Field(..., description="The Ai Agent Response of the request (don't contain code) just explanation")
     DslCode: str = Field(..., description="DSL Code Corresponding to the situations")
