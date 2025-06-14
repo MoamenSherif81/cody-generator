@@ -50,7 +50,6 @@ INSTRUCTIONS = dedent(f"""
     # You can pass args to header,footer,side_nav
     ## example header<args=["title1","title2","title3"]>
     # Should add COMMA between each token and another
-    # Generate a response JSON matching this schema: {json.dumps(AnswerQuestion.model_json_schema(), ensure_ascii=False)}
     # Do not include any introduction or conclusion.
     # Use a visually appealing, simple color scheme with all colors in #xxxxx format.
     # Be creative.
@@ -58,7 +57,6 @@ INSTRUCTIONS = dedent(f"""
     # MAKE THE PAGE LOOK MODERN
     # SHOULD FOLLOW THE LARK GRAMMAR RULES
     # MAKE IT COLORFUL AND HAVE THEME
-    # AGAIN, respond strictly following the AnswerQuestion schema.
 """)
 
 def answer_prompt_with_open_ai(prompt: str) -> str:

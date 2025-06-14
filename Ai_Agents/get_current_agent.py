@@ -21,13 +21,13 @@ def get_agent(agent: Optional[AiAgent] = None) -> AiAgent:
 
     load_dotenv(override=True)
     agent_name = os.getenv("AGENT", "Gemini").lower()
-
+    open_ai_model = os.getenv("OPENAI_MODEL", "gpt-4o")
     # Add other agent implementations here in the future
     if agent_name == "gemini":
         return Gemini()
     elif agent_name == "local":
         return LocalModel()
     elif agent_name == "openai":
-        return OpenAIModel("gpt-4.1")
+        return OpenAIModel(open_ai_model)
 
     return Gemini()

@@ -141,15 +141,18 @@ header <title=(\"Egypt Match Feedback\"), args=[\"Home\"]>\n"
 # }}**
 """
 
-    user_message = ModelMessage(
-        role="user",
-        message=(
+    user_message = {
+        "role": "user",
+        "parts": [
             f"## Pydantic Input Schema:\n"
             f"{json.dumps(AskQuestion.model_json_schema(), ensure_ascii=False)}\n\n"
             f"## Question:\n{prom}\n"
-        )
-    )
+        ]
+    }
 
     instruction = ModelMessage(role="system", message=system_prompt)
-
+    instruction = {
+        "role": "model",
+        "parts": [system_prompt]
+    }
     return instruction, user_message

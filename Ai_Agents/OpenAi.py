@@ -7,7 +7,7 @@ from openai import OpenAI
 from Ai_Agents.Agents_prompts.OpenAiPrompt import answer_prompt_with_open_ai
 from Ai_Agents.AiAgent import AiAgent
 from Ai_Agents.models.models import ModelMessage, ModelResponse
-from LLM.Utils import parse_json
+from LLM.Backend.query.prompt import AnswerQuestion
 
 
 class OpenAIModel(AiAgent):
@@ -25,15 +25,15 @@ class OpenAIModel(AiAgent):
         """
         try:
             openai_messages = self._build_openai_messages(message, history)
-            completion = self.client.chat.completions.create(
+            completion = self.client.responses.parse(
                 model=self.model_name,
-                messages=openai_messages
+                input=openai_messages,
+                text_format=AnswerQuestion
             )
-            content = completion.choices[0].message.content
-            parsed = parse_json(content)
+            answer_question: AnswerQuestion = completion.output_parsed
             return ModelResponse(
-                message=parsed.get("Response"),
-                code=parsed.get("Dsl")
+                message=answer_question.Response,
+                code=answer_question.Dsl
             )
         except Exception as e:
             print(f"OpenAI error: {e}")
