@@ -53,6 +53,7 @@ async def create_dsl_record(
     )
     llm_response = get_agent().chat(message)
     dsl = llm_response.code
+    print(dsl)
     return AnonymousCodeResponse.from_dsl(dsl)
 
 

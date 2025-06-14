@@ -9,7 +9,7 @@ from LLM.Scheme.AnswerQuestion import AskQuestion
 
 class AnswerQuestion(BaseModel):
     Response: str = Field(..., description="The Ai Agent Response of the request (don't contain code) just explanation")
-_methinks: str = Field(..., description="DSL Code Corresponding to the situations")
+    Dsl: str = Field(..., description="DSL Code Corresponding to the situations")
 
 
 dsl_grammar = """

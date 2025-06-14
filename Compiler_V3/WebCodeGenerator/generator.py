@@ -53,7 +53,7 @@ def build_css_class(attrs: Dict[str, any], tag_css_attrs: Dict[str, str], base_c
     css_block = f".{custom_class} " + "{\n"
     for key, value in attrs.items():
         key = key.replace('_', '-')
-        if key in ["src", "text"]:
+        if key in ["src", "text", "placeholder"]:
             continue
 
         if key in tag_css_attrs:
@@ -80,6 +80,8 @@ def extract_text(node: ASTNode, attrs) -> str:
     if "text" in attrs:
         txt = attrs["text"]
         return f"{txt}"
+    if "placeholder" in attrs and node.tag == "input":
+        return f"{attrs["placeholder"]}"
     elif node.tag in ["input", "title", "button", "text"]:
         return random_text(6)
     return ""
@@ -162,13 +164,14 @@ def generate_html(ast_nodes: list, indent: int = 0) -> (str, str):
     css = ""
     for node in ast_nodes:
         # Handle layout node (header, footer, side-nav)
-        if isinstance(node, ASTNode):
-            html2, css2 = handle_layout_node(node)
-            html += html2
-            css += css2
         if isinstance(node, ASTNode) and node.tag == "body":
             row_html, row_css = build_html_body(node, tag_map)
             html += row_html
             css += row_css
+            continue
+        if isinstance(node, ASTNode):
+            html2, css2 = handle_layout_node(node)
+            html += html2
+            css += css2
 
     return html, css
