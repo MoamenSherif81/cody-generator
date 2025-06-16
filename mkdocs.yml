@@ -1,0 +1,16 @@
+site_name: Cody-Generator
+
+theme:
+  name: material
+
+repo_url: https://github.com/MoamenSherif81/cody-generator
+
+nav:
+  - Compiler:
+      - Overview: Compiler_v3/overview.md
+      - Writing DSL Code:
+          - Cook Book: Compiler_v3/Writing_DSL_Code/cook-book.md
+          - Tag Reference: Compiler_v3/Writing_DSL_Code/tags.md
+      - Developer Guide:
+          - Compiler APIs: Compiler_v3/Developer_guide/api.md
+          - How to integrate: Compiler_v3/Developer_guide/How-to-integrate.md
