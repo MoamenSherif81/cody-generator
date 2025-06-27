@@ -1,79 +1,54 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from typing import List, Optional
 
 from app.config.database import get_db
 from app.dependencies.auth import get_current_user
-from app.models.project import Project
-from app.models.record import Record
 from app.models.user import User
-from app.schemas.project import ProjectCreate, ProjectResponse, ProjectWithRecordsResponse
-from Compiler_V2 import compile_dsl
+from app.schemas.project import ProjectCreate, ProjectResponse, UpdateProject, GetAllProjectsResponse, GetFullProject
+from app.services.ProjectService import ProjectService
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
 
-def compile_dsl_safe(dsl_content: Optional[str]) -> tuple[Optional[str], Optional[str]]:
-    return compile_dsl(dsl_content) if dsl_content else (None, None)
+def get_project_service(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return ProjectService(db, current_user)
 
 
 @router.post("/", response_model=ProjectResponse)
-def create_project(project: ProjectCreate, db: Session = Depends(get_db),
-                   current_user: User = Depends(get_current_user)):
-    db_project = Project(name=project.name, user_id=current_user.id)
-    db.add(db_project)
-    db.commit()
-    db.refresh(db_project)
-    return db_project
+def create_project(
+        project: ProjectCreate,
+        service: ProjectService = Depends(get_project_service)
+):
+    return service.add_new_project(project)
 
 
-@router.get("/{project_id}")
-def read_project(project_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    db_project = db.query(Project).filter(Project.id == project_id, Project.user_id == current_user.id).first()
-    if not db_project:
-        raise HTTPException(status_code=404, detail="Project not found")
-
-    records = db.query(Record).filter(Record.project_id == project_id, Record.user_id == current_user.id).all()
-    record_items = [
-        {
-            "record_id": record.id,
-            "screenshot_path": record.screenshot_path,
-            "dsl_code": record.dsl_content,
-            "html": compile_dsl_safe(record.dsl_content)[0],
-            "css": compile_dsl_safe(record.dsl_content)[1],
-            "createdAt" :record.created_at
-        }
-        for record in records
-    ]
-
-    return {
-        "project": {"id": db_project.id, "name": db_project.name, "user_id": db_project.user_id},
-        "records": record_items
-    }
+@router.get("/{project_id}", response_model=GetFullProject)
+def read_project(
+        project_id: int,
+        service: ProjectService = Depends(get_project_service)
+):
+    return service.get_project(project_id)
 
 
 @router.put("/{project_id}", response_model=ProjectResponse)
-def update_project(project_id: int, project: ProjectCreate, db: Session = Depends(get_db),
-                   current_user: User = Depends(get_current_user)):
-    db_project = db.query(Project).filter(Project.id == project_id, Project.user_id == current_user.id).first()
-    if not db_project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    db_project.name = project.name
-    db.commit()
-    db.refresh(db_project)
-    return db_project
+def update_project(
+        project_id: int,
+        project: UpdateProject,
+        service: ProjectService = Depends(get_project_service)
+):
+    return service.update_project(project_id, project)
 
 
 @router.delete("/{project_id}")
-def delete_project(project_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    db_project = db.query(Project).filter(Project.id == project_id, Project.user_id == current_user.id).first()
-    if not db_project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    db.delete(db_project)
-    db.commit()
-    return {"detail": "Project deleted"}
+def delete_project(
+        project_id: int,
+        service: ProjectService = Depends(get_project_service)
+):
+    return service.delete_project_service(project_id)
 
 
-@router.get("/", response_model=List[ProjectResponse])
-def get_all_projects(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    return db.query(Project).filter(Project.user_id == current_user.id).all()
+@router.get("/", response_model=GetAllProjectsResponse)
+def get_all_projects(
+        service: ProjectService = Depends(get_project_service)
+):
+    return service.get_all_projects()

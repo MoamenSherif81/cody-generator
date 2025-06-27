@@ -1,5 +1,6 @@
 import numpy as np
 
+
 from classes.Vocabulary import START_TOKEN, END_TOKEN, PLACEHOLDER
 from .Dataset import Dataset
 from classes.models.config import IMAGE_SIZE, CONTEXT_LENGTH
@@ -8,7 +9,8 @@ from Utils import Utils
 
 class Generator:
     @staticmethod
-    def data_generator(voc, gui_paths, img_paths, batch_size, generate_binary_sequences=False, verbose=False, loop_only_one=False):
+    def data_generator(voc, gui_paths, img_paths, batch_size, generate_binary_sequences=False, verbose=False,
+                       loop_only_one=False):
         assert len(gui_paths) == len(img_paths)
         voc.create_binary_representation()
 

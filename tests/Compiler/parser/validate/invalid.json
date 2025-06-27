@@ -1,0 +1,82 @@
+[
+  {
+    "test_name": "missing_row_braces",
+    "test_description": "Row declared without required braces",
+    "dsl": "body {\n  row\n}"
+  },
+  {
+    "test_name": "box_without_closing_brace",
+    "test_description": "Box opened but not closed",
+    "dsl": "body {\n  row {\n    box {\n      title<text=\"Hello\">\n  }\n}"
+  },
+  {
+    "test_name": "invalid_leaf_tag",
+    "test_description": "Using an undefined leaf tag",
+    "dsl": "body {\n  row {\n    box {\n      unknown_tag<text=\"Oops\">\n    }\n  }\n}"
+  },
+  {
+    "test_name": "missing_attribute_equals",
+    "test_description": "Attribute defined without equal sign",
+    "dsl": "header<args [\"Home\", \"About\"]>"
+  },
+  {
+    "test_name": "unclosed_attribute_block",
+    "test_description": "Missing closing angle bracket in attribute block",
+    "dsl": "footer<args=[\"A\", \"B\"]"
+  },
+  {
+    "test_name": "unclosed_array_in_attr",
+    "test_description": "Array attribute not closed properly",
+    "dsl": "header<args=[\"Home\", \"About\">"
+  },
+  {
+    "test_name": "row_missing_comma",
+    "test_description": "Two rows declared without comma in between",
+    "dsl": "body {\n  row {\n    box {}\n  }\n  row {\n    box {}\n  }\n}"
+  },
+  {
+    "test_name": "invalid_color_format",
+    "test_description": "Color attribute given in invalid format",
+    "dsl": "row<color=255,255,255> {\n  box {}\n}"
+  },
+  {
+    "test_name": "extra_comma_in_leafs",
+    "test_description": "Leaf tags end with a comma without another tag after it",
+    "dsl": "body {\n  row {\n    box {\n      title<text=\"One\">,\n    }\n  }\n}"
+  },
+  {
+    "test_name": "duplicate_tag_structure",
+    "test_description": "Two headers in the same structure, but only one allowed",
+    "dsl": "header<args=[\"One\"]>, header<args=[\"Two\"]>"
+  },
+  {
+    "test_name": "missing_quotes_in_attr",
+    "test_description": "Attribute value not quoted",
+    "dsl": "title<text=Hello>"
+  },
+  {
+    "test_name": "comma_in_wrong_place",
+    "test_description": "Comma appears before any tags",
+    "dsl": ",header<args=[\"Oops\"]>"
+  },
+  {
+    "test_name": "only_opening_brace_in_box",
+    "test_description": "Box has opening brace but no content or closing brace",
+    "dsl": "row {\n  box {\n}"
+  },
+  {
+    "test_name": "box_inside_leaf",
+    "test_description": "Improper nesting: trying to nest box inside a leaf tag",
+    "dsl": "row {\n  box {\n    title {\n      box {}\n    }\n  }\n}"
+  },
+  {
+    "test_name": "wrong_order_of_blocks",
+    "test_description": "Footer comes before header which is not expected",
+    "dsl": "footer<args=[\"Bye\"]>, header<args=[\"Welcome\"]>"
+  },
+  {
+    "test_name": "text_outside_structure",
+    "test_description": "Random text outside any DSL structure",
+    "dsl": "this is not DSL"
+  }
+]

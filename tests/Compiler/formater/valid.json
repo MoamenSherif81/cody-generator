@@ -1,0 +1,92 @@
+[
+  {
+    "test_name": "Valid Test Case 1",
+    "dsl": "header<args=[\"title\"]>",
+    "test_description": "Test formatting for a simple header tag"
+  },
+  {
+    "test_name": "Valid Test Case 2",
+    "dsl": "row{box{title,title<text=\"sdfasdf\">},box{text}}",
+    "test_description": "Test formatting for row with boxes and titles"
+  },
+  {
+    "test_name": "Valid Test Case 3",
+    "dsl": "row{box{title}}",
+    "test_description": "Test simple row with one box"
+  },
+  {
+    "test_name": "Valid Test Case 4",
+    "dsl": "row{box{title},box{title}}",
+    "test_description": "Test row with two boxes, each containing a title"
+  },
+  {
+    "test_name": "Valid Test Case 5",
+    "dsl": "footer<args=[\"text\"]>",
+    "test_description": "Test formatting for footer with an argument"
+  },
+  {
+    "test_name": "Valid Test Case 6",
+    "dsl": "row{box{title<text=\"Sample Text\">,title<text=\"More Text\">}}\n",
+    "test_description": "Test row with nested titles containing text attributes"
+  },
+  {
+    "test_name": "Valid Test Case 7",
+    "dsl": "side_nav<args=[\"home\",\"about\",\"contact\"]>",
+    "test_description": "Test formatting for side_nav with multiple arguments"
+  },
+  {
+    "test_name": "Valid Test Case 8",
+    "dsl": "row{box{select_box<text=\"Option 1\">},box{select_box<text=\"Option 2\">}}",
+    "test_description": "Test row with two select_box elements"
+  },
+  {
+    "test_name": "Valid Test Case 9",
+    "dsl": "row{box{title<text=\"This is a long text for testing\">}}",
+    "test_description": "Test formatting of title tag with long text"
+  },
+  {
+    "test_name": "Valid Test Case 10",
+    "dsl": "row{box{title<text=\"Title with special chars!@#$%^&*\">}}",
+    "test_description": "Test title tag with special characters in the text"
+  },
+  {
+    "test_name": "Edge Case 1",
+    "dsl": "",
+    "test_description": "Test empty DSL input"
+  },
+  {
+    "test_name": "Edge Case 2",
+    "dsl": "row{}",
+    "test_description": "Test row with no content inside"
+  },
+  {
+    "test_name": "Edge Case 3",
+    "dsl": "header<args=[]>",
+    "test_description": "Test header tag with an empty argument list"
+  },
+  {
+    "test_name": "Edge Case 4",
+    "dsl": "row{box{title<text=\">!<script>alert'XSS'</script>\">}}",
+    "test_description": "Test box tag with text containing HTML special characters"
+  },
+  {
+    "test_name": "Edge Case 5",
+    "dsl": "row{box{}}",
+    "test_description": "Test row contains empty box"
+  },
+  {
+    "test_name": "Complex Test Case 1",
+    "dsl": "row{box{title<text=\"Main Title\">},box{title<text=\"Subtitle\">},box{title<text=\"Footer Title\">}}",
+    "test_description": "Test row with multiple boxes, each having a title"
+  },
+  {
+    "test_name": "Complex Test Case 2",
+    "dsl": "row{box{title<text=\"Header Title\">},box{select_box<text=\"Option 1\">},box{title<text=\"Another Title\">}}",
+    "test_description": "Test row with multiple boxes including a select_box"
+  },
+  {
+    "test_name": "Complex Test Case 3",
+    "dsl": "row{box{title<text=\"First Box\">},box{title<text=\"Second Box\">},box{title<text=\"Third Box\">}}",
+    "test_description": "Test multiple boxes in a row, all with title attributes"
+  }
+]

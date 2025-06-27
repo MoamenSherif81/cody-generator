@@ -1,0 +1,27 @@
+response:
+GenerateContentResponse(
+    done=True,
+    iterator=None,
+    result=protos.GenerateContentResponse({
+      "candidates": [
+        {
+          "content": {
+            "parts": [
+              {
+                "text": "```json\n{\n  \"id\": 123,\n  \"situation\": {\n    \"SituationInArabic\": \"\u0623\u0631\u064a\u062f \u0625\u0646\u0634\u0627\u0621 \u0635\u0641\u062d\u0629 \u062a\u0633\u062c\u064a\u0644 \u0645\u0633\u062a\u062e\u062f\u0645 \u062c\u062f\u064a\u062f\",\n    \"SituationInEgyptianArabic\": \"\u0639\u0627\u064a\u0632 \u0623\u0639\u0645\u0644 \u0635\u0641\u062d\u0629 \u0639\u0634\u0627\u0646 \u0627\u0644\u0646\u0627\u0633 \u062a\u0633\u062c\u0644 \u062d\u0633\u0627\u0628\u0627\u062a \u062c\u062f\u064a\u062f\u0629\",\n    \"SituationInEnglish\": \"I want to create a new user registration page.\",\n    \"SituationInArabicAndEnglish\": \"\u0639\u0627\u064a\u0632 \u0627\u0639\u0645\u0644 form \u0644\u062a\u0633\u062c\u064a\u0644 new user\"\n  },\n  \"DslCode\": \"row <color=(0,122,255)> {box {title <color=(34,34,34),size=24px>}},row {box <color=(245,245,245)> {text <color=(34,34,34),size=16px>},box <color=(230,230,255)>{text <color=(34,34,34),size=16px>}},row{box <color=(245,245,245)>{input,select-box <color=(0,122,255)>,button <color=(52,199,89)>}}\"\n}\n```"
+              }
+            ],
+            "role": "model"
+          },
+          "finish_reason": "STOP",
+          "avg_logprobs": -0.045240988050188335
+        }
+      ],
+      "usage_metadata": {
+        "prompt_token_count": 634,
+        "candidates_token_count": 280,
+        "total_token_count": 914
+      },
+      "model_version": "gemini-2.0-flash"
+    }),
+)

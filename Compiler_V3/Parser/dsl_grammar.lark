@@ -1,0 +1,32 @@
+start: maybe_header comma? maybe_side_nav comma? maybe_body comma? maybe_footer
+maybe_header: tag_header?
+maybe_side_nav: tag_side_nav?
+maybe_body: tag_body?
+maybe_footer: tag_footer?
+comma: COMMA
+tag_header: "header" attr_block?
+tag_footer: "footer" attr_block?
+tag_side_nav: "side_nav" attr_block?
+tag_body: "body" attr_block? "{" rows? "}"
+rows: tag_row (COMMA tag_row)*
+tag_row: "row" attr_block? "{" tag_boxes? "}"
+tag_boxes: tag_box (COMMA tag_box)*
+tag_box: "box" attr_block? "{" leaf_tags? "}"
+leaf_tags: leaf_tag (COMMA leaf_tag)*
+leaf_tag: LEAF_TAG attr_block?
+LEAF_TAG: "button" | "title" | "text" | "select_box" | "input" | "image"
+// Attributes
+attr_block: "<" attr_list? ">"
+attr_list: attr (COMMA attr)* COMMA?
+attr: NAME "=" attr_value
+attr_value: ESCAPED_STRING
+          | array_value
+array_value: "[" string_list? "]"
+string_list: ESCAPED_STRING (COMMA ESCAPED_STRING)* COMMA?
+COMMA: ","
+COMMENT: /#[^\n]*/
+%ignore COMMENT
+%import common.CNAME -> NAME
+%import common.ESCAPED_STRING
+%import common.WS
+%ignore WS

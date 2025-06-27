@@ -1,14 +1,16 @@
-import os
 import glob
-import queue
+import os
 import sys
-from queue import Queue, Empty
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
-from tqdm import tqdm
+from queue import Queue, Empty
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import time
+from tqdm import tqdm
+
+from Compiler_V3 import compile_to_web
 
 # Add the parent directory of the script to sys.path to find Compiler_V2
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -16,7 +18,6 @@ parent_dir = os.path.dirname(script_dir)
 if parent_dir not in sys.path:
     sys.path.append(parent_dir)
 
-from Compiler_V2 import compile_dsl
 
 def setup_chrome_driver():
     """Set up headless Chrome driver."""
@@ -26,6 +27,7 @@ def setup_chrome_driver():
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--window-size=1920,1080")
     return webdriver.Chrome(options=chrome_options)
+
 
 def screenshot_worker(task_queue, result_queue, progress_bar):
     """Worker function: process .gui files from task queue, take screenshots, and push to result queue."""
@@ -42,7 +44,7 @@ def screenshot_worker(task_queue, result_queue, progress_bar):
                 with open(gui_file, 'r', encoding='utf-8') as f:
                     content = f.read()
                 # Compile to HTML and CSS
-                html_content, css_content = compile_dsl(content)
+                html_content, css_content, error = compile_to_web(content)
                 # Combine HTML and CSS
                 html_with_css = f"""
                 <!DOCTYPE html>
@@ -70,22 +72,20 @@ def screenshot_worker(task_queue, result_queue, progress_bar):
                 with progress_bar.get_lock():
                     progress_bar.update(1)
     finally:
-        result_queue.put((None, None))
         thread_local.driver.quit()
+
 
 def write_worker(result_queue):
     """Worker function: write screenshots from result queue to disk."""
     while True:
         try:
-            screenshot_data, output_path = result_queue.get()
-            if output_path is None:
-                result_queue.task_done()
-                break
+            screenshot_data, output_path = result_queue.get(5)
             with open(output_path, 'wb') as f:
                 f.write(screenshot_data)
             result_queue.task_done()
         except Empty:
             break  # Result queue is empty, exit thread
+
 
 def main(input_folder, output_folder, screenshot_ratio=0.33):
     """Main function to process .gui files using two queues and multithreading."""
@@ -114,8 +114,8 @@ def main(input_folder, output_folder, screenshot_ratio=0.33):
     total_workers = os.cpu_count() * 2 if os.cpu_count() else 4
 
     # Calculate number of screenshot and write workers
-    screenshot_workers = min(1, int(total_workers * screenshot_ratio))
-    write_workers = min(1, total_workers - screenshot_workers)
+    screenshot_workers = max(1, int(total_workers * screenshot_ratio))
+    write_workers = max(1, total_workers - screenshot_workers)
 
     # Initialize progress bar
     progress_bar = tqdm(total=len(gui_files), desc="Processing .gui files", unit="file")
@@ -139,6 +139,7 @@ def main(input_folder, output_folder, screenshot_ratio=0.33):
     # Calculate and print execution time
     elapsed_time = time.time() - start_time
     print(f"Total execution time: {elapsed_time:.2f} seconds")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

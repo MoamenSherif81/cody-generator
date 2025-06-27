@@ -10,10 +10,10 @@ from keras.api.layers import (
     MaxPooling2D,
 )
 from keras.api.models import Sequential, Model
-
 from keras.api.optimizers import RMSprop
-from .config import CONTEXT_LENGTH, EPOCHS, BATCH_SIZE
+
 from .AModel import AModel
+from .config import CONTEXT_LENGTH, EPOCHS, BATCH_SIZE
 
 
 class pix2code_model(AModel):
@@ -84,11 +84,11 @@ class pix2code_model(AModel):
         self.save()
 
     def fit_generator(
-        self,
-        train_generator,
-        steps_per_epoch,
-        validation_generator=None,
-        validation_steps=None,
+            self,
+            train_generator,
+            steps_per_epoch,
+            validation_generator=None,
+            validation_steps=None,
     ):
         self.model.fit(
             train_generator,

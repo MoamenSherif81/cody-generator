@@ -1,59 +1,65 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File
-from fastapi.responses import JSONResponse
+from typing import List
 
-from Compiler_V2 import lint_dsl, compile_dsl
-from app.schemas.record import RecordResponse
-from app.services.ai_service import process_screenshot
+from fastapi import APIRouter
+from fastapi import UploadFile, File
+
+from Ai_Agents import get_agent
+from Ai_Agents.models.models import ModelMessage
+from Compiler_V3 import safe_compile_to_web
+from app.schemas.code import AnonymousCodeResponse
+from app.services.ai_service import process_screenshots
 
 router = APIRouter(prefix="/dsl", tags=["dsl"])
 
 
 @router.post(
     "/image",
-    response_model=RecordResponse,
     summary="Create a record with a screenshot",
-    description="Create a record with a mandatory screenshot, associated with the authenticated user. The screenshot is saved and accessible via /uploads/<filename>. Project ID is optional. Requires a valid JWT token (Bearer <token>) in the Swagger UI Authorize dialog (BearerAuth).",
-    response_description="The created record object with screenshot_path as a URL."
+    description="Upload one or more screenshot images.",
+    response_description="The created record object with screenshot_path as a URL.",
+    response_model=AnonymousCodeResponse
 )
 async def create_image_record(
-        screenshot: UploadFile = File(...),
+        screenshots: List[UploadFile] = File(...),
 ):
-    dsl, html, css = process_screenshot(screenshot)
-    dsl = lint_dsl(dsl)
-    return JSONResponse(content={
-        "html": html,
-        "css": css,
-        "dsl": dsl
-    })
+    dsl = await process_screenshots(screenshots)
+    return AnonymousCodeResponse.from_dsl(dsl)
 
-from app.schemas.dsl import DSLContentRequest
 
 @router.post(
     "/text",
     summary="Create a record with DSL content",
     description="Create a record with mandatory DSL content, returns compiled HTML & CSS.",
+    response_model=AnonymousCodeResponse
 )
 async def create_dsl_record(
-        body: DSLContentRequest,
+        dsl_content: str,
 ):
-    dsl_content = body.dsl_content
-    if not dsl_content.strip():
-        raise HTTPException(
-            status_code=400,
-            detail="dsl_content must not be empty"
-        )
+    return AnonymousCodeResponse.from_dsl(dsl_content)
 
-    html, css = compile_dsl(dsl_content)
-    dsl_content = lint_dsl(dsl_content)
-    return JSONResponse(content={
-        "html": html,
-        "css": css,
-        "dsl": dsl_content
-    })
+
+@router.post(
+    "/prompt",
+    summary="Create a record with DSL content",
+    description="Create a record with mandatory DSL content, returns compiled HTML & CSS.",
+    response_model=AnonymousCodeResponse
+)
+async def create_dsl_record(
+        prompt: str,
+):
+    message = ModelMessage(
+        role="user",
+        message=prompt
+    )
+    llm_response = get_agent().chat(message)
+    dsl = llm_response.code
+    print(dsl)
+    return AnonymousCodeResponse.from_dsl(dsl)
+
 
 @router.post(
     "/lint",
-    response_model=RecordResponse,
+    response_model=AnonymousCodeResponse,
     summary="Create a record with DSL content",
     description="Create a record with mandatory DSL content, associated with the authenticated user. Project ID is optional. Requires a valid JWT token (Bearer <token>) in the Swagger UI Authorize dialog (BearerAuth).",
     response_description="The created record object."
@@ -61,16 +67,5 @@ async def create_dsl_record(
 async def create_dsl_record(
         dsl_content: str,
 ):
-    if not dsl_content.strip():
-        raise HTTPException(
-            status_code=400,
-            detail="dsl_content must not be empty"
-        )
-
-    html, css = compile_dsl(dsl_content)
-    dsl_content = lint_dsl(dsl_content)
-    return JSONResponse(content={
-        "html": html,
-        "css": css,
-        "dsl": dsl_content
-    })
+    _, _ = safe_compile_to_web(dsl_content)
+    return AnonymousCodeResponse.from_dsl(dsl_content)
