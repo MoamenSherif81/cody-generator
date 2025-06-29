@@ -111,7 +111,7 @@ def build_special_html(node: ASTNode, tag_conf: TagConfig) -> (str, str):
 
 def handle_image(node: ASTNode, tag_conf: TagConfig) -> (str, str):
     # Set default image source
-    src = "https://i.etsystatic.com/38592990/r/il/3a9205/4497455433/il_794xN.4497455433_24je.jpg"
+    src = "https://community.softr.io/uploads/db9110/original/2X/7/74e6e7e382d0ff5d7773ca9a87e6f6f8817a68a6.jpeg"
 
     # Update the source if 'src' attribute exists in node
     if "src" in node.attributes:

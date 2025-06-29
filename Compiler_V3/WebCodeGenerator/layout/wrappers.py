@@ -41,6 +41,7 @@ body{
   gap: 12px;
   align-items: flex-start;
   border-radius: 8px;
+  align-items: center;
 }
 
 .button{

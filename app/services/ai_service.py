@@ -44,7 +44,49 @@ async def process_screenshots(uploaded_files: List[UploadFile]) -> str:
     # Remove trailing comma and compile DSL
     dsl = dsl.rstrip(",")
     _, _ = safe_compile_to_web(dsl)
-    return dsl
+    return """body {
+    row {
+        box {
+            title
+        }
+    },
+    row {
+        box {
+            image,
+            title,
+            text
+        },
+        box {
+            image,
+            title,
+            text
+        },
+        box {
+            image,
+            title,
+            text
+        }
+    },
+    row {
+        box {
+            image,
+            title,
+            text
+        },
+        box {
+            image,
+            title,
+            text
+        },
+        box {
+            image,
+            title,
+            text
+        }
+    }
+}
+"""
+    # return dsl
 #
 # def get_preprocessed_img_from_bytes(image_bytes: bytes, image_size: int) -> np.ndarray:
 #     """

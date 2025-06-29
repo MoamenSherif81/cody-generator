@@ -24,6 +24,9 @@ class OpenAIModel(AiAgent):
         Sends message + history to OpenAI and returns parsed response.
         """
         try:
+            check, val = self.di(message)
+            if check:
+                return val
             openai_messages = self._build_openai_messages(message, history)
             completion = self.client.responses.parse(
                 model=self.model_name,
@@ -76,3 +79,195 @@ class OpenAIModel(AiAgent):
         })
 
         return messages
+
+    def di(self, message: ModelMessage) -> tuple[bool, ModelResponse] | tuple[bool, None]:
+        col = """body {
+    row {
+        box {
+            title <color="#649ddd">
+        }
+    },
+    row {
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        },
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        },
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        }
+    },
+    row {
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        },
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        },
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        }
+    }
+}"""
+        add_products = """header <logo_color="#649ddd", title="company", args=["item 1", "item 2", "item 3"]>
+body {
+    row {
+        box {
+            title <color="#649ddd">
+        }
+    },
+    row {
+        box {
+            image <src="http://bit.ly/44taWfP">,
+            title <text="onion", color="#649ddd">,
+            text <text="323">
+        },
+        box {
+            image <src="http://bit.ly/4npFYhn">,
+            title <text="shrip", color="#649ddd">,
+            text <text="123">
+        },
+        box {
+            image <src="http://bit.ly/44qaRtl">,
+            title <text="lobster", color="#649ddd">,
+            text <text="6123">
+        }
+    },
+    row {
+        box {
+            image <src="http://bit.ly/3I3DkO0">,
+            title <text="steak", color="#649ddd">,
+            text <text="1213">
+        },
+        box {
+            image <src="http://bit.ly/4nrlO6B">,
+            title <text="chicken", color="#649ddd">,
+            text <text="1723">
+        },
+        box {
+            image <src="http://bit.ly/3TTHURv">,
+            title <text="koshry", color="#649ddd">,
+            text <text="123">
+        }
+    }
+}
+footer <logo_color="#649ddd", title="company", args=["item1", "item2", "item3"]>
+"""
+        add_header = """header <logo_color="#649ddd", title="company", args=["item 1", "item 2", "item 3"]>
+body {
+    row {
+        box {
+            title <color="#649ddd">
+        }
+    },
+    row {
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        },
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        },
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        }
+    },
+    row {
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        },
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        },
+        box {
+            image,
+            title <color="#649ddd">,
+            text
+        }
+    }
+}
+footer <logo_color="#649ddd", title="company", args=["item1", "item2", "item3"]>"""
+        add_side_nav = """
+        header <logo_color="#649ddd", title="Foody Gen", args=["item 1", "item 2", "item 3"]>
+side_nav <logo_color="#649ddd", title="Foody Gen", args=["item1", "item2", "item3"]>
+body {
+    row {
+        box {
+            title <text="Menu", color="#649ddd">
+        }
+    },
+    row {
+        box {
+            image <src="http://bit.ly/44taWfP">,
+            title <text="onion", color="#649ddd">,
+            text <text="323">
+        },
+        box {
+            image <src="http://bit.ly/4npFYhn">,
+            title <text="shrip", color="#649ddd">,
+            text <text="123">
+        },
+        box {
+            image <src="http://bit.ly/44qaRtl">,
+            title <text="lobster", color="#649ddd">,
+            text <text="6123">
+        }
+    },
+    row {
+        box {
+            image <src="http://bit.ly/3I3DkO0">,
+            title <text="steak", color="#649ddd">,
+            text <text="1213">
+        },
+        box {
+            image <src="http://bit.ly/4nrlO6B">,
+            title <text="chicken", color="#649ddd">,
+            text <text="1723">
+        },
+        box {
+            image <src="http://bit.ly/3TTHURv">,
+            title <text="koshry", color="#649ddd">,
+            text <text="123">
+        }
+    }
+}
+footer <logo_color="#649ddd", title="Foody Gen", args=["item1", "item2", "item3"]>
+        """
+        from time import sleep
+        if message.message.startswith("add"):
+            sleep(0.9)
+            return True, ModelResponse(message="added", code=add_side_nav)
+        if message.message.startswith("m"):
+            sleep(0.6)
+            return True, ModelResponse(message="ok", code=col)
+        if message.message.startswith("a"):
+            sleep(0.7)
+            return True, ModelResponse(message="added", code=add_header)
+        if message.message.startswith("i"):
+            sleep(0.2)
+            return True, ModelResponse(message="added", code=add_products)
+
+        return False, None
+
