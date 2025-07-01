@@ -1,4 +1,5 @@
 import os
+import random
 from typing import List, Optional
 
 from dotenv import load_dotenv
@@ -262,17 +263,18 @@ footer <logo_color="#649ddd", title="Foody Gen", args=["item1", "item2", "item3"
         """
         response_4 = """Acknowledged. I have added a side navigation menu and updated the header to display the company name as "Foody Gen."""
         from time import sleep
+        s = random.randint(4,8)
         if message.message.startswith("add"):
-            sleep(2)
+            sleep(s)
             return True, ModelResponse(message=response_4, code=request_4)
         if message.message.startswith("m") or message.message.startswith("M"):
-            sleep(3)
+            sleep(s)
             return True, ModelResponse(message=response_1, code=request_1)
         if message.message.startswith("a"):
-            sleep(4)
+            sleep(s)
             return True, ModelResponse(message=response_2, code=request_2)
         if message.message.startswith("i"):
-            sleep(3.5)
+            sleep(s)
             return True, ModelResponse(message=response_3, code=request_3)
 
         return False, None
