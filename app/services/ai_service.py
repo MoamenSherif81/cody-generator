@@ -77,11 +77,6 @@ async def process_screenshots(uploaded_files: List[UploadFile]) -> str:
             image,
             title,
             text
-        },
-        box {
-            image,
-            title,
-            text
         }
     }
 }

@@ -81,7 +81,7 @@ class OpenAIModel(AiAgent):
         return messages
 
     def di(self, message: ModelMessage) -> tuple[bool, ModelResponse] | tuple[bool, None]:
-        col = """body {
+        request_1 = """body {
     row {
         box {
             title <color="#649ddd">
@@ -122,51 +122,10 @@ class OpenAIModel(AiAgent):
         }
     }
 }"""
-        add_products = """header <logo_color="#649ddd", title="company", args=["item 1", "item 2", "item 3"]>
-body {
-    row {
-        box {
-            title <color="#649ddd">
-        }
-    },
-    row {
-        box {
-            image <src="http://bit.ly/44taWfP">,
-            title <text="onion", color="#649ddd">,
-            text <text="323">
-        },
-        box {
-            image <src="http://bit.ly/4npFYhn">,
-            title <text="shrip", color="#649ddd">,
-            text <text="123">
-        },
-        box {
-            image <src="http://bit.ly/44qaRtl">,
-            title <text="lobster", color="#649ddd">,
-            text <text="6123">
-        }
-    },
-    row {
-        box {
-            image <src="http://bit.ly/3I3DkO0">,
-            title <text="steak", color="#649ddd">,
-            text <text="1213">
-        },
-        box {
-            image <src="http://bit.ly/4nrlO6B">,
-            title <text="chicken", color="#649ddd">,
-            text <text="1723">
-        },
-        box {
-            image <src="http://bit.ly/3TTHURv">,
-            title <text="koshry", color="#649ddd">,
-            text <text="123">
-        }
-    }
-}
-footer <logo_color="#649ddd", title="company", args=["item1", "item2", "item3"]>
-"""
-        add_header = """header <logo_color="#649ddd", title="company", args=["item 1", "item 2", "item 3"]>
+        response_1 = """
+        Sure! I have provided code that displays three boxes in each row and updated the color scheme to use #649ddd. If you need any further adjustments or additional features, please let me know! 
+        """
+        request_2 = """header <logo_color="#649ddd", title="company", args=["item 1", "item 2", "item 3"]>
 body {
     row {
         box {
@@ -209,7 +168,53 @@ body {
     }
 }
 footer <logo_color="#649ddd", title="company", args=["item1", "item2", "item3"]>"""
-        add_side_nav = """
+        response_2="""I have added both a header and a footer to the code as requested."""
+        request_3 = """header <logo_color="#649ddd", title="company", args=["item 1", "item 2", "item 3"]>
+body {
+    row {
+        box {
+            title <color="#649ddd">
+        }
+    },
+    row {
+        box {
+            image <src="http://bit.ly/44taWfP">,
+            title <text="onion", color="#649ddd">,
+            text <text="323">
+        },
+        box {
+            image <src="http://bit.ly/4npFYhn">,
+            title <text="shrimp", color="#649ddd">,
+            text <text="123">
+        },
+        box {
+            image <src="http://bit.ly/44qaRtl">,
+            title <text="lobster", color="#649ddd">,
+            text <text="6123">
+        }
+    },
+    row {
+        box {
+            image <src="http://bit.ly/3I3DkO0">,
+            title <text="steak", color="#649ddd">,
+            text <text="1213">
+        },
+        box {
+            image <src="http://bit.ly/4nrlO6B">,
+            title <text="chicken", color="#649ddd">,
+            text <text="1723">
+        },
+        box {
+            image <src="http://bit.ly/3TTHURv">,
+            title <text="koshry", color="#649ddd">,
+            text <text="123">
+        }
+    }
+}
+footer <logo_color="#649ddd", title="company", args=["item1", "item2", "item3"]>
+"""
+        response_3="""I’ll use the provided names and image sources for each dish and assign random prices. If you have a preferred price range, let me know. Ready to proceed with the update."""
+        request_4 = """
         header <logo_color="#649ddd", title="Foody Gen", args=["item 1", "item 2", "item 3"]>
 side_nav <logo_color="#649ddd", title="Foody Gen", args=["item1", "item2", "item3"]>
 body {
@@ -255,19 +260,20 @@ body {
 }
 footer <logo_color="#649ddd", title="Foody Gen", args=["item1", "item2", "item3"]>
         """
+        response_4 = """Acknowledged. I have added a side navigation menu and updated the header to display the company name as "Foody Gen."""
         from time import sleep
         if message.message.startswith("add"):
-            sleep(0.9)
-            return True, ModelResponse(message="added", code=add_side_nav)
-        if message.message.startswith("m"):
-            sleep(0.6)
-            return True, ModelResponse(message="ok", code=col)
+            sleep(2)
+            return True, ModelResponse(message=response_4, code=request_4)
+        if message.message.startswith("m") or message.message.startswith("M"):
+            sleep(3)
+            return True, ModelResponse(message=response_1, code=request_1)
         if message.message.startswith("a"):
-            sleep(0.7)
-            return True, ModelResponse(message="added", code=add_header)
+            sleep(4)
+            return True, ModelResponse(message=response_2, code=request_2)
         if message.message.startswith("i"):
-            sleep(0.2)
-            return True, ModelResponse(message="added", code=add_products)
+            sleep(3.5)
+            return True, ModelResponse(message=response_3, code=request_3)
 
         return False, None
 
